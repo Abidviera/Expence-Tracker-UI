@@ -1,0 +1,39 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon" *ngIf="!isCollapsed">
+        <i class="fas fa-route"></i>
+      </div>
+      <div class="logo-text" *ngIf="!isCollapsed">ABC Expence</div>
+    </div>
+    <div class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+  <div class="sidebar-menu">
+    <ng-container *ngFor="let item of menuItems">
+      <div class="menu-heading" *ngIf="isHeading(item)">{{ item.heading }}</div>
+
+      <div
+        *ngIf="!isHeading(item)"
+        class="menu-item"
+        [class.active]="activeItem === item.path"
+        (click)="setActiveItem(item.path)"
+      >
+        <i [class]="item.icon"></i>
+        <span>{{ item.title }}</span>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="user-profile">
+    <div class="user-avatar">JD</div>
+    <div class="user-info">
+      <span class="user-name">{{ user?.firstName }} {{ user?.lastName }}</span>
+      <span class="user-role">{{ user?.role }}</span>
+    </div>
+    <div class="logout-btn" (click)="Logout()">
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<!-- searchable-dropdown.component.html -->
+<div class="form-group" #dropdown>
+    <label *ngIf="label" [class.field-required]="required">{{ label }}</label>
+    <div class="dropdown-container" [class.dropdown-open]="isOpen">
+      <div class="search-input-wrapper">
+        <input 
+          #searchInput
+          type="text" 
+          [(ngModel)]="searchText" 
+          (ngModelChange)="filterOptions()"
+          (click)="toggleDropdown()"
+          [placeholder]="placeholder"
+         
+        >
+        <span class="dropdown-icon" (click)="toggleDropdown()"><i class="bi bi-chevron-down"></i></span>
+      </div>
+      <div class="dropdown-options" *ngIf="isOpen">
+        <div 
+          *ngFor="let option of filteredOptions" 
+          class="dropdown-option"
+          (click)="selectOption(option)"
+        >
+          {{ option[optionLabel] }}
+        </div>
+        <div *ngIf="filteredOptions.length === 0" class="no-results">
+          No results found
+        </div>
+      </div>
+    </div>
+  </div>

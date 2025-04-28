@@ -1,0 +1,6 @@
+export enum AccountStatus {
+    UNAPPROVED = 'UNAPPROVED',
+    PENDING_APPROVAL = 'PENDING_APPROVAL',
+    ACTIVE = 'ACTIVE',
+    BLOCKED = 'BLOCKED'
+  }

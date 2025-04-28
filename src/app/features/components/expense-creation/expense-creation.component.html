@@ -1,0 +1,148 @@
+
+<div class="ExpenceCreation">
+<div class="container-fluid">
+<div class="form-card">
+    <div class="form-header">
+        <h2>Create Expense</h2>
+        <p>Enter the details for your new expense record</p>
+    </div>
+    
+    <form>
+        <div class="form-body">
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="title" class="field-required">Title</label>
+                        <input type="text" id="title" placeholder="Short title for this expense" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category" class="field-required">Category</label>
+                        <select id="category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="cat-1">Food & Dining</option>
+                            <option value="cat-2">Transportation</option>
+                            <option value="cat-3">Accommodation</option>
+                            <option value="cat-4">Entertainment</option>
+                            <option value="cat-5">Business Services</option>
+                            <option value="cat-6">Office Supplies</option>
+                        </select>
+                    </div>
+
+                      
+                    <div class="form-group">
+                        <label for="Customer" class="field-required">Customer</label>
+                        <select id="Customer" required>
+                            <option value="" disabled selected>Select a Customer</option>
+                            <option value="cat-1">Food & Dining</option>
+                            <option value="cat-2">Transportation</option>
+                            <option value="cat-3">Accommodation</option>
+                            <option value="cat-4">Entertainment</option>
+                            <option value="cat-5">Business Services</option>
+                            <option value="cat-6">Office Supplies</option>
+                        </select>
+                    </div>
+
+
+                    <app-searchable-dropdown
+                    [options]="customers"
+                    optionLabel="name"
+                    optionValue="id"
+                    [label]="'Customer'"
+                    [required]="true"
+                    placeholder="Select a Customer"
+                    (selectionChange)="onCustomerSelect($event)"
+                    [(ngModel)]="selectedCustomerId">
+                  </app-searchable-dropdown>
+               
+                    
+                    <!-- <div class="form-group">
+                        <label for="currency" class="field-required">Currency</label>
+                        <select id="currency" required>
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                            <option value="AUD">AUD - Australian Dollar</option>
+                        </select>
+                    </div> -->
+                    
+                    <!-- <div class="form-group">
+                        <label for="tax">Tax Amount</label>
+                        <input type="number" id="tax" placeholder="0.00" step="0.01">
+                        <div class="form-hint">Leave empty if tax is included in total amount</div>
+                    </div>
+                     -->
+                    <!-- <div class="form-group">
+                        <label for="payment-method" class="field-required">Payment Method</label>
+                        <select id="payment-method" required>
+                            <option value="" disabled selected>Select payment method</option>
+                            <option value="cash">Cash</option>
+                            <option value="credit-card">Credit Card</option>
+                            <option value="debit-card">Debit Card</option>
+                            <option value="bank-transfer">Bank Transfer</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div> -->
+              
+       
+            
+           
+           
+              
+                    <div class="form-group">
+                        <label for="date" class="field-required">Date & Time</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" placeholder="Where was this expense made?">
+                    </div>
+   
+           
+            
+
+         
+                    <div class="form-group">
+                        <label for="trip-id">Trip </label>
+                        <input type="text" id="trip-id" placeholder="Associated trip UUID">
+                      
+                    </div>
+                    
+                  
+                  
+        
+          
+            
+        
+             
+          
+                    <div class="form-group">
+                        <label for="amount" class="field-required">Amount</label>
+                        <div class="input-with-icon">
+                            <input type="number" id="amount" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+            </div>
+            </div>
+ 
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Add notes or additional details about this expense"></textarea>
+                    </div>
+                </div>
+           
+        </div>
+        
+        <div class="form-footer">
+            <button type="button" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Expense</button>
+        </div>
+    </form>
+</div>
+</div>
+</div>

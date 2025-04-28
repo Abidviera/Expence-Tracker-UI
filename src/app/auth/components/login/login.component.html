@@ -1,0 +1,96 @@
+<div class="LoginForm">
+    <div class="bg-element"></div>
+    <div class="bg-element"></div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="decorative-circles"></div>
+            <div class="left-panel-content">
+                <div class="brand">
+                    <div class="brand-logo">TE</div>
+                    <div>
+                        <div class="brand-name">TravelExpense</div>
+                        <div class="tagline"> expense management</div>
+                    </div>
+                </div>
+                <h1>Welcome Back to  Expense Management</h1>
+                <p>Access your  travel expense dashboard and continue managing your finances with style and precision.</p>
+                
+                <ul class="feature-list">
+                    <li><i class="bi bi-check-lg"></i> Seamless synchronization across all devices</li>
+                    <li><i class="bi bi-check-lg"></i> Military-grade encryption for your data</li>
+                    <li><i class="bi bi-check-lg"></i> Personalized expense analytics</li>
+                    <li><i class="bi bi-check-lg"></i> Access to exclusive travel partnerships</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="form-header">
+                <h2>Sign In</h2>
+                <p>Enter your credentials to access your  account</p>
+            </div>
+            <form  [formGroup]="loginForm" (ngSubmit)="onSubmit()"  class="form-body form-float">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email address" formControlName="email" required>
+                    <div class="input-icon">
+                        <i class="bi bi-envelope-fill"></i>
+                    </div>
+                    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+                        <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+                        <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+                      </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" formControlName="password" required>
+                    <div class="input-icon">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+
+                    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+                        <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+                      </div>
+                </div>
+                
+                <div class="remember-container">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" formControlName="rememberMe">
+                        <span class="checkbox-slider"></span>
+                    </label>
+                    <span class="remember-text">Remember me on this device</span>
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <span class="btn-text">{{ isLoading ? 'LOGGING IN...' : 'SIGN IN' }}</span>
+                    <span class="btn-icon"><i class="bi bi-arrow-right"></i></span>
+                </button>
+                
+                <div class="social-login">
+                    <p>Or continue with</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn google">
+                            <i class="bi bi-google"></i>
+                        </button>
+                        <button type="button" class="social-btn apple">
+                            <i class="bi bi-apple"></i>
+                        </button>
+                        <button type="button" class="social-btn linkedin">
+                            <i class="bi bi-linkedin"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="register-link">
+                    Don't have an account? <a routerLink="">Create Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  
+</div>

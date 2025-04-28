@@ -1,0 +1,420 @@
+
+
+
+.OtpVerification {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.otp-container {
+    width: 100%;
+    max-width: 500px;
+    background: #FFFFFF;
+    border-radius: 25px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.8s forwards;
+}
+
+.otp-container::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: rgba(92, 7, 51, 0.03);
+    border-radius: 50%;
+    top: -100px;
+    right: -50px;
+    z-index: 0;
+}
+
+.otp-container::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: rgba(92, 7, 51, 0.05);
+    border-radius: 50%;
+    bottom: -50px;
+    left: -50px;
+    z-index: 0;
+}
+
+.otp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.back-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: #e9ecef;
+    transform: translateX(-3px);
+}
+
+.back-button i {
+    color: #5c0733;
+    font-size: 20px;
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+}
+
+.step {
+    width: 30px;
+    height: 5px;
+    border-radius: 5px;
+    background: #e9ecef;
+    margin: 0 5px;
+}
+
+.step.active {
+    background: #5c0733;
+    width: 40px;
+}
+
+.otp-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.otp-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #5c0733, #7d0a45);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(92, 7, 51, 0.2);
+    animation: pulse 3s infinite;
+}
+
+.otp-icon i {
+    color: #FFFFFF;
+    font-size: 36px;
+}
+
+.otp-content h2 {
+    font-size: 28px;
+    color: #5c0733;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.otp-content p {
+    color: #6c757d;
+    font-size: 14px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.user-email {
+    font-weight: 600;
+    color: #343a40;
+}
+
+.otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.otp-input {
+    width: 50px;
+    height: 60px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #5c0733;
+    transition: all 0.3s ease;
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.otp-input:focus {
+    outline: none;
+    border-color: #5c0733;
+    box-shadow: 0 5px 15px rgba(92, 7, 51, 0.15);
+    transform: translateY(-3px);
+}
+
+/* Animation for input focus */
+.otp-input.filled {
+    border-color: #5c0733;
+    animation: bounceInput 0.6s;
+}
+
+.timer-container {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+.timer {
+    color: #5c0733;
+    font-weight: 600;
+}
+
+.btn-verify {
+    background: linear-gradient(135deg, #5c0733, #7d0a45);
+    color: #FFFFFF;
+    border: none;
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 20px rgba(92, 7, 51, 0.2);
+}
+
+.btn-verify:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(92, 7, 51, 0.3);
+}
+
+.btn-verify:active {
+    transform: translateY(-2px);
+}
+
+.btn-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1);
+    transition: all 0.8s ease;
+}
+
+.btn-verify:hover .btn-overlay {
+    transform: scale(100);
+    opacity: 0.2;
+}
+
+.resend-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.resend-text {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.resend-button {
+    background: none;
+    border: none;
+    color: #5c0733;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 8px;
+    position: relative;
+    opacity: 0.6;
+}
+
+.resend-button:not(:disabled) {
+    opacity: 1;
+}
+
+.resend-button:not(:disabled):hover {
+    background: rgba(92, 7, 51, 0.1);
+}
+
+.resend-loader {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid #5c0733;
+    border-right: 2px solid #5c0733;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: spin 0.8s linear infinite;
+}
+
+.resend-button.loading span {
+    opacity: 0;
+}
+
+.resend-button.loading .resend-loader {
+    opacity: 1;
+}
+
+/* Success notification styling */
+.success-notification{
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #FFFFFF;
+    border-left: 4px solid #2ecc71;
+    border-radius: 10px;
+    padding: 20px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 1000;
+}
+
+.success-notification.show {
+    top: 20px;
+}
+
+.success-icon {
+    background: rgba(46, 204, 113, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.success-icon i {
+    color: #2ecc71;
+    font-size: 20px;
+}
+
+.success-content h3 {
+    font-size: 16px;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+.success-content p {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Animations */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceInput {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(92, 7, 51, 0.3);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(92, 7, 51, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(92, 7, 51, 0);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.otp-input.filled {
+    animation: bounce 0.3s ease;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+
+@media (max-width: 576px) {
+    .otp-container {
+        padding: 30px 20px;
+    }
+    
+    .otp-input {
+        width: 40px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .otp-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .otp-icon i {
+        font-size: 30px;
+    }
+}

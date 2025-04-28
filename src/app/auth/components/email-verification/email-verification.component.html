@@ -1,0 +1,59 @@
+
+<div class="OtpVerification">
+    <div class="otp-container">
+        <div class="otp-header">
+            <div class="back-button">
+                <i class="bi bi-arrow-left"></i>
+            </div>
+            <div class="step-indicator">
+                <div class="step active"></div>
+                <div class="step active"></div>
+                <div class="step"></div>
+            </div>
+        </div>
+        
+        <div class="otp-content">
+            <div class="otp-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <h2>Verify Your Email</h2>
+            <p>We've sent a verification code to <span class="user-email">{{email}}</span></p>
+            
+            <div class="otp-input-container">
+                <input type="text" class="otp-input" maxlength="1" (input)="onOtpInput($event)" autofocus>
+                <input type="text" class="otp-input" maxlength="1" (input)="onOtpInput($event)">
+                <input type="text" class="otp-input" maxlength="1" (input)="onOtpInput($event)">
+                <input type="text" class="otp-input" maxlength="1" (input)="onOtpInput($event)">
+                <input type="text" class="otp-input" maxlength="1" (input)="onOtpInput($event)">
+                <input type="text" class="otp-input" maxlength="1" (input)="onOtpInput($event)">
+            </div>
+            
+            <div class="timer-container">
+                <span class="timer">{{ countdownDisplay }}</span> remaining
+            </div>
+            
+            <button class="btn-verify" [disabled]="isLoading || otpCode.length !== 6" (click)="onSubmit()">
+                {{ isLoading ? 'VERIFYING...' : 'VERIFY CODE' }}
+                <div class="btn-overlay"></div>
+            </button>
+            
+            <div class="resend-container">
+                <span class="resend-text">Didn't receive the code?</span>
+                <button class="resend-button" id="resendButton" [disabled]="resendLoading || countdown > 0" (click)="resendOtp()">
+                    <span> {{ resendLoading ? 'SENDING...' : 'RESEND CODE' }}</span>
+                    <div class="resend-loader"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="success-notification" id="otpSuccessNotification">
+        <div class="success-icon">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div class="success-content">
+            <h3>Verification Successful!</h3>
+            <p>Your email has been verified successfully.</p>
+        </div>
+    </div>
+</div>
