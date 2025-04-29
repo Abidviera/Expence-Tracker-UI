@@ -14,7 +14,7 @@ constructor(private http: HttpClient) {}
 getPagedExpenses(request: ExpensePaginationRequest): Observable<any> {
   let params = new HttpParams();
 
-  // Dynamically add params only if they have value
+
   Object.keys(request).forEach(key => {
     const value = (request as any)[key];
     if (value !== null && value !== undefined && value !== '') {

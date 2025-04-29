@@ -15,6 +15,7 @@ export interface LoginResponse {
     firstName: string;
     lastName: string;
     email: string;
+    roleName: string;
     role: number;
     createdAt: string;
     isVerified: boolean;

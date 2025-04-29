@@ -39,6 +39,7 @@ export class SidebarComponent {
 
   ngOnInit(): void {
     this.user = this.commonUtil.getCurrentUser();
+    console.log(this.user)
     this.setInitialActiveItem();
   }
 

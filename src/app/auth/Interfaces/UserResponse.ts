@@ -6,6 +6,7 @@ export interface UserResponse {
     firstName: string;
     lastName: string;
     email: string;
+    roleName: string;
     role?: UserRole;
     createdAt: Date;
     isVerified: boolean;
