@@ -1,19 +1,17 @@
-// models/expense-pagination-request.model.ts
+
 export interface ExpensePaginationRequest {
-    pageNumber?: number;
-    pageSize?: number;
-    searchTerm?: string;
-    sortColumn?: string;
-    sortDirection?: string;
-    
-    fromDate?: string; 
-    toDate?: string;
-    
-   
-    minAmount?: number;
-    maxAmount?: number;
-    customerId?: string;
-    CategoryId?: string;
-    tripId?: string;
-  }
-  
+  pageNumber: number;
+  pageSize: number;
+  searchTerm?: string;
+  sortColumn?: string;
+  sortDirection?: string;
+
+  fromDate?: string;
+  toDate?: string;
+
+  minAmount?: number;
+  maxAmount?: number;
+  customerId?: string;
+  CategoryId?: string;
+  tripId?: string;
+}

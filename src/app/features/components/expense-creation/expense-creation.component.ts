@@ -17,30 +17,14 @@ import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 })
 export class ExpenseCreationComponent {
   selectedCustomerId: string | number | null = null;
-  newExpense: ExpenseCreate = {
-    title: '',
-    categoryId: '',
-    amount: 0,
-    currency: 'USD',
-    date: new Date(),
-    createdByUserId: '',
-    tax: undefined,
-    location: undefined,
-    description: undefined,
-    customerId: undefined,
-    tripId: undefined,
-  };
+  expense: ExpenseCreate = this.getEmptyExpense();
 
   categories: ExpenseCategory[] = [];
-  user: any;
+  userId = '';
   customers: Customer[] = [];
   destinations: Destinations[] = [];
   expenseCategories: ExpenseCategories[] = [];
   isLoading = false;
-
-  selectedCustomer: Customer | null = null;
-  selectedDestination: Destinations | null = null;
-  selectedCategory: ExpenseCategories | null = null;
 
   constructor(
     private customerService: CustomerService,
@@ -52,103 +36,71 @@ export class ExpenseCreationComponent {
   }
 
   ngOnInit(): void {
-    this.loadCustomers();
-    this.loadDestinations();
-    this.loadAllExpenceCategories();
-    this.user = this.commonUtil.getCurrentUser();
-    console.log(this.user.userId);
+    this.userId = this.commonUtil.getCurrentUser()?.userId ?? '';
+    console.log(this.userId);
     this.resetForm();
+    this.loadInitialData();
   }
 
-  onCustomerSelect(selectedCustomer: Customer): void {
-    this.selectedCustomer = selectedCustomer;
-    console.log('Selected customer:', selectedCustomer);
-  }
-  onTripSelect(selectedDestination: Destinations): void {
-    this.selectedDestination = selectedDestination;
-    console.log('Selected selectedDestination:', selectedDestination);
-  }
-  onCategorySelect(selectedCategory: ExpenseCategories): void {
-    this.selectedCategory = selectedCategory;
-    console.log('selectedCategory:', selectedCategory);
-  }
-
-  loadCustomers(): void {
-    this.isLoading = true;
-    this.customerService.getCustomers().subscribe({
-      next: (customers) => {
-        this.customers = customers;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading customers', err);
-        this.isLoading = false;
-      },
-    });
-  }
-
-  loadDestinations(): void {
-    this.isLoading = true;
-    this.destinationService.getAllDestinations().subscribe({
-      next: (destination) => {
-        this.destinations = destination;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading customers', err);
-        this.isLoading = false;
-      },
-    });
-  }
-  loadAllExpenceCategories(): void {
-    this.isLoading = true;
-    this.expenseService.getAllExpenseCategories().subscribe({
-      next: (expenseCategories) => {
-        this.expenseCategories = expenseCategories;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading customers', err);
-        this.isLoading = false;
-      },
-    });
-  }
-
-  private resetForm(): void {
-    this.newExpense = {
+  getEmptyExpense(): ExpenseCreate {
+    return {
       title: '',
       categoryId: '',
       amount: 0,
       currency: 'USD',
       date: new Date(),
-      createdByUserId: this.user?.userId ?? '',
-      tax: undefined,
-      location: undefined,
-      description: undefined,
-      customerId: undefined,
-      tripId: undefined,
+      createdByUserId: this.userId,
     };
   }
 
-  onSubmit(): void {
-    if (this.isLoading) return;
+  onCustomerSelect(customer: Customer): void {
+    this.expense.customerId = customer?.customerId;
+  }
+  onTripSelect(destination: Destinations): void {
+    this.expense.tripId = destination?.id;
+  }
+  onCategorySelect(category: ExpenseCategories): void {
+    this.expense.categoryId = category?.id;
+  }
 
+  loadInitialData(): void {
+    this.isLoading = true;
+    this.customerService.getCustomers().subscribe({
+      next: (data) => (this.customers = data),
+      error: (err) => console.error('Error loading customers', err),
+    });
+
+    this.destinationService.getAllDestinations().subscribe({
+      next: (data) => (this.destinations = data),
+      error: (err) => console.error('Error loading destinations', err),
+    });
+
+    this.expenseService.getAllExpenseCategories().subscribe({
+      next: (data) => (this.expenseCategories = data),
+      error: (err) => console.error('Error loading categories', err),
+      complete: () => (this.isLoading = false),
+    });
+  }
+
+  resetForm(): void {
+    this.expense = this.getEmptyExpense();
+  }
+
+  submitExpense(): void {
+    if (this.isLoading) return;
     this.isLoading = true;
 
-    const expenseToCreate: ExpenseCreate = {
-      ...this.newExpense,
-      date: this.newExpense.date,
-      amount: Number(this.newExpense.amount),
-      tax: this.newExpense.tax ? Number(this.newExpense.tax) : undefined,
-      categoryId: this.selectedCategory?.id,
-      customerId: this.selectedCustomer?.customerId, 
-      tripId: this.selectedDestination?.id,
-      createdByUserId: this.user?.userId
+    const payload: ExpenseCreate = {
+      ...this.expense,
+      amount: Number(this.expense.amount),
+      tax: this.expense.tax ? Number(this.expense.tax) : undefined,
+      createdByUserId: this.userId,
+      date: new Date
     };
 
-    this.expenseService.createExpense(expenseToCreate).subscribe({
-      next: (response) => {
-        console.log('Expense created:', response);
+    this.expenseService.createExpense(payload).subscribe({
+      next: (res) => {
+        console.log('Expense created:', res);
         this.resetForm();
       },
       error: (err) => {

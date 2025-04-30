@@ -1,12 +1,19 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-
+import { Component, ElementRef, EventEmitter,forwardRef, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'app-searchable-dropdown',
   standalone: false,
   templateUrl: './searchable-dropdown.component.html',
   styleUrl: './searchable-dropdown.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SearchableDropdownComponent),
+      multi: true
+    }
+  ]
 })
-export class SearchableDropdownComponent {
+export class SearchableDropdownComponent  implements ControlValueAccessor{
   @Input() options: any[] = [];
   @Input() optionLabel: string = 'label';
   @Input() optionValue: string = 'value';
@@ -75,6 +82,9 @@ export class SearchableDropdownComponent {
         this.selectedOption = selected;
         this.searchText = selected[this.optionLabel];
       }
+    } else {
+      this.selectedOption = null;
+      this.searchText = '';
     }
   }
   
