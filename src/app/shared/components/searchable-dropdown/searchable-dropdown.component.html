@@ -1,6 +1,6 @@
-<!-- searchable-dropdown.component.html -->
-<div class="form-group" #dropdown>
-    <label *ngIf="label" [class.field-required]="required">{{ label }}</label>
+
+<div class="form-group {{containerClass}}" #dropdown>
+    <label *ngIf="label" [class.field-required]="required"  [class]="labelClass">{{ label }}</label>
     <div class="dropdown-container" [class.dropdown-open]="isOpen">
       <div class="search-input-wrapper">
         <input 
@@ -10,14 +10,14 @@
           (ngModelChange)="filterOptions()"
           (click)="toggleDropdown()"
           [placeholder]="placeholder"
-         
+          [class]="inputClass"
         >
         <span class="dropdown-icon" (click)="toggleDropdown()"><i class="bi bi-chevron-down"></i></span>
       </div>
-      <div class="dropdown-options" *ngIf="isOpen">
+      <div class="dropdown-options {{dropdownClass}}" *ngIf="isOpen">
         <div 
           *ngFor="let option of filteredOptions" 
-          class="dropdown-option"
+          class="dropdown-option {{optionClass}}"
           (click)="selectOption(option)"
         >
           {{ option[optionLabel] }}

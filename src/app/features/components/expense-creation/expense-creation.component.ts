@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Expense } from '../../../models/Expense.model';
+import { Expense, ExpenseCreate } from '../../../models/Expense.model';
 import { ExpenseCategory } from '../../../enums/ExpenseCategory.enum';
 import { CustomerService } from '../../../services/customer.service';
 import { Customer } from '../../../models/Customer.model';
@@ -7,6 +7,7 @@ import { DestinationsService } from '../../../services/destinations.service';
 import { Destinations } from '../../../models/Destinations.model';
 import { ExpenseService } from '../../../services/expense.service';
 import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
+import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 
 @Component({
   selector: 'app-expense-creation',
@@ -16,21 +17,22 @@ import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
 })
 export class ExpenseCreationComponent {
   selectedCustomerId: string | number | null = null;
-
-  expense: Expense = {
-    expenseId: '',
+  newExpense: ExpenseCreate = {
     title: '',
-    category: ExpenseCategory.Miscellaneous,
+    categoryId: '',
     amount: 0,
     currency: 'USD',
     date: new Date(),
     createdByUserId: '',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    tax: undefined,
+    location: undefined,
+    description: undefined,
+    customerId: undefined,
+    tripId: undefined,
   };
 
   categories: ExpenseCategory[] = [];
-
+  user: any;
   customers: Customer[] = [];
   destinations: Destinations[] = [];
   expenseCategories: ExpenseCategories[] = [];
@@ -43,13 +45,19 @@ export class ExpenseCreationComponent {
   constructor(
     private customerService: CustomerService,
     private destinationService: DestinationsService,
-    private expenseService: ExpenseService
-  ) {}
+    private expenseService: ExpenseService,
+    private commonUtil: CommonUtil
+  ) {
+    this.resetForm();
+  }
 
   ngOnInit(): void {
     this.loadCustomers();
     this.loadDestinations();
     this.loadAllExpenceCategories();
+    this.user = this.commonUtil.getCurrentUser();
+    console.log(this.user.userId);
+    this.resetForm();
   }
 
   onCustomerSelect(selectedCustomer: Customer): void {
@@ -103,6 +111,50 @@ export class ExpenseCreationComponent {
         console.error('Error loading customers', err);
         this.isLoading = false;
       },
+    });
+  }
+
+  private resetForm(): void {
+    this.newExpense = {
+      title: '',
+      categoryId: '',
+      amount: 0,
+      currency: 'USD',
+      date: new Date(),
+      createdByUserId: this.user?.userId ?? '',
+      tax: undefined,
+      location: undefined,
+      description: undefined,
+      customerId: undefined,
+      tripId: undefined,
+    };
+  }
+
+  onSubmit(): void {
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+
+    const expenseToCreate: ExpenseCreate = {
+      ...this.newExpense,
+      date: this.newExpense.date,
+      amount: Number(this.newExpense.amount),
+      tax: this.newExpense.tax ? Number(this.newExpense.tax) : undefined,
+      categoryId: this.selectedCategory?.id,
+      customerId: this.selectedCustomer?.customerId, 
+      tripId: this.selectedDestination?.id,
+      createdByUserId: this.user?.userId
+    };
+
+    this.expenseService.createExpense(expenseToCreate).subscribe({
+      next: (response) => {
+        console.log('Expense created:', response);
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Error creating expense', err);
+      },
+      complete: () => (this.isLoading = false),
     });
   }
 }

@@ -1,10 +1,10 @@
 
 .form-group {
-    margin-bottom: 1rem;
-    position: relative;
-  }
+  margin-bottom: 1rem;
+  position: relative;
+}
   
-  .form-group label {
+ label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
@@ -12,7 +12,7 @@
     font-size: 14px;
   }
   
-  .form-group label.field-required:after {
+ label.field-required:after {
     content: " *";
     color: #e91e63;
   }
@@ -30,7 +30,7 @@
     position: relative;
   }
   
-  .search-input-wrapper input {
+   input {
     width: 100%;
     padding: 14px 16px;
     border: 1px solid #e0e0e0;
@@ -42,12 +42,12 @@
     cursor: pointer;
   }
   
-  .dropdown-open .search-input-wrapper input {
-    border-color: #e91e63;
-    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
-  }
+  // .dropdown-open input {
+  //   border-color: #e91e63;
+  //   box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+  // }
   
-  .search-input-wrapper input:focus {
+  input:focus {
     outline: none;
     border-color: #e91e63;
     box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
@@ -146,3 +146,47 @@
   .dropdown-options::-webkit-scrollbar-thumb:hover {
     background: #e91e63;
   }
+
+
+
+
+
+
+  // ----------------------------------
+
+
+  .ExpenseFilterInput {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background-color: #fafafa;
+    color: #333;
+    transition: all 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  
+  .ExpenseFilterInput:focus {
+    outline: none;
+    border-color: #5c0733;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(92, 7, 51, 0.08);
+  }
+  
+  .ExpenseFilterInput:hover {
+    border-color: #d0d0d0;
+    background-color: #f7f7f7;
+  }
+
+
+  .ExpenseFilterLabel{
+    font-size: 13px;
+    font-weight: 500;
+    color: #707070;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+

@@ -13,9 +13,12 @@ export class SearchableDropdownComponent {
   @Input() placeholder: string = 'Select an option';
   @Input() required: boolean = false;
   @Input() label: string = '';
-  
+  @Input() containerClass: string = '';
+  @Input() dropdownClass: string = '';
+  @Input() optionClass: string = '';
+  @Input() labelClass: string = '';
   @Output() selectionChange = new EventEmitter<any>();
-  
+  @Input() inputClass: string = '';
   @ViewChild('searchInput') searchInput!: ElementRef;
   @ViewChild('dropdown') dropdown!: ElementRef;
   

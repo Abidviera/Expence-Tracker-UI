@@ -10,7 +10,7 @@ import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
   styleUrl: './expenses-list.component.scss'
 })
 export class ExpensesListComponent {
-filterSection : boolean = false
+filterSection : boolean = true
 isLoading = false;
 expenseCategories: ExpenseCategories[] = [];
 selectedCategory: ExpenseCategories | null = null;
