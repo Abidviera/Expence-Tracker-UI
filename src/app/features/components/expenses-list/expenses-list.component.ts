@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ExpensePaginationRequest } from '../../../models/ExpensePaginationRequest.model';
 import { ExpenseService } from '../../../services/expense.service';
+import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
 
 @Component({
   selector: 'app-expenses-list',
@@ -10,8 +11,9 @@ import { ExpenseService } from '../../../services/expense.service';
 })
 export class ExpensesListComponent {
 filterSection : boolean = false
-
-
+isLoading = false;
+expenseCategories: ExpenseCategories[] = [];
+selectedCategory: ExpenseCategories | null = null;
 toggleFilters() {
   this.filterSection = !this.filterSection;
 }
@@ -28,10 +30,10 @@ filters: ExpensePaginationRequest = {
   sortDirection: 'asc',
   fromDate: '',
   toDate: '',
-  category: undefined,
   minAmount: undefined,
   maxAmount: undefined,
   customerId: undefined,
+  CategoryId: undefined,
   tripId: undefined
 };
 
@@ -40,6 +42,7 @@ constructor(private expenseService: ExpenseService) {}
 ngOnInit(){
   
   this.loadExpenses()
+  this.loadAllExpenceCategories()
 }
 loadExpenses() {
   this.expenseService.getPagedExpenses(this.filters).subscribe({
@@ -86,6 +89,16 @@ onCustomerFilter(customerId: string) {
   this.loadExpenses();
 }
 
+onCategoryFilter(CategoryId: string) {
+  this.filters.CategoryId = CategoryId || undefined;
+  
+  if (this.selectedCategory) {
+    this.selectedCategory.id = CategoryId;
+  }
+  this.filters.pageNumber = 1;
+  this.loadExpenses();
+}
+
 onSortChange(sortColumn: string, sortDirection: string) {
   this.filters.sortColumn = sortColumn;
   this.filters.sortDirection = sortDirection;
@@ -108,4 +121,26 @@ previousPage() {
 }
 
   
+
+loadAllExpenceCategories(): void {
+  this.isLoading = true;
+  this.expenseService.getAllExpenseCategories().subscribe({
+    next: (expenseCategories) => {
+      this.expenseCategories = expenseCategories;
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('Error loading customers', err);
+      this.isLoading = false;
+    },
+  });
+}
+
+
+onCategorySelect(selectedCategory: ExpenseCategories): void {
+  this.selectedCategory = selectedCategory;
+  console.log('selectedCategory:', selectedCategory);
+  this.onCategoryFilter(this.selectedCategory?.id);
+
+}
 }

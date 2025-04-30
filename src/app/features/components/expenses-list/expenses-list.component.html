@@ -38,21 +38,35 @@
             </div>
           </div>
           
-          <div class="filter-group">
+          <!-- <div class="filter-group">
             <label class="filter-label">Category</label>
             <div class="filter-control select">
         
-              <select>
+              <select >
                 <option value="">All Categories</option>
-                <option value="travel">Travel</option>
-                <option value="meals">Meals & Entertainment</option>
-                <option value="accommodation">Accommodation</option>
-                <option value="transportation">Transportation</option>
-                <option value="fuel">Fuel</option>
-                <option value="other">Other</option>
+              <option *ngFor="let category of expenseCategories" [value]="category.id">
+                {{ category.name }}
+              </option>
               </select>
             </div>
+          </div> -->
+
+          <div class="filter-group">
+            <app-searchable-dropdown
+            [options]="expenseCategories"
+            optionLabel="name"
+            optionValue="id"
+            [label]="'Category'"
+            [required]="true"
+            placeholder="Select a category"
+            (selectionChange)="onCategorySelect($event)"
+            [(ngModel)]="selectedCategory"
+          >
+          </app-searchable-dropdown>
           </div>
+
+
+          
           
           <div class="filter-group">
             <label class="filter-label">Min Amount</label>
@@ -189,7 +203,7 @@
             </td>
             <td>
               <span class="category-badge">
-                <i class="fas fa-utensils"></i> {{ expense.categoryName }}
+                <i class="fas fa-utensils"></i> {{ expense.category.name }}
               </span>
             </td>
             <td class="amount">{{ expense.amount }}</td>

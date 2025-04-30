@@ -3,6 +3,9 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpensePaginationRequest } from '../models/ExpensePaginationRequest.model';
+import { Expense } from '../models/Expense.model';
+import { ExpenseCategory } from '../enums/ExpenseCategory.enum';
+import { ExpenseCategories } from '../models/ExpenseCategories.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,4 +27,19 @@ getPagedExpenses(request: ExpensePaginationRequest): Observable<any> {
 
   return this.http.get(`${this.apiUrl}GetAllExpensesWithPagination`, { params });
 }
+
+
+createExpense(expense: Expense): Observable<Expense>{
+  return this.http.post<Expense>(`${this.apiUrl}CreateExpense`, expense)
+}
+
+getExpenseCategories(): ExpenseCategory[] {
+  return Object.values(ExpenseCategory);
+}
+
+
+
+  getAllExpenseCategories(): Observable<ExpenseCategories[]> {
+    return this.http.get<ExpenseCategories[]>(`${this.apiUrl}GetAllExpenseCategory`);
+  }
 }
