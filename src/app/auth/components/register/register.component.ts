@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
+import { ToasterService } from '../../../services/toaster.service';
 
 @Component({
   selector: 'app-register',
@@ -19,8 +20,9 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private notificationService: NotificationService,
-    private router: Router
+    private toasterService: ToasterService,
+    private router: Router,
+    private toastService: ToasterService,
   ) {
     this.registerForm = this.createForm();
   }
@@ -68,7 +70,7 @@ export class RegisterComponent {
       role: formValue.role
     }).subscribe({
       next: (response: any) => {
-        this.notificationService.showSuccess(
+        this.toasterService.success(
           response.message || 'Registration successful!'
         );
         this.router.navigate(['email-verification'], { 
@@ -80,7 +82,7 @@ export class RegisterComponent {
         const errorMessage = error.error?.message || 
                            error.message || 
                            'Registration failed';
-        this.notificationService.showError(errorMessage);
+        this.toasterService.error(errorMessage);
       },
       complete: () => {
         this.isLoading = false;

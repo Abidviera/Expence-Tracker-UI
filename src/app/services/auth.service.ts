@@ -14,6 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { LoginResponse, UserResponseDto } from '../auth/components/login/Interfaces/LoginResponse';
 import { AccountStatus } from '../enums/AccountStatus.enums';
 import { StorageService } from './storage.service';
+import { ToasterService } from './toaster.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,7 +27,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private notificationService: NotificationService,
+     private toasterService: ToasterService,
      private commonUtil: CommonUtil ,
      private storageService: StorageService
   ) {
@@ -119,25 +120,25 @@ export class AuthService {
       tap((response) => {
         if (response.success && response.token) {
           if (response.requiresVerification) {
-            this.notificationService.showError('Please verify your email to continue');
+            this.toasterService.error('Please verify your email to continue');
             this.router.navigate(['/email-verification'], {
               queryParams: { email: response.userDetails?.email || this.getUserInfo()?.email },
             });
           } 
           else if (response.requiresAdminApproval && response.accountStatus) {
             const statusMessage = this.getStatusMessage(response.accountStatus);
-            this.notificationService.showError(statusMessage);
+            this.toasterService.error(statusMessage);
           }
           else if (response.userDetails) {
             this.commonUtil.setCurrentUser(response.userDetails);
-            this.notificationService.showSuccess('Login successful!');
+            this.toasterService.success('Login successful!');
             this.router.navigate(['/features/dashboard'], { replaceUrl: true });
           }
         }
       }),
       catchError((error) => {
         const errorMessage = error.error?.message || error.message || 'Login failed';
-        this.notificationService.showError(errorMessage);
+        this.toasterService.error(errorMessage);
         return throwError(() => error);
       })
     );

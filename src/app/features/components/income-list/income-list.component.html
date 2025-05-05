@@ -6,8 +6,8 @@
         <button (click)="toggleFilters()" class="filter-button">
           <i class="fas fa-filter"></i> Filter
         </button>
-        <button class="btn btn-primary" routerLink="/features/ExpenseCreation">
-          <i class="fas fa-plus"></i> New Expense
+        <button class="btn btn-primary" routerLink="/features/incomes/new">
+          <i class="fas fa-plus"></i> New Income
         </button>
       </div>
     </div>
@@ -28,84 +28,50 @@
               <input
                 type="date"
                 [(ngModel)]="filters.fromDate"
-                (change)="
-                  onDateFilter($any($event.target).value, filters.toDate || '')
-                "
+                (ngModelChange)="onDateFilter(filters.fromDate || '', filters.toDate || '')"
                 placeholder="Start date"
               />
             </div>
           </div>
+
+        
+
           <div class="filter-group">
             <label class="filter-label">&nbsp;</label>
             <div class="filter-control">
               <input
                 type="date"
                 [(ngModel)]="filters.toDate"
-                (change)="
-                  onDateFilter(
-                    filters.fromDate || '',
-                    $any($event.target).value
-                  )
-                "
+                (ngModelChange)="onDateFilter(filters.fromDate || '', filters.toDate || '')"
                 placeholder="End date"
               />
             </div>
           </div>
         </div>
 
-        <app-searchable-dropdown
-          [options]="expenseCategories"
-          optionLabel="name"
-          optionValue="id"
-          [label]="'Category'"
-          [required]="true"
-          placeholder="Select a category"
-          (selectionChange)="onCategorySelect($event)"
-          [(ngModel)]="selectedCategory"
-          [inputClass]="'ExpenseFilterInput'"
-          [labelClass]="'ExpenseFilterLabel'"
-        >
-        </app-searchable-dropdown>
 
         <app-searchable-dropdown
-          [options]="customers"
-          optionLabel="name"
-          optionValue="id"
-          [label]="'Customer'"
-          [required]="true"
-          placeholder="Select a Customer"
-          (selectionChange)="onCustomerSelect($event)"
-          [(ngModel)]="selectedCustomer"
-          [inputClass]="'ExpenseFilterInput'"
-          [labelClass]="'ExpenseFilterLabel'"
-        >
-        </app-searchable-dropdown>
+        [options]="users"
+        optionLabel="fullName"
+        optionValue="userId"
+        [label]="'User'"
+        [required]="true"
+        placeholder="Select a User"
+        (selectionChange)="onUserSelect($event)"
+        [(ngModel)]="selectedUser"
+        [inputClass]="'ExpenseFilterInput'"
+        [labelClass]="'ExpenseFilterLabel'"
+      >
+      </app-searchable-dropdown>
 
-        <app-searchable-dropdown
-          [options]="destinations"
-          optionLabel="name"
-          optionValue="id"
-          [label]="'Trip'"
-          [required]="true"
-          placeholder="Select a Destination"
-          (selectionChange)="onTripSelect($event)"
-          [(ngModel)]="selectedDestination"
-          [inputClass]="'ExpenseFilterInput'"
-          [labelClass]="'ExpenseFilterLabel'"
-        >
-        </app-searchable-dropdown>
 
         <div class="filter-group">
           <label class="filter-label">Min Amount</label>
           <div class="filter-control">
             <input
               type="number"
-              (input)="
-                onAmountFilter(
-                  $any($event.target).valueAsNumber,
-                  filters.maxAmount || undefined
-                )
-              "
+              [(ngModel)]="filters.minAmount" 
+                           (ngModelChange)="onAmountFilter(filters.minAmount, filters.maxAmount)"
               placeholder="0.00"
             />
           </div>
@@ -117,24 +83,15 @@
             <input
               type="number"
               placeholder="Any"
-              (input)="
-                onAmountFilter(
-                  filters.minAmount || undefined,
-                  $any($event.target).valueAsNumber
-                )
-              "
+              [(ngModel)]="filters.maxAmount" 
+                           (ngModelChange)="onAmountFilter(filters.minAmount, filters.maxAmount)"
             />
           </div>
         </div>
       </div>
 
       <div class="active-filters" *ngIf="hasActiveFilters()">
-        <div class="active-filter" *ngIf="selectedCategory">
-          Category: {{ selectedCategory.name }}
-          <span (click)="clearCategory()" style="cursor: pointer">
-            <i class="fas fa-times-circle"></i>
-          </span>
-        </div>
+      
         <div class="active-filter" *ngIf="filters.fromDate || filters.toDate">
           Date: {{ filters.fromDate || "..." }} to
           {{ filters.toDate || "..." }}
@@ -142,8 +99,9 @@
             <i class="fas fa-times-circle"></i>
           </span>
         </div>
-        <div class="active-filter" *ngIf="selectedCustomer">
-          Customer: {{ selectedCustomer.name }}
+        
+        <div class="active-filter" *ngIf="selectedUser">
+          User: {{ selectedUser.firstName }} {{ selectedUser.lastName }}
           <span (click)="clearCustomer()" style="cursor: pointer">
             <i class="fas fa-times-circle"></i>
           </span>
@@ -162,12 +120,7 @@
           </span>
         </div>
 
-        <div class="active-filter" *ngIf="selectedDestination">
-          Trip: {{ selectedDestination.name }}
-          <span (click)="clearTrip()" style="cursor: pointer">
-            <i class="fas fa-times-circle"></i>
-          </span>
-        </div>
+      
       </div>
     </div>
 
@@ -176,7 +129,8 @@
         <i class="bi bi-search"></i>
         <input
           type="text"
-          (input)="onSearchChange($any($event.target).value)"
+          [(ngModel)]="filters.searchTerm" 
+          (ngModelChange)="onSearchChange(filters.searchTerm || '')"
           placeholder="Search title or description..."
         />
       </div>
@@ -191,51 +145,38 @@
       </div>
     </div>
 
+  
     <div class="table-container">
       <table>
         <thead>
           <tr>
+           
             <th>
-              Customer
+              User
               <i class="fas fa-sort sort-icon"></i>
             </th>
             <th
-              (click)="
-                onSortChange(
-                  'date',
-                  filters.sortDirection === 'asc' ? 'desc' : 'asc'
-                )
-              "
+            (click)="onSortChange('date', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
             >
               Date
               <i class="fas fa-sort-up sort-icon"></i>
-            </th>
+            </th> 
             <th
-              (click)="
-                onSortChange(
-                  'title',
-                  filters.sortDirection === 'asc' ? 'desc' : 'asc'
-                )
-              "
+            (click)="onSortChange('source', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
             >
-              Title & Description
-              <i class="fas fa-sort sort-icon"></i>
-            </th>
-            <th>
-              Status
-              <i class="fas fa-sort sort-icon"></i>
-            </th>
-            <th>
-              Category
+            Source
               <i class="fas fa-sort sort-icon"></i>
             </th>
             <th
-              (click)="
-                onSortChange(
-                  'amount',
-                  filters.sortDirection === 'asc' ? 'desc' : 'asc'
-                )
-              "
+            (click)="onSortChange('source', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
+            >
+            Description
+              <i class="fas fa-sort sort-icon"></i>
+            </th>
+          
+           
+            <th
+            (click)="onSortChange('amount', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
             >
               Amount
               <i class="fas fa-sort sort-icon"></i>
@@ -248,35 +189,31 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="table-row-highlight" *ngFor="let expense of expenses">
-            <td class="customer-cell">{{ expense.customer.name }}</td>
+          <tr class="table-row-highlight" *ngFor="let income of incomes">
+            
+            <td class="customer-cell">  {{ income.user?.firstName }} {{ income.user?.lastName || '' }}
+            </td>
             <td class="date-cell">
-              {{ expense.date | date }}
+             
+              {{ income.date | date }}
             </td>
             <td>
-              <div class="expense-title">{{ expense.title }}</div>
-              <div class="expense-description">
-                {{ expense.description }}
-              </div>
+              <div class="expense-title">{{ income.source }}</div>
             </td>
-            <td>
-              <span class="status-badge status-approved">
-                <i class="fas fa-check-circle"></i> Approved
-              </span>
+            <td class="expense-description">
+           
+                {{ income.description || '-' }}
+              
             </td>
-            <td>
-              <span class="category-badge">
-                <i class="fas fa-utensils"></i> {{ expense.category.name }}
-              </span>
-            </td>
-            <td class="amount">{{ expense.amount }}</td>
+          
+            <td class="amount">{{ income.amount | currency}}</td>
 
             <td>
               <div class="action-buttons">
-                <button class="action-btn action-update" data-tooltip="Edit">
+                <button class="action-btn action-update" (click)="editIncome(income.incomeId)">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn action-delete" data-tooltip="Delete">
+                <button (click)="deleteIncome(income.incomeId)" class="action-btn action-delete" >
                   <i class="fas fa-trash-alt"></i>
                 </button>
                 <button class="action-btn action-info" data-tooltip="Details">
@@ -294,10 +231,7 @@
 
     <!-- Pagination Section -->
     <div class="pagination">
-      <div class="pagination-info">
-        Showing {{ getStartItem() }}-{{ getEndItem() }} of
-        {{ totalRecords }} expenses
-      </div>
+      <div class="pagination-info">Showing {{getStartItem()}}-{{getEndItem()}} of {{totalRecords}} expenses</div>
       <div class="pagination-controls">
         <button
           class="pagination-btn"
@@ -307,22 +241,15 @@
           <i class="fas fa-chevron-left"></i> Previous
         </button>
         <div class="pagination-pages">
-          <button
-            *ngFor="let page of getPageNumbers()"
-            class="page-btn"
+          <button 
+            *ngFor="let page of getPageNumbers()" 
+            class="page-btn" 
             [class.active]="page === filters.pageNumber"
-            (click)="goToPage(page)"
-          >
-            {{ page }}
+            (click)="goToPage(page)">
+            {{page}}
           </button>
-          <button
-            *ngIf="
-              getTotalPages() > 5 && filters.pageNumber < getTotalPages() - 2
-            "
-            class="page-btn"
-          >
-            ...
-          </button>
+          <button *ngIf="getTotalPages() > 5 && filters.pageNumber < getTotalPages() - 2" 
+                  class="page-btn">...</button>
         </div>
         <button
           class="pagination-btn"
@@ -339,3 +266,24 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

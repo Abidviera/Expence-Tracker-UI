@@ -5,6 +5,7 @@ import { catchError, Observable, throwError } from "rxjs";
 import { NotificationService } from "../../services/notification.service";
 import { Injectable, Injector } from "@angular/core";
 import { CommonUtil } from "../../shared/utilities/CommonUtil";
+import { ToasterService } from "../../services/toaster.service";
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
     private authService!: AuthService;
@@ -12,7 +13,8 @@ export class JwtInterceptor implements HttpInterceptor {
     constructor(
       private injector: Injector,
       private router: Router,
-      private notificationService: NotificationService
+      private notificationService: NotificationService,
+      private toasterService: ToasterService,
     ) {}
   
     intercept(
@@ -69,16 +71,16 @@ export class JwtInterceptor implements HttpInterceptor {
     }
   
     private handleForbiddenError(): void {
-      this.notificationService.showError('You do not have permission to access this resource.');
+      this.toasterService.error('You do not have permission to access this resource.');
       this.router.navigate(['/']);
     }
   
     private handleServerError(): void {
-      this.notificationService.showError('Server error occurred. Please try again later.');
+      this.toasterService.error('Server error occurred. Please try again later.');
     }
   
     private handleGenericError(error: HttpErrorResponse): void {
       const errorMessage = error.error?.message || 'An unexpected error occurred';
-      this.notificationService.showError(errorMessage);
+      this.toasterService.error(errorMessage);
     }
 }

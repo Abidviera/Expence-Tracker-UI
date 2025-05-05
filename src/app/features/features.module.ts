@@ -7,12 +7,17 @@ import { SharedModule } from '../shared/shared.module';
 import { ExpensesListComponent } from './components/expenses-list/expenses-list.component';
 import { ExpenseCreationComponent } from './components/expense-creation/expense-creation.component';
 import { FormsModule } from '@angular/forms';
+import { IncomeCreationComponent } from './components/income-creation/income-creation.component';
+import { IncomeListComponent } from './components/income-list/income-list.component';
+
 
 @NgModule({
   declarations: [
     DashboardComponent,
     ExpensesListComponent,
     ExpenseCreationComponent,
+    IncomeCreationComponent,
+    IncomeListComponent,
     
   ],
   imports: [

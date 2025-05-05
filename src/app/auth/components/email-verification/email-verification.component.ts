@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
 import { AuthService } from '../../../services/auth.service';
+import { ToasterService } from '../../../services/toaster.service';
 
 @Component({
   selector: 'app-email-verification',
@@ -24,6 +25,7 @@ export class EmailVerificationComponent {
     private fb: FormBuilder,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
+    private toasterService: ToasterService,
     private authService: AuthService
   ) {}
 
@@ -35,7 +37,7 @@ export class EmailVerificationComponent {
     }
 
     if (!this.email) {
-      this.notificationService.showError('No email provided for verification');
+      this.toasterService.error('No email provided for verification');
       this.router.navigate(['']);
     }
 
@@ -102,7 +104,7 @@ export class EmailVerificationComponent {
 
   onSubmit(): void {
     if (!this.otpCode || this.otpCode.length !== 6) {
-      this.notificationService.showError('Please enter a valid 6-digit code');
+      this.toasterService.error('Please enter a valid 6-digit code');
       return;
     }
 
@@ -111,22 +113,23 @@ export class EmailVerificationComponent {
     this.authService.verifyEmail(this.email, this.otpCode).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.notificationService.showSuccess(response.message);
+        this.toasterService.success(response.message);
         this.router.navigate(['/login'], {
-          state: { emailVerified: true }
+          state: { emailVerified: true },
         });
       },
       error: (err) => {
         this.isLoading = false;
-        const errorMessage = err.error?.message || 'Verification failed. Please try again.';
-        this.notificationService.showError(errorMessage);
+        const errorMessage =
+          err.error?.message || 'Verification failed. Please try again.';
+        this.toasterService.error(errorMessage);
       },
     });
   }
 
   resendOtp(): void {
     if (!this.email) {
-      this.notificationService.showError('Email is required to resend OTP');
+      this.toasterService.error('Email is required to resend OTP');
       return;
     }
 
@@ -137,17 +140,15 @@ export class EmailVerificationComponent {
         this.resendLoading = false;
 
         if (response?.success) {
-          this.notificationService.showSuccess(response.message );
+          this.toasterService.success(response.message);
         }
-        this.notificationService.showError(
-          response?.message || 'Something went wrong.'
-        );
+        this.toasterService.error(response?.message || 'Something went wrong.');
         this.startCountdown();
       },
       error: (error) => {
         this.resendLoading = false;
         const msg = error?.error?.message || 'Resend failed. Please try again.';
-        this.notificationService.showError(msg);
+        this.toasterService.error(msg);
       },
     });
   }

@@ -58,6 +58,7 @@ export class SidebarComponent {
     { path: 'features/ExpensesList', title: 'Expenses', icon: 'fas fa-wallet' },
     { path: 'users', title: 'Users', icon: 'fas fa-users' },
     { path: 'travel-tours', title: 'Travel & Tours', icon: 'fas fa-route' },
+    { path: 'features/incomesList', title: 'Income', icon: 'fas fa-store' },
     
     { heading: 'Management' },
     { path: 'approvals', title: 'Approvals', icon: 'fas fa-check-circle' },

@@ -8,6 +8,7 @@ import { Destinations } from '../../../models/Destinations.model';
 import { ExpenseService } from '../../../services/expense.service';
 import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
+import { ToasterService } from '../../../services/toaster.service';
 
 @Component({
   selector: 'app-expense-creation',
@@ -30,6 +31,7 @@ export class ExpenseCreationComponent {
     private customerService: CustomerService,
     private destinationService: DestinationsService,
     private expenseService: ExpenseService,
+    private toasterService: ToasterService,
     private commonUtil: CommonUtil
   ) {
     this.resetForm();
@@ -100,11 +102,11 @@ export class ExpenseCreationComponent {
 
     this.expenseService.createExpense(payload).subscribe({
       next: (res) => {
-        console.log('Expense created:', res);
+        this.toasterService.success('Expense created Succesfull');
         this.resetForm();
       },
       error: (err) => {
-        console.error('Error creating expense', err);
+        this.toasterService.error('Error creating expense');
       },
       complete: () => (this.isLoading = false),
     });

@@ -11,4 +11,6 @@ export class User {
   updatedAt?: Date;
   isVerified?: boolean;
   accountStatus?: AccountStatus
+
+  
 }

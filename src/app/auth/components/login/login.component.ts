@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { NotificationService } from '../../../services/notification.service';
 import { Router } from '@angular/router';
 import { StorageService } from '../../../services/storage.service';
+import { ToasterService } from '../../../services/toaster.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private notificationService: NotificationService,
+     private toasterService: ToasterService,
     private router: Router,
     private storageService: StorageService
     

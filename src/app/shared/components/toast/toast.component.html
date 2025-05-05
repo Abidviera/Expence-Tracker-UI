@@ -1,0 +1,29 @@
+<div class="toast-container">
+    <div 
+      *ngFor="let message of messages"
+      [@toastAnimation]
+      [ngClass]="getColorClass(message.type)"
+      class="toast-message"
+    >
+      <div class="toast-icon">
+        <i *ngIf="message.icon" class="{{ message.icon }}"></i>
+      </div>
+      
+      <div class="toast-content">
+        <div class="toast-title" *ngIf="message.title">{{ message.title }}</div>
+        <div  class="toast-text">{{ message.message }}</div>
+      </div>
+      
+      <button 
+        *ngIf="message.showClose"
+        class="toast-close" 
+        (click)="removeMessage(message.id)"
+      >
+        close
+      </button>
+    </div>
+  </div>
+
+
+
+  

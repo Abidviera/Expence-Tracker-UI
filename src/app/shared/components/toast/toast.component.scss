@@ -1,0 +1,185 @@
+
+  .toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .toast-message {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.3s ease forwards, fadeIn 0.3s ease forwards;
+    transform-origin: top right;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .toast-message.toast-exit {
+    animation: slideOut 0.3s ease forwards, fadeOut 0.3s ease forwards;
+  }
+
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(120%);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .toast-message::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .toast-message::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+    animation: progressBar 5s linear forwards;
+  }
+
+  @keyframes progressBar {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+
+  .toast-icon {
+    margin-right: 12px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .toast-content {
+    flex: 1;
+  }
+
+  .toast-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  .toast-text {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  .toast-close {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 16px;
+    margin-left: 8px;
+  }
+
+  .toast-close:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+  }
+
+  .toast-success {
+    background: linear-gradient(45deg, #43a047, #66bb6a);
+  }
+
+  .toast-error {
+    background: linear-gradient(45deg, #e53935, #f44336);
+  }
+
+  .toast-warning {
+    background: linear-gradient(45deg, #fb8c00, #ff9800);
+  }
+
+  .toast-info {
+    background: linear-gradient(45deg, #1e88e5, #42a5f5);
+  }
+
+  .toast-custom {
+    background: linear-gradient(45deg, #8e24aa, #ab47bc);
+  }
+
+  /* Material Icons */
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
