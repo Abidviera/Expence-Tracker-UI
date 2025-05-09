@@ -9,6 +9,9 @@ export interface IncomePaginationRequest {
   minAmount?: number;
   maxAmount?: number;
   userId?: string;
+  CategoryId?: string;
+  TripId?: string;
+  CustomerId?: string;
   }
 
 

@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { ExpensePaginationRequest } from '../../../models/ExpensePaginationRequest.model';
 import { ExpenseService } from '../../../services/expense.service';
-import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
+import { Categories } from '../../../models/ExpenseCategories.model';
 import { Customer } from '../../../models/Customer.model';
 import { Destinations } from '../../../models/Destinations.model';
 import { CustomerService } from '../../../services/customer.service';
 import { DestinationsService } from '../../../services/destinations.service';
+import { CategoryService } from '../../../services/category.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-expenses-list',
@@ -16,10 +18,10 @@ import { DestinationsService } from '../../../services/destinations.service';
 export class ExpensesListComponent {
   filterSection: boolean = false;
   isLoading = false;
-  expenseCategories: ExpenseCategories[] = [];
+  Categories: Categories[] = [];
   customers: Customer[] = [];
   destinations: Destinations[] = [];
-  selectedCategory: ExpenseCategories | null = null;
+  selectedCategory: Categories | null = null;
   selectedCustomer: Customer | null = null;
   selectedDestination: Destinations | null = null;
   expenses: any[] = [];
@@ -43,7 +45,9 @@ export class ExpensesListComponent {
   constructor(
     private expenseService: ExpenseService,
     private customerService: CustomerService,
-    private destinationService: DestinationsService
+    private categoryService: CategoryService,
+    private destinationService: DestinationsService,
+        private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -158,9 +162,9 @@ export class ExpensesListComponent {
 
   loadAllExpenceCategories(): void {
     this.isLoading = true;
-    this.expenseService.getAllExpenseCategories().subscribe({
-      next: (expenseCategories) => {
-        this.expenseCategories = expenseCategories;
+    this.categoryService.getAllCategories().subscribe({
+      next: (category) => {
+        this.Categories = category;
         this.isLoading = false;
       },
       error: (err) => {
@@ -196,7 +200,7 @@ export class ExpensesListComponent {
     });
   }
 
-  onCategorySelect(selectedCategory: ExpenseCategories): void {
+  onCategorySelect(selectedCategory: Categories): void {
     this.selectedCategory = selectedCategory;
     console.log('selectedCategory:', selectedCategory);
     this.onCategoryFilter(this.selectedCategory?.id);
@@ -326,5 +330,11 @@ export class ExpensesListComponent {
       this.filters.pageNumber = page;
       this.loadExpenses();
     }
+  }
+
+
+  editIncome(expenseId: string): void {
+    this.router.navigate(['/features/expense/edit', expenseId]);
+    console.log(expenseId)
   }
 }

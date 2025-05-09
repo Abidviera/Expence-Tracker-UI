@@ -126,6 +126,8 @@ textarea {
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 14px;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-secondary {
@@ -147,6 +149,26 @@ textarea {
     box-shadow: 0 6px 14px rgba(140, 11, 78, 0.3);
     transform: translateY(-1px);
 }
+
+
+.btn-view-list {
+    background: linear-gradient(135deg, #5c0733, #8c0b4e);
+    color: white;
+    box-shadow: 0 4px 10px rgba(140, 11, 78, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-view-list:hover {
+    box-shadow: 0 6px 14px rgba(140, 11, 78, 0.3);
+    transform: translateY(-1px);
+}
+
+.view-list {
+    margin-right: auto;
+}
+
 
 .field-required::after {
     content: '*';

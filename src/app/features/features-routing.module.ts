@@ -15,7 +15,8 @@ const routes: Routes = [
   {path: 'ExpenseCreation', component:ExpenseCreationComponent, canActivate: [AuthGuard] },
   {path: 'incomes/new', component:IncomeCreationComponent, canActivate: [AuthGuard] },
   { path: 'incomesList', component: IncomeListComponent, canActivate: [AuthGuard]  },
-  { path: 'incomes/edit/:id', component: IncomeCreationComponent },
+  { path: 'incomes/edit/:id', component: IncomeCreationComponent ,canActivate: [AuthGuard]},
+  { path: 'expense/edit/:id', component: ExpenseCreationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

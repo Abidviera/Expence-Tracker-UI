@@ -3,9 +3,9 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpensePaginationRequest } from '../models/ExpensePaginationRequest.model';
-import { Expense, ExpenseCreate } from '../models/Expense.model';
-import { ExpenseCategory } from '../enums/ExpenseCategory.enum';
-import { ExpenseCategories } from '../models/ExpenseCategories.model';
+import { Expense, ExpenseCreate, ExpenseUpdateDto } from '../models/Expense.model';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -34,8 +34,16 @@ createExpense(expense: ExpenseCreate): Observable<Expense>{
 }
 
 
+  getExpenseById(expenseId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}GetExpenseById/${expenseId}`);
+  }
 
-  getAllExpenseCategories(): Observable<ExpenseCategories[]> {
-    return this.http.get<ExpenseCategories[]>(`${this.apiUrl}GetAllExpenseCategory`);
+
+    updateExpense(expenseId: string, expense: ExpenseUpdateDto): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}${expenseId}`, expense);
+  }
+
+  deleteExpense(expenseId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/DeleteExpense/${expenseId}`);
   }
 }

@@ -54,7 +54,7 @@
         </div>
 
         <app-searchable-dropdown
-          [options]="expenseCategories"
+          [options]="Categories"
           optionLabel="name"
           optionValue="id"
           [label]="'Category'"
@@ -273,7 +273,7 @@
 
             <td>
               <div class="action-buttons">
-                <button class="action-btn action-update" data-tooltip="Edit">
+                <button class="action-btn action-update"  (click)="editIncome(expense.expenseId)">
                   <i class="fas fa-edit"></i>
                 </button>
                 <button class="action-btn action-delete" data-tooltip="Delete">

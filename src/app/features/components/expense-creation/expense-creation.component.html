@@ -22,7 +22,7 @@
 
 
             <app-searchable-dropdown
-            [options]="expenseCategories"
+            [options]="categories"
             optionLabel="name"
             optionValue="id"
             [label]="'Category'"
@@ -101,8 +101,12 @@
       </div>
 
       <div class="form-footer">
-        <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
-        <button type="submit" class="btn btn-primary" (click)="submitExpense()">Create Expense</button>
+          <button type="button" class="btn btn-view-list view-list" routerLink="/features/ExpensesList">
+             <i class="fa fa-list"></i> 
+           View List
+          </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">  <i  class="fa fa-refresh"></i> Reset</button>
+        <button type="submit" class="btn btn-primary" (click)="submitExpense()" >Create Expense</button>
       </div>
     </div>
   </div>

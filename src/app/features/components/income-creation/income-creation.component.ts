@@ -4,6 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IncomeService } from '../../../services/income.service';
 import { IncomeDto } from '../../../models/Income.model';
 import { ToasterService } from '../../../services/toaster.service';
+import { Customer } from '../../../models/Customer.model';
+import { Destinations } from '../../../models/Destinations.model';
+import { Categories } from '../../../models/ExpenseCategories.model';
+import { CustomerService } from '../../../services/customer.service';
+import { DestinationsService } from '../../../services/destinations.service';
+import { CategoryService } from '../../../services/category.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-income-creation',
@@ -12,44 +19,84 @@ import { ToasterService } from '../../../services/toaster.service';
   styleUrl: './income-creation.component.scss',
 })
 export class IncomeCreationComponent {
-  income: IncomeDto = {
-    incomeId: undefined,
-    source: '',
-    amount: 0,
-    date: new Date(),
-    description: '',
-    addedBy: '',
-  };
+  isLoading = false;
   isEditMode = false;
+  customers: Customer[] = [];
+  destinations: Destinations[] = [];
+  Categories: Categories[] = [];
+
+  selectedCategory: Categories | null = null;
+  selectedCustomer: Customer | null = null;
+  selectedTrip: Destinations | null = null;
+
+  income: IncomeDto = this.getDefaultIncome();
+
   constructor(
     private incomeService: IncomeService,
     private commonUtil: CommonUtil,
     private route: ActivatedRoute,
     private router: Router,
-    private toastService: ToasterService
+    private toastService: ToasterService,
+    private customerService: CustomerService,
+    private destinationService: DestinationsService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
+    this.initializeComponent();
+  }
+
+  private initializeComponent(): void {
     const incomeId = this.route.snapshot.paramMap.get('id');
-    if (incomeId) {
-      this.isEditMode = true;
-      this.loadIncomeForEdit(incomeId);
-    } else {
-      this.income.addedBy = this.commonUtil.getCurrentUser()?.userId ?? '';
-    }
+    forkJoin({
+      customers: this.customerService.getCustomers(),
+      destinations: this.destinationService.getAllDestinations(),
+      categories: this.categoryService.getAllCategories(),
+    }).subscribe({
+      next: ({ customers, destinations, categories }) => {
+        this.customers = customers;
+        this.destinations = destinations;
+        this.Categories = categories;
+
+        if (incomeId) {
+          this.isEditMode = true;
+          this.loadIncomeForEdit(incomeId);
+        } else {
+          this.income.addedBy = this.commonUtil.getCurrentUser()?.userId ?? '';
+        }
+      },
+      error: (err) => {
+        console.error('Error loading initial data', err);
+        this.toastService.error('Error loading initial data');
+      },
+    });
+  }
+
+  private getDefaultIncome(): IncomeDto {
+    return {
+      incomeId: undefined,
+      source: '',
+      amount: 0,
+      tax: 0,
+      date: new Date(),
+      description: '',
+      location: '',
+      addedBy: '',
+      categoryId: '',
+      customerId: '',
+      tripId: '',
+    };
   }
 
   loadIncomeForEdit(incomeId: string): void {
     this.incomeService.getIncomeById(incomeId).subscribe({
       next: (income) => {
         this.income = {
-          incomeId: income.incomeId,
-          source: income.source,
-          amount: income.amount,
+          ...income,
           date: new Date(income.date),
-          description: income.description || '',
-          addedBy: income.addedBy,
         };
+        console.log(income)
+        this.setSelectedObjects(income);
       },
       error: () => {
         this.toastService.error('Error loading income for edit');
@@ -57,51 +104,80 @@ export class IncomeCreationComponent {
       },
     });
   }
+
+  private setSelectedObjects(income: IncomeDto): void {
+    this.selectedCategory =
+      this.Categories.find((c) => c.id === income.categoryId) || null;
+    this.selectedCustomer =
+      this.customers.find((c) => c.customerId === income.customerId) || null;
+    this.selectedTrip =
+      this.destinations.find((d) => d.id === income.tripId) || null;
+  }
+
   submitIncome(): void {
+    this.income.tax = 0;
     if (this.isEditMode && this.income.incomeId) {
-      this.incomeService
-        .updateIncome(this.income.incomeId, this.income)
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/incomes']);
-            this.toastService.success('Updated Successfully');
-          },
-          error: (err) => {
-            this.toastService.error('Error updating income:', err);
-          },
-        });
+      this.updateIncome();
     } else {
-      this.incomeService.createIncome(this.income).subscribe({
-        next: (createdIncome) => {
-          this.router.navigate(['/incomes', createdIncome.incomeId]);
-          this.toastService.success('Income Created Successfully');
+      this.createIncome();
+    }
+  }
+
+  private updateIncome(): void {
+    this.incomeService
+      .updateIncome(this.income.incomeId!, this.income)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/incomes']);
+          this.toastService.success('Updated Successfully');
           this.resetForm();
         },
-        error: () => {
-          this.toastService.error('Error creating income');
+        error: (err) => {
+          this.toastService.error('Error updating income:', err);
         },
       });
-    }
+  }
+
+  private createIncome(): void {
+    this.incomeService.createIncome(this.income).subscribe({
+      next: (createdIncome) => {
+        this.router.navigate(['/incomes', createdIncome.incomeId]);
+        this.toastService.success('Income Created Successfully');
+        this.resetForm();
+      },
+      error: () => {
+        this.toastService.error('Error creating income');
+      },
+    });
   }
 
   resetForm(): void {
     this.income = {
       source: '',
       amount: 0,
+      tax: 0,
       date: new Date(),
       addedBy: this.commonUtil.getCurrentUser()?.userId ?? '',
+      categoryId: '',
+      location: '',
+      customerId: '',
+      tripId: '',
     };
+    this.selectedCategory = null;
+    this.selectedCustomer = null;
+    this.selectedTrip = null;
   }
 
-  // private validateForm(): boolean {
-  //   if (
-  //     !this.income.source ||
-  //     this.income.amount <= 0 ||
-  //     !this.income.addedBy
-  //   ) {
-     
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  onCustomerSelect(customer: Customer): void {
+    this.income.customerId = customer?.customerId;
+    this.selectedCustomer = customer || null;
+  }
+  onTripSelect(destination: Destinations): void {
+    this.income.tripId = destination?.id;
+    this.selectedTrip = destination || null;
+  }
+  onCategorySelect(category: Categories): void {
+    this.income.categoryId = category?.id;
+    this.selectedCategory = category || null;
+  }
 }

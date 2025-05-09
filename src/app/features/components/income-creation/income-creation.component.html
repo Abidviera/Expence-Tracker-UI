@@ -1,63 +1,116 @@
 <div class="ExpenceCreation">
-    <div class="container-fluid">
-      <div class="form-card">
-        <div class="form-header">
-          <h2>{{ isEditMode ? 'Edit Income' : 'Create Income' }}</h2>
-          <p>Enter the details for your new Income record</p>
-        </div>
-  
-        <div class="form-body">
-          <div class="form-section">
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="title" class="field-required">Source</label>
+  <div class="container-fluid">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>{{ isEditMode ? "Edit Income" : "Create Income" }}</h2>
+        <p>Enter the details for your new Income record</p>
+      </div>
+
+      <div class="form-body">
+        <div class="form-section">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="title" class="field-required">Source</label>
+              <input
+                type="text"
+                id="title"
+                placeholder="Enter the Source"
+                required
+                [(ngModel)]="income.source"
+              />
+            </div>
+
+            <app-searchable-dropdown
+              [options]="Categories"
+              optionLabel="name"
+              optionValue="id"
+              [label]="'Category'"
+              [required]="true"
+              placeholder="Select a category"
+              (selectionChange)="onCategorySelect($event)"
+              [(ngModel)]="income.categoryId"
+            >
+            </app-searchable-dropdown>
+
+            <app-searchable-dropdown
+              [options]="customers"
+              optionLabel="name"
+              optionValue="customerId"
+              [label]="'Customer'"
+              [required]="true"
+              placeholder="Select a Customer"
+              (selectionChange)="onCustomerSelect($event)"
+              [(ngModel)]="income.customerId"
+            >
+            </app-searchable-dropdown>
+
+            <app-searchable-dropdown
+              [options]="destinations"
+              optionLabel="name"
+              optionValue="id"
+              [label]="'Trip'"
+              [required]="true"
+              placeholder="Associated trip"
+              (selectionChange)="onTripSelect($event)"
+              [(ngModel)]="income.tripId"
+            >
+            </app-searchable-dropdown>
+
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input
+                type="text"
+                id="location"
+                placeholder="Where was this expense made?"
+                [(ngModel)]="income.location"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="amount" class="field-required">Amount</label>
+              <div class="input-with-icon">
                 <input
-                  type="text"
-                  id="title"
-                  placeholder="Enter the Source"
+                  type="number"
+                  id="amount"
+                  placeholder="0.00"
+                  step="0.01"
                   required
-                  [(ngModel)]="income.source"
+                  [(ngModel)]="income.amount"
                 />
               </div>
-  
-  
-           
-  
-             
-  
-              <div class="form-group">
-                <label for="amount" class="field-required">Amount</label>
-                <div class="input-with-icon">
-                  <input
-                    type="number"
-                    id="amount"
-                    placeholder="0.00"
-                    step="0.01"
-                    required
-                    [(ngModel)]="income.amount"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <div class="form-grid">
-            <div class="form-group full-width">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                placeholder="Add notes or additional details about this Income"
-                [(ngModel)]="income.description"
-              ></textarea>
             </div>
           </div>
         </div>
-  
-        <div class="form-footer">
-          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
-          <button type="submit" class="btn btn-primary" (click)="submitIncome()"> {{ isEditMode ? 'Update' : 'Create' }}</button>
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              placeholder="Add notes or additional details about this Income"
+              [(ngModel)]="income.description"
+            ></textarea>
+          </div>
         </div>
+      </div>
+
+      <div class="form-footer">
+        <button
+          type="button"
+          class="btn btn-view-list view-list"
+          routerLink="/features/incomesList"
+        >
+          <i class="fa fa-list"></i>
+          View List
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">
+          <i class="fa fa-refresh"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="submitIncome()">
+          <i [ngClass]="isEditMode ? 'bi bi-pencil' : 'bi bi-plus-lg'"></i>
+          {{ isEditMode ? "Update" : "Create" }}
+        </button>
       </div>
     </div>
   </div>
-  
+</div>

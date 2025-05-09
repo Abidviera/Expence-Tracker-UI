@@ -2,21 +2,31 @@ import { User } from "./user.model";
 
 export interface Income {
     incomeId: string;
-    source: string;
-    amount: number;
-    date: Date;
-    description?: string;
-    addedBy: string;
-    createdAt: Date;
-    updatedAt: Date;
-    user?: User;
+  source: string;
+  categoryId: string;
+  tripId?: string;
+  amount: number;
+  tax?: number;
+  date: Date;
+  location?: string;
+  description?: string;
+  customerId?: string;
+  addedBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  addedByUser?: User;
   }
   
   export interface IncomeDto {
-    incomeId?: string;
-    source: string;
-    amount: number;
-    date: Date;
-    description?: string;
-    addedBy: string;
+   incomeId?: string; 
+   source: string;
+  categoryId: string;
+  tripId?: string;
+  amount: number;
+  tax?: number;
+  date: Date;
+  location?: string;
+  description?: string;
+  customerId?: string;
+  addedBy: string;
   }

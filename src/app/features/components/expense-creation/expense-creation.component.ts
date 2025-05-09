@@ -6,9 +6,10 @@ import { Customer } from '../../../models/Customer.model';
 import { DestinationsService } from '../../../services/destinations.service';
 import { Destinations } from '../../../models/Destinations.model';
 import { ExpenseService } from '../../../services/expense.service';
-import { ExpenseCategories } from '../../../models/ExpenseCategories.model';
+import { Categories } from '../../../models/ExpenseCategories.model';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 import { ToasterService } from '../../../services/toaster.service';
+import { CategoryService } from '../../../services/category.service';
 
 @Component({
   selector: 'app-expense-creation',
@@ -20,11 +21,11 @@ export class ExpenseCreationComponent {
   selectedCustomerId: string | number | null = null;
   expense: ExpenseCreate = this.getEmptyExpense();
 
-  categories: ExpenseCategory[] = [];
+  categories: Categories[] = [];
   userId = '';
   customers: Customer[] = [];
   destinations: Destinations[] = [];
-  expenseCategories: ExpenseCategories[] = [];
+
   isLoading = false;
 
   constructor(
@@ -32,7 +33,8 @@ export class ExpenseCreationComponent {
     private destinationService: DestinationsService,
     private expenseService: ExpenseService,
     private toasterService: ToasterService,
-    private commonUtil: CommonUtil
+    private commonUtil: CommonUtil,
+    private categoryService: CategoryService,
   ) {
     this.resetForm();
   }
@@ -61,7 +63,7 @@ export class ExpenseCreationComponent {
   onTripSelect(destination: Destinations): void {
     this.expense.tripId = destination?.id;
   }
-  onCategorySelect(category: ExpenseCategories): void {
+  onCategorySelect(category: Categories): void {
     this.expense.categoryId = category?.id;
   }
 
@@ -77,8 +79,8 @@ export class ExpenseCreationComponent {
       error: (err) => console.error('Error loading destinations', err),
     });
 
-    this.expenseService.getAllExpenseCategories().subscribe({
-      next: (data) => (this.expenseCategories = data),
+    this.categoryService.getAllCategories().subscribe({
+      next: (data) => (this.categories = data),
       error: (err) => console.error('Error loading categories', err),
       complete: () => (this.isLoading = false),
     });
