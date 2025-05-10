@@ -387,6 +387,36 @@
     gap: 8px;
   }
   
+.btn-excel {
+  background-color: #e2f0d9;
+  color: #107c41; /* Excel green color */
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-excel:hover {
+  background-color: #cee6be;
+  box-shadow: 0 2px 6px rgba(16, 124, 65, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-excel:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(16, 124, 65, 0.2);
+}
+
+.btn-excel i {
+  font-size: 16px;
+}
+
 
 
   .btn-primary {
@@ -417,6 +447,22 @@
   .btn-secondary:hover {
     background-color: #eddee6;
   }
+
+
+  @media (max-width: 768px) {
+  .actions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .btn-excel, .btn-secondary, .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
   
   .table-container {
     overflow-x: auto;

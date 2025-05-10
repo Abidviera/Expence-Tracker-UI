@@ -181,11 +181,14 @@
         />
       </div>
 
-      <div class="actions-section" *ngIf="filterSection">
-        <button class="btn btn-secondary" (click)="resetFilters()">
+      <div class="actions-section" >
+        <button class="btn btn-secondary export-btn">
+          <i class="fas fa-file-excel"></i> Export to Excel
+        </button>
+        <button *ngIf="filterSection" class="btn btn-secondary" (click)="resetFilters()">
           <i class="fas fa-undo"></i> Reset Filters
         </button>
-        <button class="btn btn-primary">
+        <button *ngIf="filterSection" class="btn btn-primary">
           <i class="fas fa-filter"></i> Apply Filters
         </button>
       </div>
@@ -273,7 +276,7 @@
 
             <td>
               <div class="action-buttons">
-                <button class="action-btn action-update"  (click)="editIncome(expense.expenseId)">
+                <button class="action-btn action-update"  (click)="editExpense(expense)">
                   <i class="fas fa-edit"></i>
                 </button>
                 <button class="action-btn action-delete" data-tooltip="Delete">

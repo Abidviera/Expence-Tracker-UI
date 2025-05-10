@@ -10,6 +10,7 @@ import { Categories } from '../../../models/ExpenseCategories.model';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 import { ToasterService } from '../../../services/toaster.service';
 import { CategoryService } from '../../../services/category.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-expense-creation',
@@ -20,7 +21,8 @@ import { CategoryService } from '../../../services/category.service';
 export class ExpenseCreationComponent {
   selectedCustomerId: string | number | null = null;
   expense: ExpenseCreate = this.getEmptyExpense();
-
+  isEditMode = false;
+  expenseId: string | null = null;
   categories: Categories[] = [];
   userId = '';
   customers: Customer[] = [];
@@ -35,6 +37,8 @@ export class ExpenseCreationComponent {
     private toasterService: ToasterService,
     private commonUtil: CommonUtil,
     private categoryService: CategoryService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.resetForm();
   }

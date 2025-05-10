@@ -1,0 +1,26 @@
+<div class="confirmation-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">{{ title }}</h4>
+      <button type="button" class="close-btn" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="modal-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <p class="modal-message">{{ message }}</p>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="activeModal.dismiss()">
+        <i class="fas fa-times-circle"></i> Cancel
+      </button>
+      <button type="button" class="btn btn-confirm" (click)="confirm()">
+        <i class="fas fa-check-circle"></i> Confirm
+      </button>
+    </div>
+  </div>
+</div>

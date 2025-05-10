@@ -1,0 +1,177 @@
+
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: 16px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      position: relative;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #5c0733;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #888;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .close-button:hover {
+      color: #5c0733;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-message {
+      margin-bottom: 24px;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .export-options {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .export-option {
+      flex: 1;
+      padding: 20px;
+      border: 2px solid #e8e8e8;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .export-option:hover {
+      border-color: #5c0733;
+      background-color: #f9f5f7;
+      transform: translateY(-2px);
+    }
+
+    .export-option.selected {
+      border-color: #5c0733;
+      background-color: #f9f5f7;
+    }
+
+    .export-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      color: #5c0733;
+    }
+
+    .export-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .export-desc {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 16px 24px;
+      border-top: 1px solid #f0f0f0;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-cancel {
+      background-color: #f2f2f2;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background-color: #e5e5e5;
+    }
+
+    .btn-export {
+      background: linear-gradient(135deg, #5c0733, #8c0b4e);
+      color: white;
+      box-shadow: 0 4px 15px rgba(92, 7, 51, 0.2);
+    }
+
+    .btn-export:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(92, 7, 51, 0.3);
+    }
+
+    .btn-export:active {
+      transform: translateY(0);
+    }
+
+    .btn-export:disabled {
+      background: linear-gradient(135deg, #a9a9a9, #888);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    @media (max-width: 480px) {
+      .export-options {
+        flex-direction: column;
+      }
+    }

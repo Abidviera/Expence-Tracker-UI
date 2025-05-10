@@ -8,6 +8,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { DestinationsService } from '../../../services/destinations.service';
 import { CategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
+import { Expense } from '../../../models/Expense.model';
 
 @Component({
   selector: 'app-expenses-list',
@@ -333,8 +334,12 @@ export class ExpensesListComponent {
   }
 
 
-  editIncome(expenseId: string): void {
-    this.router.navigate(['/features/expense/edit', expenseId]);
-    console.log(expenseId)
-  }
+
+// In your ExpenseListComponent
+editExpense(expense: any) {
+  console.log(expense)
+  this.router.navigate(['/features/ExpenseCreation'], { 
+    state: { expense: expense } 
+  });
+}
 }

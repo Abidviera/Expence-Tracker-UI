@@ -9,6 +9,7 @@ import { ExpenseCreationComponent } from './components/expense-creation/expense-
 import { FormsModule } from '@angular/forms';
 import { IncomeCreationComponent } from './components/income-creation/income-creation.component';
 import { IncomeListComponent } from './components/income-list/income-list.component';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { IncomeListComponent } from './components/income-list/income-list.compon
     CommonModule,
     FeaturesRoutingModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    NgbModalModule
   ]
 })
 export class FeaturesModule { }

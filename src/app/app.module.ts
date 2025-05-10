@@ -9,6 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } fro
 import { JwtInterceptor } from './auth/interceptors/JwtInterceptor.service';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { SharedModule } from './shared/shared.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     FormsModule,
     SharedModule,
-    HttpClientModule
+    NgbModule
   ],
   providers: [
     provideHttpClient(withFetch()),

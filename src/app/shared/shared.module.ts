@@ -5,11 +5,14 @@ import { SearchableDropdownComponent } from './components/searchable-dropdown/se
 import { FormsModule } from '@angular/forms';
 import { ToastComponent } from './components/toast/toast.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ExportModalComponent } from './modals/export-modal/export-modal.component';
 
 
 @NgModule({
-  declarations: [SidebarComponent,  SearchableDropdownComponent,  ToastComponent],
-  imports: [CommonModule, FormsModule,  MatIconModule, ],
-  exports: [SidebarComponent,  SearchableDropdownComponent , ToastComponent],
+  declarations: [SidebarComponent,  SearchableDropdownComponent,  ToastComponent, ConfirmationModalComponent, ExportModalComponent],
+  imports: [CommonModule, FormsModule,  MatIconModule, NgbModule],
+  exports: [SidebarComponent,  SearchableDropdownComponent , ToastComponent, ConfirmationModalComponent, NgbModule, ExportModalComponent],
 })
 export class SharedModule {}

@@ -10,6 +10,10 @@ import { IncomePaginationRequest } from '../../../models/IncomePaginationRequest
 import { User } from '../../../models/user.model';
 import { UserService } from '../../../services/user.service';
 import { CategoryService } from '../../../services/category.service';
+import { ModalService } from '../../../services/modal.service';
+import { ExportService } from '../../../services/export.service';
+import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
+import { animation } from '@angular/animations';
 
 @Component({
   selector: 'app-income-list',
@@ -20,7 +24,7 @@ import { CategoryService } from '../../../services/category.service';
 export class IncomeListComponent {
   filterSection = false;
   isLoading = false;
-
+   exportPopup = false;
   selectedCategory: Categories | null = null;
   selectedCustomer: Customer | null = null;
   selectedDestination: Destinations | null = null;
@@ -54,7 +58,9 @@ export class IncomeListComponent {
     private userService: UserService,
     private customerService: CustomerService,
     private categoryService: CategoryService,
-    private destinationService: DestinationsService
+    private destinationService: DestinationsService,
+     private modalService: ModalService,
+      private exportService: ExportService 
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +81,9 @@ export class IncomeListComponent {
     });
   }
 
+  exportPopups(){
+    this.exportPopup = !this.exportPopup
+  }
   loadAllCategories(): void {
     this.isLoading = true;
     this.categoryService.getAllCategories().subscribe({
@@ -263,20 +272,25 @@ export class IncomeListComponent {
     }
   }
 
-  deleteIncome(incomeId: string): void {
-    if (confirm('Are you sure you want to delete this income?')) {
-      this.incomeService.deleteIncome(incomeId).subscribe({
-        next: () => {
-          this.incomes = this.incomes.filter(
-            (income) => income.incomeId !== incomeId
-          );
-          this.loadIncomes();
-        },
-        error: (err) => {
-          console.error('Error deleting income:', err);
-        },
-      });
-    }
+   deleteIncome(incomeId: string): void {
+    this.modalService.confirm(
+      'Delete Income',
+      'Are you sure you want to delete this income?'
+    ).then(confirmed => {
+      if (confirmed) {
+        this.incomeService.deleteIncome(incomeId).subscribe({
+          next: () => {
+            this.incomes = this.incomes.filter(
+              (income) => income.incomeId !== incomeId
+            );
+            this.loadIncomes();
+          },
+          error: (err) => {
+            console.error('Error deleting income:', err);
+          },
+        });
+      }
+    });
   }
 
   editIncome(incomeId: string): void {
@@ -400,5 +414,76 @@ export class IncomeListComponent {
     }
      this.resetPagination();
     this.loadIncomes();
+  }
+
+
+  openExportModal(): void {
+    const modalRef = this.modalService.open(ExportModalComponent, {
+      centered: true,
+      size: 'md',
+      windowClass: 'export-modal',
+      animation: false 
+    });
+
+    modalRef.componentInstance.exportRequested.subscribe((format: 'excel' | 'csv') => {
+      if (format === 'excel') {
+        this.exportToExcel();
+      } else {
+        this.exportToCsv();
+      }
+      modalRef.close();
+    });
+
+    modalRef.componentInstance.modalClosed.subscribe(() => {
+      modalRef.close();
+    });
+}
+
+
+  exportToExcel(): void {
+   
+    const exportData = this.incomes.map(income => ({
+      'User': `${income.addedByUser?.firstName} ${income.addedByUser?.lastName || ''}`,
+      'Date': this.formatDateForExport(income.date),
+      'Source': income.source,
+      'Customer': income.customer?.name || '',
+      'Category': income.category?.name || '',
+      'Description': income.description || '',
+      'Amount': income.amount,
+      'Tax': income.tax || 0,
+      'Location': income.location || '',
+      'Trip': income.trip?.name || ''
+    }));
+
+    this.exportService.exportToExcel(exportData, 'incomes');
+  }
+
+
+  exportToCsv(): void {
+
+    const exportData = this.incomes.map(income => ({
+      'User': `${income.addedByUser?.firstName} ${income.addedByUser?.lastName || ''}`,
+      'Date': this.formatDateForExport(income.date),
+      'Source': income.source,
+      'Customer': income.customer?.name || '',
+      'Category': income.category?.name || '',
+      'Description': income.description || '',
+      'Amount': income.amount,
+      'Tax': income.tax || 0,
+      'Location': income.location || '',
+      'Trip': income.trip?.name || ''
+    }));
+
+    this.exportService.exportToCsv(exportData, 'incomes');
+  }
+
+  private formatDateForExport(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   }
 }

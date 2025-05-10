@@ -1,0 +1,36 @@
+
+<div class="modal-overlay" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Export Data</h2>
+        <button class="close-button" (click)="close()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-message">
+          Please select your preferred export format:
+        </div>
+        <div class="export-options">
+          <div class="export-option"  [class.selected]="selectedFormat === 'excel'"
+             (click)="selectFormat('excel')" >
+            <div class="export-icon">
+              <i class="fas fa-file-excel"></i>
+            </div>
+            <div class="export-title">Excel (.xlsx)</div>
+            <div class="export-desc">Full formatting with multiple sheets</div>
+          </div>
+          <div class="export-option" [class.selected]="selectedFormat === 'csv'"
+             (click)="selectFormat('csv')" id="csv-option">
+            <div class="export-icon">
+              <i class="fas fa-file-csv"></i>
+            </div>
+            <div class="export-title">CSV (.csv)</div>
+            <div class="export-desc">Simple format compatible with all systems</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="close()">Cancel</button>
+        <button class="btn btn-export" id="export-btn" [disabled]="!selectedFormat" (click)="export()">Export</button>
+      </div>
+    </div>
+  </div>
