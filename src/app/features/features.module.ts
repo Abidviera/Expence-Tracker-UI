@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { IncomeCreationComponent } from './components/income-creation/income-creation.component';
 import { IncomeListComponent } from './components/income-list/income-list.component';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProfitManagementComponent } from './components/profit-management/profit-management.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     ExpenseCreationComponent,
     IncomeCreationComponent,
     IncomeListComponent,
+    ProfitManagementComponent,
     
   ],
   imports: [

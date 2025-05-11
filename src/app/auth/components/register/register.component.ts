@@ -22,7 +22,7 @@ export class RegisterComponent {
     private authService: AuthService,
     private toasterService: ToasterService,
     private router: Router,
-    private toastService: ToasterService,
+   
   ) {
     this.registerForm = this.createForm();
   }
@@ -78,11 +78,7 @@ export class RegisterComponent {
         });
       },
       error: (error) => {
-        this.isLoading = false;
-        const errorMessage = error.error?.message || 
-                           error.message || 
-                           'Registration failed';
-        this.toasterService.error(errorMessage);
+        this.isLoading = false;  
       },
       complete: () => {
         this.isLoading = false;
