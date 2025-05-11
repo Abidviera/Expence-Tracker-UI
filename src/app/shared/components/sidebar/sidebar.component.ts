@@ -33,7 +33,6 @@ export class SidebarComponent {
     this.user = this.commonUtil.getCurrentUser();
     console.log(this.user)
      if (this.user) {
-      // Convert roleName to enum value (you might need to adjust this based on your actual enum)
       const role = UserRole[this.user.roleName as keyof typeof UserRole];
       this.menuItems = this.menuService.getMenuItemsForRole(role);
     }

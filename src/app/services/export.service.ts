@@ -5,44 +5,43 @@ import { saveAs } from 'file-saver';
   providedIn: 'root',
 })
 export class ExportService {
-   private readonly DEFAULT_DATE_FORMAT = 'yyyy-MM-dd';
-  private readonly EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  private readonly CSV_TYPE = 'text/csv;charset=utf-8;';
+  exportToExcel(data: any[], fileName: string): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
 
-  exportToExcel(data: any[], fileName: string, sheetName = 'Data'): void {
-    try {
-      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-      const workbook: XLSX.WorkBook = {
-        Sheets: { [sheetName]: worksheet },
-        SheetNames: [sheetName],
-      };
-      
-      const excelBuffer: any = XLSX.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array',
-      });
-      
-      this.saveFile(excelBuffer, fileName, this.EXCEL_TYPE, 'xlsx');
-    } catch (error) {
-      console.error('Error exporting to Excel:', error);
-      throw new Error('Failed to export data to Excel');
-    }
+    const workbook: XLSX.WorkBook = {
+      Sheets: { data: worksheet },
+      SheetNames: ['data'],
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    this.saveAsExcelFile(excelBuffer, fileName);
   }
 
   exportToCsv(data: any[], fileName: string): void {
-    try {
-      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-      const csvOutput: string = XLSX.utils.sheet_to_csv(worksheet);
-      this.saveFile(csvOutput, fileName, this.CSV_TYPE, 'csv');
-    } catch (error) {
-      console.error('Error exporting to CSV:', error);
-      throw new Error('Failed to export data to CSV');
-    }
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+    const csvOutput: string = XLSX.utils.sheet_to_csv(worksheet);
+
+    this.saveAsFile(csvOutput, fileName, 'text/csv;charset=utf-8;');
   }
 
-  private saveFile(content: any, fileName: string, contentType: string, extension: string): void {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const blob = new Blob([content], { type: contentType });
-    saveAs(blob, `${fileName}_export_${timestamp}.${extension}`);
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(data, `${fileName}_export_${new Date().getTime()}.xlsx`);
+  }
+
+  private saveAsFile(
+    content: string,
+    fileName: string,
+    contentType: string
+  ): void {
+    const data: Blob = new Blob([content], { type: contentType });
+    saveAs(data, `${fileName}_export_${new Date().getTime()}.csv`);
   }
 }

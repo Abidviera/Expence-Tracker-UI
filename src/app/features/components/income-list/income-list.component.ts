@@ -14,6 +14,7 @@ import { ModalService } from '../../../services/modal.service';
 import { ExportService } from '../../../services/export.service';
 import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
 import { animation } from '@angular/animations';
+import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-details-popup/income-details-popup.component';
 
 @Component({
   selector: 'app-income-list',
@@ -486,4 +487,15 @@ export class IncomeListComponent {
       day: 'numeric'
     });
   }
+
+
+  showIncomeDetails(income: any): void {
+  const modalRef = this.modalService.open(IncomeDetailsPopupComponent, {
+    centered: true,
+    size: 'xl',
+    windowClass: 'income-details-modal'
+  });
+  modalRef.componentInstance.income = income;
+  console.log(income)
+}
 }
