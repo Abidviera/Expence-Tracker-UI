@@ -1,0 +1,192 @@
+ <div class="invoice-wrapper">
+        <div class="invoice-container">
+            <!-- Invoice Header -->
+            <div class="invoice-header">
+                <div class="header-content">
+                    <div class="company-logo">
+                        <div class="logo-icon">P</div>
+                        PLANVISTOR
+                    </div>
+                    <div class="invoice-title">
+                        <h1>TAX INVOICE</h1>
+                        <p>Travel Expense Management Software</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Invoice Body -->
+            <div class="invoice-body">
+                <div class="watermark">PLANVISTOR</div>
+                
+                <!-- Company and Client Details -->
+                <div class="parties-section">
+                    <div class="company-details">
+                        <div class="section-title">From</div>
+                        <div class="company-name">Planvistor.com</div>
+                        <div class="details-card">
+                            <div class="address-line">Georgia, Tbilisi, Samgori district,</div>
+                            <div class="address-line">police lane I, N5, floor 2, N4a</div>
+                            <div class="contact-line">📱 591014764</div>
+                            <div class="contact-line">📧 planvistorofficialgmail.com</div>
+                            <div class="contact-line">🆔 434173173</div>
+                        </div>
+                    </div>
+                    
+                    <div class="client-details">
+                        <div class="section-title">Bill To</div>
+                        <div class="client-name">Fazhan</div>
+                        <div class="details-card">
+                            <div class="contact-line">📱 7560847114</div>
+                            <div class="contact-line">📧 fahzangmail.com</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Invoice Meta Information -->
+                <div class="invoice-meta">
+                    <div class="invoice-id">
+                        <div class="meta-item">
+                            <div class="meta-label">Invoice Number</div>
+                            <div class="meta-value">INVPV-23512</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Reference</div>
+                            <div class="meta-value">TRV25041423</div>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-dates">
+                        <div class="meta-item">
+                            <div class="meta-label">Invoice Date</div>
+                            <div class="meta-value">14-04-2025</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Due Date</div>
+                            <div class="meta-value">28-04-2025</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Invoice Items Table -->
+                <div class="invoice-table-wrapper">
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 40%;">Description</th>
+                                <th style="width: 10%; text-align: center;">Qty</th>
+                                <th style="width: 15%; text-align: right;">Price</th>
+                                <th style="width: 15%; text-align: right;">Taxable Amount</th>
+                                <th style="width: 15%; text-align: right;">Tax</th>
+                                <th style="width: 15%; text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <div class="item-name">Travel package</div>
+                                    <div class="item-description">2 Adult</div>
+                                </td>
+                                <td class="quantity-cell">1</td>
+                                <td>$870.00</td>
+                                <td>$870.00</td>
+                                <td class="tax-cell">
+                                    $0.00
+                                    <div class="tax-rate">0.0%</div>
+                                </td>
+                                <td>$870.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Totals Section -->
+                <div class="totals-section">
+                    <div class="totals-table">
+                        <div class="totals-row">
+                            <div class="totals-label">Taxable Amount</div>
+                            <div class="totals-value">$870.00</div>
+                        </div>
+                        <div class="totals-row">
+                            <div class="totals-label">Tax</div>
+                            <div class="totals-value">$0.00</div>
+                        </div>
+                        <div class="totals-row">
+                            <div class="totals-label">Total</div>
+                            <div class="totals-value">$870.00</div>
+                        </div>
+                        <div class="totals-row">
+                            <div class="totals-label">Paid</div>
+                            <div class="totals-value">-$174.00</div>
+                        </div>
+                        <div class="grand-total">
+                            <div class="totals-row">
+                                <div class="totals-label">Balance Due</div>
+                                <div class="totals-value">$696.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Details and Signature -->
+                <div class="payment-details">
+                    <div class="payment-instructions">
+                        <div class="section-title">Payment Instructions</div>
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <div class="payment-method-title">Bank Transfer</div>
+                                <div class="payment-method-detail">Account Number: 11700100190810</div>
+                                <div class="payment-method-detail">IFSC: FDRL0001170</div>
+                                <div class="payment-method-detail">Branch: THALAKKADATHUR</div>
+                            </div>
+                            <div class="payment-method">
+                                <div class="payment-method-title">Online Payment</div>
+                                <div class="payment-method-detail">GPAY: +91 9656490351</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="signature-stamp">
+                        <div class="section-title">Authorization</div>
+                        <div class="stamp-area">
+                            <div class="stamp-container">
+                                <div class="stamp-icon">🔖</div>
+                                <img id="stamp-preview" class="stamp-preview" style="display: none;">
+                                <input type="file" class="upload-stamp" id="stamp-upload" accept="image/*">
+                            </div>
+                            <div>
+                                <div class="signature-box">
+                                    <div class="signature-placeholder">signature</div>
+                                </div>
+                                <div class="signature-label">Authorized Signature</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Invoice Footer -->
+            <div class="invoice-footer">
+                <div class="footer-branding">
+                    <div class="footer-logo">PLANVISTOR</div>
+                    <div class="footer-tagline">Your Premier Travel Experience Manager</div>
+                </div>
+                <div class="footer-contact">
+                    <div class="footer-contact-line">www.planvistor.com | supportplanvistor.com</div>
+                    <div class="footer-contact-line">+995 591014764 | 24/7 Customer Support</div>
+                    <div class="footer-social">
+                        <div class="social-icon">f</div>
+                        <div class="social-icon">in</div>
+                        <div class="social-icon">t</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Terms Section -->
+            <div class="terms-section">
+                <p>This is a computer-generated invoice and does not require a physical signature.</p>
+                <p>Thank you for choosing Planvistor.com for your travel needs!</p>
+            </div>
+        </div>
+    </div>
