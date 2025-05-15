@@ -1,0 +1,110 @@
+ body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .company-logo {
+            color: #732E4A;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .company-info {
+            text-align: center;
+            flex-grow: 1;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .invoice-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .divider {
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        .billing-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .bill-to {
+            flex: 1;
+        }
+        .invoice-details {
+            text-align: right;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .invoice-table th {
+            background-color: #f5f5f5;
+            text-align: left;
+            padding: 10px;
+        }
+        .invoice-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .amounts-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .amounts-table {
+            width: 40%;
+            margin-left: auto;
+        }
+        .amounts-table td {
+            padding: 5px 0;
+        }
+        .amounts-table .total-row {
+            font-weight: bold;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+        .balance-due {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            padding: 8px;
+        }
+        .payment-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .payment-instructions {
+            flex: 1;
+        }
+        .signature {
+            text-align: right;
+            flex: 1;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .company-info p {
+            margin: 5px 0;
+        }
+        .right-align {
+            text-align: right;
+        }
+        .label {
+            font-weight: bold;
+        }

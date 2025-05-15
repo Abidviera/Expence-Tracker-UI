@@ -29,9 +29,9 @@ export class SidebarMenuService {
     private allMenuItems: MenuItem[] = [
     { heading: 'Core' },
     { path: 'features/dashboard', title: 'Dashboard', icon: 'fas fa-chart-line' },
-    { path: 'features/ExpensesList', title: 'Expenses', icon: 'fas fa-wallet', roles: [UserRole.User, UserRole.Admin] },
+    { path: 'features/ExpensesList', title: 'Expenses', icon: 'fas fa-wallet', roles: [UserRole.User, UserRole.Admin, UserRole.Driver] },
     { path: 'users', title: 'Users', icon: 'fas fa-users', roles: [UserRole.Admin] },
-    { path: 'travel-tours', title: 'Travel & Tours', icon: 'fas fa-route', roles: [UserRole.Admin, UserRole.User, UserRole.Driver] },
+    { path: 'travel-tours', title: 'Travel & Tours', icon: 'fas fa-route', roles: [UserRole.Admin, UserRole.User] },
     { path: 'features/incomesList', title: 'Income', icon: 'fas fa-store', roles: [UserRole.Admin, UserRole.User, UserRole.Accountant] },
      { path: 'features/ProfitManagement', title: 'Profit', icon: 'fas fa-file-alt', roles: [UserRole.Admin, UserRole.Accountant] },
      
