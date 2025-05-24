@@ -20,7 +20,8 @@ export interface Expense {
 
 
   export interface ExpenseCreate {
-    title: string;
+    
+    title: string ;
     categoryId?: string;
     tripId?: string;
     tax?: number;

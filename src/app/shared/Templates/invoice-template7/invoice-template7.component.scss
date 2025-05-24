@@ -1,14 +1,4 @@
- :root {
-            --primary-color: #5c0733;
-            --primary-light: rgba(92, 7, 51, 0.1);
-            --primary-medium: rgba(92, 7, 51, 0.5);
-            --text-dark: #2d2d2d;
-            --text-medium: #666666;
-            --text-light: #999999;
-            --bg-white: #ffffff;
-            --bg-light: #f9f9f9;
-            --border-color: #e6e6e6;
-        }
+
         
         * {
             margin: 0;
@@ -19,7 +9,7 @@
         body {
             font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
             background-color: #f5f5f5;
-            color: var(--text-dark);
+            color: #2d2d2d;
             line-height: 1.6;
             padding: 20px;
         }
@@ -27,14 +17,14 @@
         .invoice-container {
             max-width: 1000px;
             margin: 0 auto;
-            background-color: var(--bg-white);
+            background-color: #ffffff;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             overflow: hidden;
         }
         
         .invoice-header {
-            background-color: var(--primary-color);
+            background-color: #5c0733;
             color: white;
             padding: 30px 40px;
             display: flex;
@@ -67,7 +57,7 @@
             width: 36px;
             height: 36px;
             background-color: white;
-            color: var(--primary-color);
+            color: #5c0733;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -124,12 +114,12 @@
         }
         
         .section-heading {
-            color: var(--primary-color);
+            color: #5c0733;
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 15px;
             padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary-light);
+            border-bottom: 2px solid rgba(92, 7, 51, 0.1);
             position: relative;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -142,11 +132,11 @@
             bottom: -2px;
             width: 60px;
             height: 2px;
-            background-color: var(--primary-color);
+            background-color: #5c0733;
         }
         
         .info-card {
-            background-color: var(--bg-light);
+            background-color: #f9f9f9;
             border-radius: 8px;
             padding: 20px;
         }
@@ -159,7 +149,7 @@
         
         .address-line, .contact-line {
             font-size: 14px;
-            color: var(--text-medium);
+            color: #666666;
             margin-bottom: 5px;
         }
         
@@ -179,12 +169,12 @@
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e6e6e6;
         }
         
         .detail-label {
             font-weight: 600;
-            color: var(--text-medium);
+            color: #666666;
         }
         
         .detail-value {
@@ -204,7 +194,7 @@
         }
         
         .invoice-table th {
-            background-color: var(--primary-color);
+            background-color: #5c0733;
             color: white;
             text-align: left;
             padding: 12px 15px;
@@ -213,12 +203,12 @@
         }
         
         .invoice-table tr:nth-child(even) {
-            background-color: var(--bg-light);
+            background-color: #f9f9f9;
         }
         
         .invoice-table td {
             padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e6e6e6;
             font-size: 14px;
         }
         
@@ -232,7 +222,7 @@
         }
         
         .item-description {
-            color: var(--text-medium);
+            color: #666666;
             font-size: 13px;
         }
         
@@ -260,11 +250,11 @@
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e6e6e6;
         }
         
         .totals-label {
-            color: var(--text-medium);
+            color: #666666;
             font-weight: 600;
         }
         
@@ -273,7 +263,7 @@
         }
         
         .balance-due {
-            background-color: var(--primary-color);
+            background-color: #5c0733;
             color: white;
             padding: 15px;
             border-radius: 6px;
@@ -297,23 +287,23 @@
         }
         
         .payment-card {
-            background-color: var(--bg-light);
+            background-color: #f9f9f9;
             border-radius: 8px;
             padding: 20px;
         }
         
         .payment-type {
             font-weight: 600;
-            color: var(--primary-color);
+            color: #5c0733;
             margin-bottom: 5px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e6e6e6;
             padding-bottom: 5px;
         }
         
         .payment-detail {
             margin-bottom: 5px;
             font-size: 14px;
-            color: var(--text-medium);
+            color: #666666;
         }
         
         .authorization {
@@ -332,7 +322,7 @@
         .signature-box {
             width: 180px;
             height: 70px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e6e6e6;
             position: relative;
             margin-bottom: 8px;
         }
@@ -341,14 +331,14 @@
             position: absolute;
             bottom: 0;
             font-style: italic;
-            color: var(--text-light);
+            color: #999999;
             font-size: 24px;
             opacity: 0.5;
         }
         
         .signature-label {
             font-size: 12px;
-            color: var(--text-medium);
+            color: #666666;
             text-align: center;
         }
         
@@ -356,7 +346,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            border: 2px dashed var(--primary-light);
+            border: 2px dashed rgba(92, 7, 51, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -366,7 +356,7 @@
         }
         
         .stamp-placeholder {
-            color: var(--primary-light);
+            color: rgba(92, 7, 51, 0.1);
             font-size: 28px;
         }
         
@@ -389,12 +379,12 @@
         
         .stamp-label {
             font-size: 12px;
-            color: var(--text-medium);
+            color: #666666;
             text-align: center;
         }
         
         .invoice-footer {
-            background-color: var(--primary-color);
+            background-color: #5c0733;
             color: white;
             padding: 25px 40px;
             display: flex;
@@ -448,12 +438,12 @@
         }
         
         .terms-section {
-            background-color: var(--bg-light);
+            background-color: #f9f9f9;
             padding: 20px 40px;
             font-size: 12px;
-            color: var(--text-light);
+            color: #999999;
             text-align: center;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid #e6e6e6;
         }
         
         @media (max-width: 768px) {

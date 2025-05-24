@@ -2,9 +2,8 @@
   <div class="container-fluid">
     <div class="form-card">
       <div class="form-header">
-        <h2>Create Expense</h2>
-        <p>Enter the details for your new expense record</p>
-      </div>
+        <h2>{{ isEditMode ? 'Update' : 'Create' }} Expense</h2>
+ <p>Enter the details for your {{ isEditMode ? 'expense update' : 'new expense record' }}</p>      </div>
 
       <div class="form-body">
         <div class="form-section">
@@ -36,7 +35,7 @@
             <app-searchable-dropdown
               [options]="customers"
               optionLabel="name"
-              optionValue="id"
+              optionValue="customerId"
               [label]="'Customer'"
               [required]="true"
               placeholder="Select a Customer"
@@ -68,7 +67,7 @@
               [required]="true"
               placeholder="Associated trip"
               (selectionChange)="onTripSelect($event)"
-              [(ngModel)]="expense.tripId"
+              [(ngModel)]="expense.tripId "
             >
             </app-searchable-dropdown>
 
@@ -106,7 +105,7 @@
            View List
           </button>
         <button type="button" class="btn btn-secondary" (click)="resetForm()">  <i  class="fa fa-refresh"></i> Reset</button>
-        <button type="submit" class="btn btn-primary" (click)="submitExpense()" >Create Expense</button>
+        <button type="submit" class="btn btn-primary" (click)="submitExpense()" > {{ isEditMode ? 'Update' : 'Create' }} Expense</button>
       </div>
     </div>
   </div>
