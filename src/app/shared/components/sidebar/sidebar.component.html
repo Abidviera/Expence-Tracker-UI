@@ -1,15 +1,61 @@
-<div class="sidebar" [class.collapsed]="isCollapsed">
+<div class="mobile-overlay" 
+     [class.active]="isMobileMenuOpen" 
+     (click)="closeMobileMenu()"
+     *ngIf="isMobile"
+     >
+  
+  <div class="mobile-menu-container">
+    <ng-container *ngFor="let item of menuItems; let i = index">
+      <div class="menu-heading" 
+           *ngIf="isHeading(item)"
+           [style.--item-index]="i">
+        {{ item.heading }}
+      </div>
+
+      <div *ngIf="!isHeading(item)"
+           class="menu-item"
+           [class.active]="activeItem === item.path"
+           [style.--item-index]="i"
+           (click)="setActiveItem(item.path)">
+        <i [class]="item.icon"></i>
+        <span>{{ item.title }}</span>
+
+        
+      </div>
+      
+    </ng-container>
+
+    
+  </div>
+     
+</div>
+
+<div class="sidebar" 
+     [class.collapsed]="isCollapsed && !isMobile"
+     [class.menu-open]="isMobileMenuOpen">
+  
   <div class="sidebar-header">
     <div class="logo">
-      <!-- <div class="logo-icon" *ngIf="!isCollapsed">
+      <div class="logo-icon">
         <i class="fas fa-route"></i>
-      </div> -->
-      <div class="logo-text" *ngIf="!isCollapsed"></div>
+      </div>
+      <div class="logo-text">abc company</div>
     </div>
-    <div class="sidebar-toggle" (click)="toggleSidebar()">
-      <i class="fas fa-bars"></i>
+    
+ <div class="sidebar-toggle" (click)="toggleSidebar()">
+  <i class="bi" [class.bi-list]="!isMobileMenuOpen" 
+              [class.bi-x]="isMobileMenuOpen"></i>
+</div>
+  </div>
+
+
+  <div class="user-profile" *ngIf="isMobile">
+    <div class="logout-btn" (click)="Logout()">
+      <i class="fas fa-sign-out-alt"></i>
     </div>
   </div>
+  
+ 
   <div class="sidebar-menu">
     <ng-container *ngFor="let item of menuItems">
       <div class="menu-heading" *ngIf="isHeading(item)">{{ item.heading }}</div>
@@ -24,12 +70,11 @@
         <span>{{ item.title }}</span>
       </div>
     </ng-container>
-
-   
   </div>
 
-  <div class="user-profile">
-    <div class="user-avatar">JD</div>
+  
+  <div class="user-profile" *ngIf="!isMobile">
+    <div class="user-avatar" >{{ getUserInitials() }}</div>
     <div class="user-info">
       <span class="user-name">{{ user?.firstName }} {{ user?.lastName }}</span>
       <span class="user-role">{{ user?.roleName }}</span>

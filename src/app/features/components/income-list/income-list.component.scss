@@ -560,6 +560,37 @@ tr:hover {
   color: #c81e1e;
 }
 
+
+
+  .status-badges {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+
+
+
+}
+
+  .status-paid {
+  background-color: #e6f7ee;
+  color: #10b981;
+}
+
+.status-unpaid {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.status-partial {
+  background-color: #fef3c7;
+  color: #f59e0b;
+}
+
 .action-buttons {
   display: flex;
   gap: 8px;

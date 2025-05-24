@@ -77,6 +77,7 @@ export class IncomeCreationComponent {
       incomeId: undefined,
       source: '',
       amount: 0,
+      paid: 0,
       tax: 0,
       date: new Date(),
       description: '',
@@ -88,14 +89,23 @@ export class IncomeCreationComponent {
     };
   }
 
+  updateBalance(): void {
+    // Ensure paid amount doesn't exceed the total amount
+    if (this.income.paid > this.income.amount) {
+      this.income.paid = this.income.amount;
+      this.toastService.warning('Paid amount cannot exceed the total amount');
+    }
+  }
+
   loadIncomeForEdit(incomeId: string): void {
     this.incomeService.getIncomeById(incomeId).subscribe({
       next: (income) => {
         this.income = {
           ...income,
+           paid: income.paid || 0,
           date: new Date(income.date),
         };
-        console.log(income)
+        console.log(income);
         this.setSelectedObjects(income);
       },
       error: () => {
@@ -113,8 +123,18 @@ export class IncomeCreationComponent {
     this.selectedTrip =
       this.destinations.find((d) => d.id === income.tripId) || null;
   }
+  private validateIncome(): boolean {
+  if (this.income.paid > this.income.amount) {
+    this.toastService.error('Paid amount cannot exceed the total amount');
+    return false;
+  }
+  return true;
+}
 
   submitIncome(): void {
+    if (!this.validateIncome()) {
+    return;
+  }
     this.income.tax = 0;
     if (this.isEditMode && this.income.incomeId) {
       this.updateIncome();
@@ -128,14 +148,25 @@ export class IncomeCreationComponent {
       .updateIncome(this.income.incomeId!, this.income)
       .subscribe({
         next: () => {
-          this.router.navigate(['/incomes']);
-          this.toastService.success('Updated Successfully');
+           this.handleSuccess(
+          'Income updated successfully',
+          '/features/incomesList'
+        ),
           this.resetForm();
         },
         error: (err) => {
           this.toastService.error('Error updating income:', err);
         },
       });
+  }
+
+    private handleSuccess(message: string, navigateTo?: string): void {
+    this.toastService.success(message);
+    if (navigateTo) {
+      this.router.navigate([navigateTo]);
+    } else {
+      this.resetForm();
+    }
   }
 
   private createIncome(): void {
@@ -156,6 +187,7 @@ export class IncomeCreationComponent {
       source: '',
       amount: 0,
       tax: 0,
+      paid: 0,
       date: new Date(),
       addedBy: this.commonUtil.getCurrentUser()?.userId ?? '',
       categoryId: '',

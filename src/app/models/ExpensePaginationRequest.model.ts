@@ -8,10 +8,15 @@ export interface ExpensePaginationRequest {
 
   fromDate?: string;
   toDate?: string;
-
   minAmount?: number;
   maxAmount?: number;
   customerId?: string;
   CategoryId?: string;
   tripId?: string;
+  
+  minPaid?: number;
+  maxPaid?: number;
+  minBalance?: number;
+  maxBalance?: number;
+  paymentStatus?: 'paid' | 'unpaid' | 'partial';
 }

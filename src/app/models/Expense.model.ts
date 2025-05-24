@@ -7,6 +7,8 @@ export interface Expense {
   tripId?: string;
   tax?: number;
   amount: number;
+  paid: number; 
+  balance: number; 
   currency: string;
   date: Date;
   paymentMethod?: string;
@@ -26,6 +28,7 @@ export interface Expense {
     tripId?: string;
     tax?: number;
     amount: number;
+     paid: number;
     currency: string;
     date: Date;  
     paymentMethod?: string;
@@ -41,6 +44,7 @@ export interface Expense {
   categoryId?: string;
   tripId?: string;
   amount?: number;
+   paid?: number;
   tax?: number;
   currency?: string;
   date?: Date;

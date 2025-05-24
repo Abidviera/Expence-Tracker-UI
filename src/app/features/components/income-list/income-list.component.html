@@ -134,6 +134,67 @@
             />
           </div>
         </div>
+
+<div class="filter-group">
+  <label class="filter-label">Min Paid</label>
+  <div class="filter-control">
+    <input
+      type="number"
+      [(ngModel)]="filters.minPaid"
+      (ngModelChange)="onPaidFilter(filters.minPaid, filters.maxPaid)"
+      placeholder="0.00"
+    />
+  </div>
+</div>
+
+<div class="filter-group">
+  <label class="filter-label">Max Paid</label>
+  <div class="filter-control">
+    <input
+      type="number"
+      [(ngModel)]="filters.maxPaid"
+      (ngModelChange)="onPaidFilter(filters.minPaid, filters.maxPaid)"
+      placeholder="Any"
+    />
+  </div>
+</div>
+
+<div class="filter-group">
+  <label class="filter-label">Min Balance</label>
+  <div class="filter-control">
+    <input
+      type="number"
+      [(ngModel)]="filters.minBalance"
+      (ngModelChange)="onBalanceFilter(filters.minBalance, filters.maxBalance)"
+      placeholder="0.00"
+    />
+  </div>
+</div>
+
+<div class="filter-group">
+  <label class="filter-label">Max Balance</label>
+  <div class="filter-control">
+    <input
+      type="number"
+      [(ngModel)]="filters.maxBalance"
+      (ngModelChange)="onBalanceFilter(filters.minBalance, filters.maxBalance)"
+      placeholder="Any"
+    />
+  </div>
+</div>
+
+        <app-searchable-dropdown
+  [options]="paymentStatusOptions"
+  optionLabel="name"
+  optionValue="value"
+  [label]="'Payment Status'"
+  placeholder="Select payment status"
+  (selectionChange)="onPaymentStatusSelect($event)"
+  [(ngModel)]="selectedPaymentStatus"
+  [inputClass]="'ExpenseFilterInput'"
+  [labelClass]="'ExpenseFilterLabel'"
+>
+</app-searchable-dropdown>
       </div>
 
       <div class="active-filters" *ngIf="hasActiveFilters()">
@@ -184,6 +245,27 @@
             <i class="fas fa-times-circle"></i>
           </span>
         </div>
+
+        <div class="active-filter" *ngIf="selectedPaymentStatus">
+  Payment Status: {{ selectedPaymentStatus.name }}
+  <span (click)="clearPaymentStatus()" style="cursor: pointer">
+    <i class="fas fa-times-circle"></i>
+  </span>
+</div>
+
+<div class="active-filter" *ngIf="filters.minPaid !== undefined || filters.maxPaid !== undefined">
+  Paid: {{ filters.minPaid || "0" }} - {{ filters.maxPaid || "Any" }}
+  <span (click)="clearPaid()" style="cursor: pointer">
+    <i class="fas fa-times-circle"></i>
+  </span>
+</div>
+
+<div class="active-filter" *ngIf="filters.minBalance !== undefined || filters.maxBalance !== undefined">
+  Balance: {{ filters.minBalance || "0" }} - {{ filters.maxBalance || "Any" }}
+  <span (click)="clearBalance()" style="cursor: pointer">
+    <i class="fas fa-times-circle"></i>
+  </span>
+</div>
       </div>
     </div>
 
@@ -261,6 +343,30 @@
               <i class="fas fa-sort sort-icon"></i>
             </th>
 
+ <th
+      (click)="
+        onSortChange(
+          'paid',
+          filters.sortDirection === 'asc' ? 'desc' : 'asc'
+        )
+      "
+    >
+      Paid
+      <i class="fas fa-sort sort-icon"></i>
+    </th>
+    <th
+      (click)="
+        onSortChange(
+          'balance',
+          filters.sortDirection === 'asc' ? 'desc' : 'asc'
+        )
+      "
+    >
+      Balance
+      <i class="fas fa-sort sort-icon"></i>
+    </th>
+    <th>Status</th>
+
             <th
               (click)="
                 onSortChange(
@@ -272,6 +378,8 @@
               Amount
               <i class="fas fa-sort sort-icon"></i>
             </th>
+
+            
 
             <th style="text-align: center; align-items: center">
               Action
@@ -300,6 +408,23 @@
             <td class="expense-description">
               {{ income.description || "-" }}
             </td>
+              <td class="amount">{{ income.paid | currency }}</td>
+    <td class="amount">{{ income.amount - income.paid | currency }}</td>
+      <td>
+      <span class="status-badges" [ngClass]="{
+        'status-paid': income.paid === income.amount,
+        'status-unpaid': income.paid === 0,
+        'status-partial': income.paid > 0 && income.paid < income.amount
+      }">
+        <i class="fas" [ngClass]="{
+          'fa-check-circle': income.paid === income.amount,
+          'fa-times-circle': income.paid === 0,
+          'fa-minus-circle': income.paid > 0 && income.paid < income.amount
+        }"></i>
+        {{ income.paid === income.amount ? 'Paid' : 
+           income.paid === 0 ? 'Unpaid' : 'Partial' }}
+      </span>
+    </td>
 
             <td class="amount">{{ income.amount | currency }}</td>
 

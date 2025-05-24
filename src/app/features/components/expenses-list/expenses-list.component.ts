@@ -9,6 +9,10 @@ import { DestinationsService } from '../../../services/destinations.service';
 import { CategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
 import { Expense } from '../../../models/Expense.model';
+import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-details-popup/income-details-popup.component';
+import { ModalService } from '../../../services/modal.service';
+import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
+import { ToasterService } from '../../../services/toaster.service';
 
 @Component({
   selector: 'app-expenses-list',
@@ -48,7 +52,9 @@ export class ExpensesListComponent {
     private customerService: CustomerService,
     private categoryService: CategoryService,
     private destinationService: DestinationsService,
-        private router: Router,
+    private router: Router,
+    private modalService: ModalService,
+    private toastService: ToasterService
   ) {}
 
   ngOnInit(): void {
@@ -228,6 +234,10 @@ export class ExpensesListComponent {
       toDate: '',
       minAmount: undefined,
       maxAmount: undefined,
+       minPaid: undefined,
+      maxPaid: undefined,
+      minBalance: undefined,
+      maxBalance: undefined,
       customerId: undefined,
       CategoryId: undefined,
       tripId: undefined,
@@ -235,6 +245,7 @@ export class ExpensesListComponent {
     this.selectedCategory = null;
     this.selectedCustomer = null;
     this.selectedDestination = null;
+      this.selectedPaymentStatus = null;
     this.loadExpenses();
   }
 
@@ -246,7 +257,12 @@ export class ExpensesListComponent {
       this.filters.fromDate ||
       this.filters.toDate ||
       this.filters.minAmount !== undefined ||
-      this.filters.maxAmount !== undefined
+      this.filters.maxAmount !== undefined ||
+      this.selectedPaymentStatus ||
+          this.filters.minPaid !== undefined ||
+      this.filters.maxPaid !== undefined ||
+      this.filters.minBalance !== undefined ||
+      this.filters.maxBalance !== undefined
     );
   }
 
@@ -333,13 +349,120 @@ export class ExpensesListComponent {
     }
   }
 
+  // In your ExpenseListComponent
+  editExpense(expense: any) {
+    console.log(expense);
+    this.router.navigate(['/features/ExpenseCreation'], {
+      state: { expense: expense },
+    });
+  }
+
+  showExpenceDetails(expense: any): void {
+    const modalRef = this.modalService.open(IncomeDetailsPopupComponent, {
+      centered: true,
+      size: 'xl',
+      windowClass: 'income-details-modal',
+    });
+    modalRef.componentInstance.income = expense;
+    console.log(expense);
+  }
+
+  openExportModal(): void {
+    const modalRef = this.modalService.open(ExportModalComponent, {
+      centered: true,
+      size: 'md',
+      windowClass: 'export-modal',
+      animation: false,
+    });
+
+    modalRef.componentInstance.exportRequested.subscribe(
+      (format: 'excel' | 'csv') => {
+        if (format === 'excel') {
+          this.exportToExcel();
+        } else {
+          this.exportToCsv();
+        }
+        modalRef.close();
+      }
+    );
+
+    modalRef.componentInstance.modalClosed.subscribe(() => {
+      modalRef.close();
+    });
+  }
+
+  exportToExcel(): void {}
+
+  exportToCsv(): void {}
+
+  deleteExpense(expenseId: string): void {
+    this.modalService
+      .confirm(
+        'Delete Expense',
+        'Are you sure you want to delete this expense?'
+      )
+      .then((confirmed) => {
+        if (confirmed) {
+          this.expenseService.deleteExpense(expenseId).subscribe({
+            next: () => {
+              this.toastService.success('Deleted Successfully');
+              this.loadExpenses();
+            },
+            error: () => {},
+          });
+        }
+      });
+  }
 
 
-// In your ExpenseListComponent
-editExpense(expense: any) {
-  console.log(expense)
-  this.router.navigate(['/features/ExpenseCreation'], { 
-    state: { expense: expense } 
-  });
+    paymentStatusOptions = [
+    { name: 'Paid', value: 'paid' },
+    { name: 'Unpaid', value: 'unpaid' },
+    { name: 'Partial', value: 'partial' }
+  ];
+  selectedPaymentStatus: any = null;
+
+
+
+onPaidFilter(minPaid: number | undefined, maxPaid: number | undefined) {
+  this.filters.minPaid = minPaid === undefined || isNaN(minPaid) ? undefined : minPaid;
+  this.filters.maxPaid = maxPaid === undefined || isNaN(maxPaid) ? undefined : maxPaid;
+  this.filters.pageNumber = 1;
+  this.loadExpenses();
 }
+
+onBalanceFilter(minBalance: number | undefined, maxBalance: number | undefined) {
+  this.filters.minBalance = minBalance === undefined || isNaN(minBalance) ? undefined : minBalance;
+  this.filters.maxBalance = maxBalance === undefined || isNaN(maxBalance) ? undefined : maxBalance;
+  this.filters.pageNumber = 1;
+  this.loadExpenses();
+}
+
+  onPaymentStatusSelect(status: any) {
+    this.filters.paymentStatus = status?.value;
+    this.filters.pageNumber = 1;
+    this.loadExpenses();
+  }
+
+  clearPaid() {
+    this.filters.minPaid = undefined;
+    this.filters.maxPaid = undefined;
+    this.loadExpenses();
+  }
+
+  clearBalance() {
+    this.filters.minBalance = undefined;
+    this.filters.maxBalance = undefined;
+    this.loadExpenses();
+  }
+
+  clearPaymentStatus() {
+    this.filters.paymentStatus = undefined;
+    this.selectedPaymentStatus = null;
+    this.loadExpenses();
+  }
+
+  getPaymentStatusLabel(status: string): string {
+    return this.paymentStatusOptions.find(opt => opt.value === status)?.name || status;
+  }
 }

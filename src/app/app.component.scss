@@ -17,3 +17,10 @@
 .main-section::-webkit-scrollbar {
   display: none; 
 }
+
+@media (max-width: 768px) {
+
+  .main-section{
+    padding-top: 80px;
+  }
+}

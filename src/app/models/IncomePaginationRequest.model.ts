@@ -8,18 +8,21 @@ export interface IncomePaginationRequest {
   toDate?: string;
   minAmount?: number;
   maxAmount?: number;
+  minPaid?: number;
+  maxPaid?: number;
+  minBalance?: number;
+  maxBalance?: number;
   userId?: string;
   CategoryId?: string;
   TripId?: string;
   CustomerId?: string;
-  }
+  paymentStatus?: 'Paid' | 'Partial' | 'Unpaid';
+}
 
-
-  export interface PaginationResponse<T> {
-    pageNumber: number;
-    pageSize: number;
-    totalRecords: number;
-    totalPages: number;
-    data: T[];
-  }
-  
+export interface PaginationResponse<T> {
+  pageNumber: number;
+  pageSize: number;
+  totalRecords: number;
+  totalPages: number;
+  data: T[];
+}

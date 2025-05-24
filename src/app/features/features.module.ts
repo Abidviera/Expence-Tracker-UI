@@ -29,6 +29,6 @@ import { ProfitManagementComponent } from './components/profit-management/profit
     SharedModule,
     FormsModule,
     NgbModalModule
-  ]
+  ],
 })
 export class FeaturesModule { }

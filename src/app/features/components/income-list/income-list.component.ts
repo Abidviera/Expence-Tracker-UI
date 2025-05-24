@@ -206,16 +206,22 @@ export class IncomeListComponent {
       toDate: '',
       minAmount: undefined,
       maxAmount: undefined,
+      minPaid: undefined,
+      maxPaid: undefined,
+      minBalance: undefined,
+      maxBalance: undefined,
       userId: undefined,
       CustomerId: undefined,
       CategoryId: undefined,
       TripId: undefined,
+      paymentStatus: undefined
     };
 
     this.selectedUser = null;
     this.selectedCustomer = null;
     this.selectedDestination = null;
     this.selectedCategory = null;
+     this.selectedPaymentStatus = null;
 
     this.loadIncomes();
   }
@@ -301,14 +307,19 @@ export class IncomeListComponent {
 
   hasActiveFilters(): boolean {
     return !!(
-      this.selectedUser ||
+       this.selectedUser ||
       this.selectedCustomer ||
       this.selectedDestination ||
       this.selectedCategory ||
+      this.selectedPaymentStatus ||
       this.filters.fromDate ||
       this.filters.toDate ||
       this.filters.minAmount !== undefined ||
-      this.filters.maxAmount !== undefined
+      this.filters.maxAmount !== undefined ||
+      this.filters.minPaid !== undefined ||
+      this.filters.maxPaid !== undefined ||
+      this.filters.minBalance !== undefined ||
+      this.filters.maxBalance !== undefined
     );
   }
 
@@ -498,4 +509,52 @@ export class IncomeListComponent {
   modalRef.componentInstance.income = income;
   console.log(income)
 }
+
+  paymentStatusOptions = [
+    { name: 'Paid', value: 'paid' },
+    { name: 'Unpaid', value: 'unpaid' },
+    { name: 'Partial', value: 'partial' }
+  ];
+  selectedPaymentStatus: any = null;
+
+
+
+   onPaymentStatusSelect(status: any): void {
+    this.selectedPaymentStatus = status;
+    this.filters.paymentStatus = status?.value;
+    this.resetPagination();
+    this.loadIncomes();
+  }
+
+  clearPaymentStatus(): void {
+    this.selectedPaymentStatus = null;
+    this.filters.paymentStatus = undefined;
+    this.loadIncomes();
+  }
+
+  onPaidFilter(minPaid: number | undefined, maxPaid: number | undefined): void {
+    this.filters.minPaid = minPaid;
+    this.filters.maxPaid = maxPaid;
+    this.resetPagination();
+    this.loadIncomes();
+  }
+
+  clearPaid(): void {
+    this.filters.minPaid = undefined;
+    this.filters.maxPaid = undefined;
+    this.loadIncomes();
+  }
+
+  onBalanceFilter(minBalance: number | undefined, maxBalance: number | undefined): void {
+    this.filters.minBalance = minBalance;
+    this.filters.maxBalance = maxBalance;
+    this.resetPagination();
+    this.loadIncomes();
+  }
+
+  clearBalance(): void {
+    this.filters.minBalance = undefined;
+    this.filters.maxBalance = undefined;
+    this.loadIncomes();
+  }
 }

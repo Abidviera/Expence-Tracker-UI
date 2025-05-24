@@ -6,6 +6,7 @@ export interface Income {
   categoryId: string;
   tripId?: string;
   amount: number;
+   paid: number;
   tax?: number;
   date: Date;
   location?: string;
@@ -23,6 +24,7 @@ export interface Income {
   categoryId: string;
   tripId?: string;
   amount: number;
+    paid: number;
   tax?: number;
   date: Date;
   location?: string;
