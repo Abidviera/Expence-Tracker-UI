@@ -1,180 +1,196 @@
-<div class="invoice-container">
-        <div class="watermark">PLANVISTOR</div>
+
+<div class="invoice" #printContent >
+ <div class="invoice-container" style=" margin: 0px auto; background: linear-gradient(to bottom, #ffffff, #f9f5f7); border-radius: 12px; box-shadow: 0 10px 25px rgba(92, 7, 51, 0.08); overflow: hidden; position: relative;">
+        <div class="watermark" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 120px; opacity: 0.03; font-weight: bold; pointer-events: none; z-index: 10; white-space: nowrap; color: #5c0733;">PLANVISTOR</div>
         
-        <!-- Header Section -->
-        <div class="invoice-header">
-            <div class="header-bg-element"></div>
-            <div class="header-bg-element"></div>
+        <div class="invoice-header" style="display: flex; padding: 15px 30px; background: #5c0733; color: white; position: relative; overflow: hidden;">
+            <div class="header-bg-element" style="position: absolute; top: -20px; right: -20px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;"></div>
+            <div class="header-bg-element" style="position: absolute; width: 120px; height: 120px; bottom: -40px; right: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;"></div>
             
-            <div class="company-branding">
-                <div class="company-logo">Planvistor.com</div>
-                <div class="company-info">
+            <div class="company-branding" style="flex: 1; z-index: 1;">
+                <div class="company-logo" style="font-size: 27px; font-weight: 900; letter-spacing: 1px; margin-bottom: 10px; position: relative; cursor: pointer;" >
+                    Planvistor.com
+                    <span style="content: ''; position: absolute; bottom: -5px; left: 0; width: 40px; height: 3px; background-color: #ffffff; display: block;"></span>
+                </div>
+                <div class="company-info" style="font-size: 14px; line-height: 1.7; color: rgba(255, 255, 255, 0.9); max-width: 60%; z-index: 1;">
                     <p>Georgia, Tbilisi, Samgori district, police lane I, N5, floor 2, N4a</p>
                     <p>📱 591014764 • 📧 planvistorofficialgmail.com</p>
                     <p>Registration: 434173173</p>
                 </div>
             </div>
             
-            <div class="invoice-title-section">
-                <div class="invoice-title">TAX INVOICE</div>
-                <div class="invoice-subtitle">Official Financial Document</div>
+            <div class="invoice-title-section" style="text-align: right; display: flex; flex-direction: column; justify-content: center; z-index: 1;">
+                <div class="invoice-title" style="font-size: 35px; font-weight: 700; text-transform: uppercase; line-height: 1; letter-spacing: 2px; margin-bottom: 15px;">TAX INVOICE</div>
+                <div class="invoice-subtitle" style="font-size: 16px; color: rgba(255, 255, 255, 0.8);">Official Financial Document</div>
             </div>
         </div>
         
-        <!-- Content Wrapper -->
-        <div class="content-wrapper">
-            <!-- Document Details Section -->
-            <div class="document-details">
-                <div class="document-badge">PAID: $174.00</div>
+        <div class="content-wrapper" style="padding-left: 35px; padding-right: 35px;padding-top: 30px; padding-bottom: 20px; position: relative; z-index: 2;">
+            <div class="document-details" style="display: flex; justify-content: space-between; margin-bottom: 20px; position: relative;">
+                <div class="document-badge" style="position: absolute; top: -25px; right: 0; background-color: #5c0733; color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">PAID: $174.00</div>
                 
-                <!-- Bill To Section -->
-                <div class="bill-to-section">
-                    <div class="section-title">CLIENT INFORMATION</div>
-                    <div class="client-details">
-                        <p class="client-name">Fazhan</p>
-                        <p>📱 7560847114</p>
-                        <p>📧 fahzangmail.com</p>
+                <div class="bill-to-section" style="flex: 1; padding: 25px; background-color: #f9f5f7; border-radius: 8px; border-left: 4px solid #5c0733;">
+                    <div class="section-title" style="font-size: 15px; text-transform: uppercase; color: #5c0733; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; display: flex; align-items: center;">
+                        <span style="content: ''; display: inline-block; background-color: #5c0733; margin-right: 8px; border-radius: 50%;"></span>
+                        CLIENT INFORMATION
+                    </div>
+                    <div class="client-details" style="padding-left: 14px;">
+                        <p class="client-name" style="margin-bottom: 6px; font-size: 18px; font-weight: 600;">Fazhan</p>
+                        <p style="margin-bottom: 6px; font-size: 14px;">📱 7560847114</p>
+                        <p style="margin-bottom: 6px; font-size: 14px;">📧 fahzangmail.com</p>
                     </div>
                 </div>
                 
-                <!-- Invoice Details -->
-                <div class="invoice-details-section">
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <div class="detail-label">Invoice Number</div>
-                            <div class="detail-value">INVPV-23512</div>
+                <div class="invoice-details-section" style="width: 300px; margin-left: 30px;">
+                    <div class="detail-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <div class="detail-item" style="background-color: #f9f5f7; padding: 15px; border-radius: 8px; border-bottom: 3px solid #5c0733;">
+                            <div class="detail-label" style="font-size: 12px; text-transform: uppercase; color: #7f8c8d; margin-bottom: 5px;">Invoice Number</div>
+                            <div class="detail-value" style="font-size: 15px; font-weight: 600; color: #5c0733;">INVPV-23512</div>
                         </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Invoice Date</div>
-                            <div class="detail-value">14-04-2025</div>
+                        <div class="detail-item" style="background-color: #f9f5f7; padding: 15px; border-radius: 8px; border-bottom: 3px solid #5c0733;">
+                            <div class="detail-label" style="font-size: 12px; text-transform: uppercase; color: #7f8c8d; margin-bottom: 5px;">Invoice Date</div>
+                            <div class="detail-value" style="font-size: 15px; font-weight: 600; color: #5c0733;">14-04-2025</div>
                         </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Due Date</div>
-                            <div class="detail-value">28-04-2025</div>
+                        <div class="detail-item" style="background-color: #f9f5f7; padding: 15px; border-radius: 8px; border-bottom: 3px solid #5c0733;">
+                            <div class="detail-label" style="font-size: 12px; text-transform: uppercase; color: #7f8c8d; margin-bottom: 5px;">Due Date</div>
+                            <div class="detail-value" style="font-size: 15px; font-weight: 600; color: #5c0733;">28-04-2025</div>
                         </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Status</div>
-                            <div class="detail-value" style="color: var(--accent-color);">PARTIAL</div>
+                        <div class="detail-item" style="background-color: #f9f5f7; padding: 15px; border-radius: 8px; border-bottom: 3px solid #5c0733;">
+                            <div class="detail-label" style="font-size: 12px; text-transform: uppercase; color: #7f8c8d; margin-bottom: 5px;">Status</div>
+                            <div class="detail-value" style="font-size: 15px; font-weight: 600; color: #5c0733;">PARTIAL</div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Items Section -->
-            <div class="items-section">
-                <table class="items-table">
+            <div class="items-section" style="margin: 20px 0;">
+                <table class="items-table" style="width: 100%; border-collapse: separate; border-spacing: 0; box-shadow: 0 3px 10px rgba(92, 7, 51, 0.05); border-radius: 10px; overflow: hidden;">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th class="item-description">DESCRIPTION</th>
-                            <th class="text-center">QTY</th>
-                            <th class="text-right">PRICE</th>
-                            <th class="text-right">TAXABLE AMOUNT</th>
-                            <th class="text-right">TAX</th>
-                            <th class="text-right">TOTAL</th>
+                            <th style="background-color: #5c0733; color: white; padding: 12px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">#</th>
+                            <th class="item-description" style="background-color: #5c0733; color: white; padding: 12px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; width: 40%;">DESCRIPTION</th>
+                            <th class="text-center" style="background-color: #5c0733; color: white; padding: 12px; text-align: center; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">QTY</th>
+                            <th class="text-right" style="background-color: #5c0733; color: white; padding: 12px; text-align: right; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">PRICE</th>
+                            <th class="text-right" style="background-color: #5c0733; color: white; padding: 12px; text-align: right; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">TAXABLE AMOUNT</th>
+                            <th class="text-right" style="background-color: #5c0733; color: white; padding: 12px; text-align: right; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">TAX</th>
+                            <th class="text-right" style="background-color: #5c0733; color: white; padding: 12px; text-align: right; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td class="item-description">
-                                <div class="item-title">Travel Package</div>
-                                <div class="item-details">Premium travel arrangement for 2 adults</div>
+                        <tr style="background-color: rgba(92, 7, 51, 0.02);">
+                            <td style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px;">1</td>
+                            <td class="item-description" style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; width: 40%;">
+                                <div class="item-title" style="font-weight: 600; margin-bottom: 5px;">Travel Package</div>
+                                <div class="item-details" style="font-size: 13px; color: #7f8c8d;">Premium travel arrangement for 2 adults</div>
                             </td>
-                            <td class="text-center">1</td>
-                            <td class="text-right">$870.00</td>
-                            <td class="text-right">$870.00</td>
-                            <td class="text-right">$0.00<br><span style="font-size: 12px;">(0.0%)</span></td>
-                            <td class="text-right">$870.00</td>
+                            <td class="text-center" style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; text-align: center;">1</td>
+                            <td class="text-right" style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; text-align: right;">$870.00</td>
+                            <td class="text-right" style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; text-align: right;">$870.00</td>
+                            <td class="text-right" style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; text-align: right;">$0.00<br><span style="font-size: 12px;">(0.0%)</span></td>
+                            <td class="text-right" style="padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; text-align: right;">$870.00</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             
-            <!-- Totals Section -->
-            <div class="totals-section">
-                <!-- QR Code for Payment -->
-                <div class="payment-qr">
-                    <div class="qr-title">SCAN TO PAY</div>
-                    <div class="qr-code">QR CODE</div>
+            <div class="totals-section" style="display: flex; justify-content: space-between; margin: 20px 0;">
+                <div class="payment-qr" style="flex: 1; padding: 20px; background-color: #f9f5f7; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div class="qr-title" style="font-size: 13px; font-weight: 600; margin-bottom: 15px; color: #5c0733;">SCAN TO PAY</div>
+                    <div class="qr-code" style="width: 120px; height: 120px; background-color: white; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #7f8c8d; position: relative;">
+                        QR CODE
+                        <span style="content: ''; position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border: 3px solid #5c0733; border-right: none; border-bottom: none;"></span>
+                        <span style="content: ''; position: absolute; bottom: 10px; right: 10px; width: 30px; height: 30px; border: 3px solid #5c0733; border-left: none; border-top: none;"></span>
+                    </div>
                 </div>
                 
-                <!-- Payment Instructions -->
-                <div class="payment-instructions">
-                    <div class="section-title">Payment Information</div>
-                    <ul class="payment-info-list">
-                        <li><span class="info-label">Account Number:</span> 11700100190810</li>
-                        <li><span class="info-label">IFSC:</span> FDRL0001170</li>
-                        <li><span class="info-label">Branch:</span> THALAKKADATHUR</li>
-                        <li><span class="info-label">GPAY:</span> +91 9656490351</li>
+                <div class="payment-instructions" style="flex: 1; padding: 20px; background-color: #f9f5f7; border-radius: 10px; margin: 0 20px;">
+                    <div class="section-title" style="font-size: 16px; text-transform: uppercase; color: #5c0733; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; display: flex; align-items: center;">
+                        <span style="content: '•'; display: inline-block; background-color: #5c0733; margin-right: 8px; border-radius: 50%;"></span>
+                        Payment Information
+                    </div>
+                    <ul class="payment-info-list" style="list-style-type: none; margin: 0; padding: 0;">
+                        <li style="margin-bottom: 10px; display: flex; align-items: center; position: relative; padding-left: .5em; font-size: 15px;">
+                            <span style="content: '•'; color: #5c0733; font-weight: bold; position: absolute; left: 0;"></span>
+                            <span class="info-label" style="font-weight: 600; margin-right: 10px; ">Account Number:</span> 11700100190810
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: center; position: relative; padding-left: .5em; font-size: 15px;">
+                            <span style="content: '•'; color: #5c0733; font-weight: bold; position: absolute; left: 0;"></span>
+                            <span class="info-label" style="font-weight: 600; margin-right: 10px;">IFSC:</span> FDRL0001170
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: center; position: relative; padding-left: .5em; font-size: 15px;">
+                            <span style="content: '•'; color: #5c0733; font-weight: bold; position: absolute; left: 0;"></span>
+                            <span class="info-label" style="font-weight: 600; margin-right: 10px;">Branch:</span> THALAKKADATHUR
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: center; position: relative; padding-left: .5em; font-size: 15px;">
+                            <span style="content: '•'; color: #5c0733; font-weight: bold; position: absolute; left: 0;"></span>
+                            <span class="info-label" style="font-weight: 600; margin-right: 10px;">GPAY:</span> +91 9656490351
+                        </li>
                     </ul>
                 </div>
                 
-                <!-- Summary Table -->
-                <table class="summary-table">
-                    <tr>
-                        <td class="summary-item-label">Taxable Amount</td>
-                        <td class="summary-item-value text-right">$870.00</td>
+                <table class="summary-table" style="width: 350px; border-collapse: separate; border-spacing: 0; box-shadow: 0 3px 15px rgba(92, 7, 51, 0.05); border-radius: 10px; overflow: hidden;">
+                    <tr style="font-size: 15px;">
+                        <td class="summary-item-label" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; font-weight: 600; color: #7f8c8d;">Taxable Amount</td>
+                        <td class="summary-item-value text-right" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; text-align: right;">$870.00</td>
                     </tr>
-                    <tr>
-                        <td class="summary-item-label">Tax Amount</td>
-                        <td class="summary-item-value text-right">$0.00</td>
+                    <tr  style="font-size: 15px;">
+                        <td class="summary-item-label" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; font-weight: 600; color: #7f8c8d;">Tax Amount</td>
+                        <td class="summary-item-value text-right" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; text-align: right;">$0.00</td>
                     </tr>
-                    <tr class="summary-total-row">
-                        <td class="summary-item-label">Total</td>
-                        <td class="summary-item-value text-right">$870.00</td>
+                    <tr class="summary-total-row" style="background-color: #f9e6ed;">
+                        <td class="summary-item-label" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; color: #5c0733; font-size: 15px; font-weight: 600;">Total</td>
+                        <td class="summary-item-value text-right" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; text-align: right; color: #5c0733; font-size: 17px; font-weight: 700;">$870.00</td>
                     </tr>
-                    <tr>
-                        <td class="summary-item-label">Paid Amount</td>
-                        <td class="summary-item-value text-right">- $174.00</td>
+                    <tr  style="font-size: 15px;">
+                        <td class="summary-item-label" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; font-weight: 600; color: #7f8c8d;">Paid Amount</td>
+                        <td class="summary-item-value text-right" style="padding: 12px 20px; border-bottom: 1px solid #e0e0e0; text-align: right;">- $174.00</td>
                     </tr>
-                    <tr class="balance-due-row">
-                        <td class="summary-item-label">BALANCE DUE</td>
-                        <td class="summary-item-value text-right">$696.00</td>
+                    <tr class="balance-due-row" style="background-color: #5c0733;">
+                        <td class="summary-item-label" style="padding: 10px 20px; color: white; font-size: 14px; font-weight: 700;">BALANCE DUE</td>
+                        <td class="summary-item-value text-right" style="padding: 10px 20px; text-align: right; color: white; font-size: 14px; font-weight: 700;">$696.00</td>
                     </tr>
                 </table>
             </div>
             
-            <!-- Signature & Stamp Section -->
-            <div class="authorization-section">
-                <div class="signature-section">
-                    <div class="section-title">Authorized By</div>
-                    <div class="signature-line"></div>
-                    <div class="signature-title">For PLANVISTOR.COM</div>
+            <div class="authorization-section" style="display: flex; justify-content: space-between; margin-top: 30px;">
+                <div class="signature-section" style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="section-title" style="font-size: 15px; text-transform: uppercase; color: #5c0733; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; display: flex; align-items: center;">
+                        <span style="content: ''; display: inline-block; background-color: #5c0733; margin-right: 8px; border-radius: 50%;"></span>
+                        Authorized By
+                    </div>
+                    <div class="signature-line" style="width: 250px; border-bottom: 1px solid #7f8c8d; margin-top: 50px; margin-bottom: 10px;"></div>
+                    <div class="signature-title" style="font-size: 13px; color: #7f8c8d; text-transform: uppercase;">For PLANVISTOR.COM</div>
                 </div>
                 
-                <div class="stamp-section">
-                    <div class="stamp-placeholder">COMPANY STAMP</div>
-                  
+                <div class="stamp-section" style="width: 160px; height: 160px; border: 2px dashed #e0e0e0; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                    <div class="stamp-placeholder" style="width: 110px; height: 110px; border: 1px solid #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #7f8c8d; text-align: center; transform: rotate(-15deg); background-color: rgba(255, 255, 255, 0.8);">COMPANY STAMP</div>
                 </div>
             </div>
             
-     
-            <!-- <div class="barcode-section">
-                <div class="barcode">
-                    <div>*INVPV-23512*</div>
-                    <div class="barcode-lines"></div>
-                    <div>PV-2025-04-14-23512</div>
-                </div>
-            </div>  -->
+       
         </div>
         
-        <!-- Footer Section -->
-         <div class="invoice-footer">
-            <div class="footer-logo">PLANVISTOR.COM</div>
-            <div class="footer-links">
-                <a href="#">Terms & Conditions</a> | 
-                <a href="#">Privacy Policy</a> | 
-                <a href="#">Support</a> | 
-                <a href="#">Contact Us</a>
+        <div class="invoice-footer" style="color: white; padding: 10px 30px; display: flex; flex-direction: column; align-items: center; text-align: center; background: linear-gradient(to right, #5c0733, #801048);">
+            <div class="footer-logo" style="font-size: 22px; font-weight: 700; margin-bottom: 10px;">PLANVISTOR.COM</div>
+            <div class="footer-links" style="margin-bottom: 10px;">
+                <a href="#" style="color: white; text-decoration: none; margin: 0 10px; font-size: 13px; transition: opacity 0.2s;">Terms & Conditions</a> | 
+                <a href="#" style="color: white; text-decoration: none; margin: 0 10px; font-size: 13px; transition: opacity 0.2s;">Privacy Policy</a> | 
+                <a href="#" style="color: white; text-decoration: none; margin: 0 10px; font-size: 13px; transition: opacity 0.2s;">Support</a> | 
+                <a href="#" style="color: white; text-decoration: none; margin: 0 10px; font-size: 13px; transition: opacity 0.2s;">Contact Us</a>
             </div>
-            <div class="footer-contacts">
-                <span>📱 +995 591014764</span>
-                <span>📧 planvistorofficialgmail.com</span>
-                <span>🌐 www.planvistor.com</span>
+            <div class="footer-contacts" style="margin-bottom: 10px;">
+                <span style="margin: 0 10px; font-size: 13px; color: rgba(255, 255, 255, 0.8);">📱 +995 591014764</span>
+                <span style="margin: 0 10px; font-size: 13px; color: rgba(255, 255, 255, 0.8);">📧 planvistorofficialgmail.com</span>
+                <span style="margin: 0 10px; font-size: 13px; color: rgba(255, 255, 255, 0.8);">🌐 www.planvistor.com</span>
             </div>
-            <div class="copyright">
+            <div class="copyright" style="font-size: 11px; color: rgba(255, 255, 255, 0.6);">
                 © 2025 Planvistor.com. All rights reserved. This invoice is generated electronically and is valid without a signature.
             </div>
         </div>
     </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+  <button class="btn btn-primary" (click)="printInvoice()">Print</button>
+  <button class="btn btn-success" (click)="downloadPDF()">Download PDF</button>
+</div>

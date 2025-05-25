@@ -13,6 +13,9 @@ import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-detai
 import { ModalService } from '../../../services/modal.service';
 import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
 import { ToasterService } from '../../../services/toaster.service';
+import { PrintService } from '../../../services/print.service';
+import { InvoiceTemplate3Component } from '../../../shared/Templates/invoice-template3/invoice-template3.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-expenses-list',
@@ -54,7 +57,9 @@ export class ExpensesListComponent {
     private destinationService: DestinationsService,
     private router: Router,
     private modalService: ModalService,
-    private toastService: ToasterService
+    private toastService: ToasterService,
+    private printService: PrintService,
+    private modalPrintService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -465,4 +470,26 @@ onBalanceFilter(minBalance: number | undefined, maxBalance: number | undefined) 
   getPaymentStatusLabel(status: string): string {
     return this.paymentStatusOptions.find(opt => opt.value === status)?.name || status;
   }
+
+
+ PrintOut(expense: any) {
+  const modalRef = this.modalPrintService.open(InvoiceTemplate3Component, {
+    centered: true,
+    scrollable: false,
+    size: 'lg',
+    backdrop: 'static',
+    keyboard: false,
+  });
+  
+  
+  modalRef.componentInstance.expenseData = expense;
+
+
+  // If you want to print automatically without showing the modal
+  // modalRef.componentInstance.expenseData = expense;
+  // setTimeout(() => {
+  //   modalRef.componentInstance.printInvoice();
+  //   modalRef.close();
+  // }, 100);
+}
 }

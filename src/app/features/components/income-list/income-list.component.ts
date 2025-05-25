@@ -557,4 +557,7 @@ export class IncomeListComponent {
     this.filters.maxBalance = undefined;
     this.loadIncomes();
   }
+
+
+  
 }
