@@ -75,7 +75,7 @@ export class InvoiceTemplate3Component {
       });
 
       const canvas = await html2canvas(clone, {
-        scale: 4,
+        scale: 1,
         logging: false,
         useCORS: true,
         scrollX: 0,
