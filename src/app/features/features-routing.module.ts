@@ -7,6 +7,7 @@ import { ExpenseCreationComponent } from './components/expense-creation/expense-
 import { IncomeCreationComponent } from './components/income-creation/income-creation.component';
 import { IncomeListComponent } from './components/income-list/income-list.component';
 import { ProfitManagementComponent } from './components/profit-management/profit-management.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   {path: 'ExpensesList', component:ExpensesListComponent, canActivate: [AuthGuard] },
   {path: 'ExpenseCreation', component:ExpenseCreationComponent, canActivate: [AuthGuard] },
   {path: 'ProfitManagement', component:ProfitManagementComponent, canActivate: [AuthGuard] },
+  {path: 'UserManagement', component:UserManagementComponent, canActivate: [AuthGuard] },
   {path: 'incomes/new', component:IncomeCreationComponent, canActivate: [AuthGuard] },
   { path: 'incomesList', component: IncomeListComponent, canActivate: [AuthGuard]  },
   { path: 'incomes/edit/:id', component: IncomeCreationComponent ,canActivate: [AuthGuard]},

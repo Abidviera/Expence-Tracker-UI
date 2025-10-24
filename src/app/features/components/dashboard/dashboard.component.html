@@ -1,590 +1,950 @@
-
 <div class="main-content">
-
   <div class="dashboard-container">
     <div class="dashboard-header">
       <div class="dashboard-left">
-        <h1 class="welcome-message">Welcome back, {{ user?.firstName }} {{ user?.lastName }}!</h1>
-       
+        <h1 class="welcome-message">
+          Welcome back, {{ user?.firstName }} {{ user?.lastName }}!
+        </h1>
       </div>
-      
+
       <div class="dashboard-center">
         <div class="search-container">
-          <input type="text" class="search-input" placeholder="Search expenses, categories, dates...">
-          <svg class="search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search expenses, categories, dates..."
+          />
+          <svg
+            class="search-icon"
+            width="16"
+            height="16"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
         </div>
       </div>
-      
+
       <div class="dashboard-right">
         <button class="icon-button" aria-label="Notifications">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
           </svg>
           <span class="notification-badge">3</span>
         </button>
-        
+
         <button class="icon-button" aria-label="Settings">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
         </button>
-        
+
         <button class="action-button" routerLink="/features/ExpenseCreation">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <svg
+            width="16"
+            height="16"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
           </svg>
           New Expense
         </button>
       </div>
     </div>
-    
+
     <div class="dashboard-grid">
-        <!-- First Row - Stats Cards -->
-        <div class="col-span-3 fade-in" style="animation-delay: 0.1s">
-            <div class="widget holographic hover-raise">
-                <span class="widget-badge success">+15%</span>
-                <span class="widget-title">TOTAL EXPENSES</span>
-                <div class="widget-value">$23,548</div>
-                <div class="widget-trend">
-                    <i class="fas fa-arrow-up trend-up"></i>
-                    <span>15% from last month</span>
-                </div>
-                <div class="widget-icon"><i class="fas fa-dollar-sign"></i></div>
-                <div class="animated-bg">
-                    <div class="animated-circle circle1"></div>
-                    <div class="animated-circle circle2"></div>
-                </div>
-            </div>
-        </div>
-  
-        <div class="col-span-3 fade-in" style="animation-delay: 0.2s">
-            <div class="widget holographic hover-raise">
-                <span class="widget-badge warning">12</span>
-                <span class="widget-title">PENDING APPROVALS</span>
-                <div class="widget-value">12</div>
-                <div class="widget-trend">
-                    <i class="fas fa-arrow-down trend-down"></i>
-                    <span>3 new today</span>
-                </div>
-                <div class="widget-icon"><i class="fas fa-clipboard-list"></i></div>
-                <div class="animated-bg">
-                    <div class="animated-circle circle2"></div>
-                    <div class="animated-circle circle3"></div>
-                </div>
-            </div>
-        </div>
-  
-        <div class="col-span-3 fade-in" style="animation-delay: 0.3s">
-            <div class="widget holographic hover-raise">
-                <span class="widget-badge info">24</span>
-                <span class="widget-title">SCHEDULED TRIPS</span>
-                <div class="widget-value">24</div>
-                <div class="widget-trend">
-                    <i class="fas fa-arrow-up trend-up"></i>
-                    <span>5 this month</span>
-                </div>
-                <div class="widget-icon"><i class="fas fa-plane"></i></div>
-                <div class="animated-bg">
-                    <div class="animated-circle circle1"></div>
-                    <div class="animated-circle circle3"></div>
-                </div>
-            </div>
-        </div>
-  
-        <div class="col-span-3 fade-in" style="animation-delay: 0.4s">
-            <div class="widget holographic hover-raise">
-                <span class="widget-badge success">+42%</span>
-                <span class="widget-title">TOTAL INCOME</span>
-                <div class="widget-value">$82,741</div>
-                <div class="widget-trend">
-                    <i class="fas fa-arrow-up trend-up"></i>
-                   
-                    
-                      <span>42% from last quarter</span>
-                  
-                  <div class="widget-icon"><i class="fas fa-wallet"></i></div>
-                  <div class="animated-bg">
-                      <div class="animated-circle circle2"></div>
-                      <div class="animated-circle circle3"></div>
-                  </div>
-              </div>
+      <!-- First Row - Stats Cards -->
+      <div class="col-span-3 fade-in" style="animation-delay: 0.1s">
+        <div class="widget holographic hover-raise">
+          <span class="widget-badge success">+15%</span>
+          <span class="widget-title">TOTAL EXPENSES</span>
+          <div class="widget-value">$23,548</div>
+          <div class="widget-trend">
+            <i class="fas fa-arrow-up trend-up"></i>
+            <span>15% from last month</span>
           </div>
+          <div class="widget-icon"><i class="fas fa-dollar-sign"></i></div>
+          <div class="animated-bg">
+            <div class="animated-circle circle1"></div>
+            <div class="animated-circle circle2"></div>
+          </div>
+        </div>
       </div>
-      
+
+      <div class="col-span-3 fade-in" style="animation-delay: 0.2s">
+        <div class="widget holographic hover-raise">
+          <span class="widget-badge warning">12</span>
+          <span class="widget-title">PENDING APPROVALS</span>
+          <div class="widget-value">12</div>
+          <div class="widget-trend">
+            <i class="fas fa-arrow-down trend-down"></i>
+            <span>3 new today</span>
+          </div>
+          <div class="widget-icon"><i class="fas fa-clipboard-list"></i></div>
+          <div class="animated-bg">
+            <div class="animated-circle circle2"></div>
+            <div class="animated-circle circle3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-3 fade-in" style="animation-delay: 0.3s">
+        <div class="widget holographic hover-raise">
+          <span class="widget-badge info">24</span>
+          <span class="widget-title">SCHEDULED TRIPS</span>
+          <div class="widget-value">24</div>
+          <div class="widget-trend">
+            <i class="fas fa-arrow-up trend-up"></i>
+            <span>5 this month</span>
+          </div>
+          <div class="widget-icon"><i class="fas fa-plane"></i></div>
+          <div class="animated-bg">
+            <div class="animated-circle circle1"></div>
+            <div class="animated-circle circle3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-3 fade-in" style="animation-delay: 0.4s">
+        <div class="widget holographic hover-raise">
+          <span class="widget-badge success">+42%</span>
+          <span class="widget-title">TOTAL INCOME</span>
+          <div class="widget-value">$82,741</div>
+          <div class="widget-trend">
+            <i class="fas fa-arrow-up trend-up"></i>
+
+            <span>42% from last quarter</span>
+
+            <div class="widget-icon"><i class="fas fa-wallet"></i></div>
+            <div class="animated-bg">
+              <div class="animated-circle circle2"></div>
+              <div class="animated-circle circle3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Second Row - Main Stats and Categories -->
       <div class="col-span-8 fade-in" style="animation-delay: 0.5s">
-          <div class="chart-container futuristic-border hover-raise">
-              <div class="chart-header">
-                  <h3 class="chart-title">Expense Analytics</h3>
-                  <div class="chart-filters">
-                      <button class="chart-filter">Week</button>
-                      <button class="chart-filter active">Month</button>
-                      <button class="chart-filter">Quarter</button>
-                      <button class="chart-filter">Year</button>
-                  </div>
-              </div>
-              <div class="chart-canvas">
-                  <div class="chart-placeholder">
-                      <div style="text-align: center; position: relative; z-index: 1;">
-                          <i class="fas fa-chart-line" style="font-size: 2rem; color: #4361ee; margin-bottom: 1rem;"></i>
-                          <p>waiting for requirements</p>
-                      </div>
-                  </div>
-              </div>
+        <div class="chart-container futuristic-border hover-raise">
+          <div class="chart-header">
+            <h3 class="chart-title">Expense Analytics</h3>
+            <div class="chart-filters">
+              <button class="chart-filter">Week</button>
+              <button class="chart-filter active">Month</button>
+              <button class="chart-filter">Quarter</button>
+              <button class="chart-filter">Year</button>
+            </div>
           </div>
+          <div class="chart-canvas">
+            <div class="chart-placeholder">
+              <div style="text-align: center; position: relative; z-index: 1">
+                <i
+                  class="fas fa-chart-line"
+                  style="font-size: 2rem; color: #4361ee; margin-bottom: 1rem"
+                ></i>
+                <p>waiting for requirements</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
+
       <div class="col-span-4 fade-in" style="animation-delay: 0.6s">
-          <div class="stats-card hover-raise">
-              <div class="stats-card-bg"></div>
-              <div class="stats-card-content">
-                  <h3 class="stats-card-title">Budget Status</h3>
-                  <div class="stats-card-value">$78,500</div>
-                  <div class="stats-card-subtitle">Total budget allocated</div>
-                  
-                  <div class="card-progress">
-                      <div class="progress-bar"></div>
-                  </div>
-                  
-                  <div class="card-stats">
-                      <div class="card-stat">
-                          <div class="card-stat-value">75%</div>
-                          <div class="card-stat-label">Used</div>
-                      </div>
-                      <div class="card-stat">
-                          <div class="card-stat-value">$19,625</div>
-                          <div class="card-stat-label">Remaining</div>
-                      </div>
-                  </div>
+        <div class="stats-card hover-raise">
+          <div class="stats-card-bg"></div>
+          <div class="stats-card-content">
+            <h3 class="stats-card-title">Budget Status</h3>
+            <div class="stats-card-value">$78,500</div>
+            <div class="stats-card-subtitle">Total budget allocated</div>
+
+            <div class="card-progress">
+              <div class="progress-bar"></div>
+            </div>
+
+            <div class="card-stats">
+              <div class="card-stat">
+                <div class="card-stat-value">75%</div>
+                <div class="card-stat-label">Used</div>
               </div>
+              <div class="card-stat">
+                <div class="card-stat-value">$19,625</div>
+                <div class="card-stat-label">Remaining</div>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
-      
+
       <!-- Third Row - Categories and Upcoming -->
       <div class="col-span-4 fade-in" style="animation-delay: 0.7s">
-          <div class="widget hover-raise">
-              <div class="widget-title">EXPENSE CATEGORIES</div>
-              
-              <div class="expense-category">
-                  <div class="category-icon hotel-icon">
-                      <i class="fas fa-hotel"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Hotels & Accommodation</div>
-                      <div class="category-amount">$8,245</div>
-                  </div>
-                  <div class="category-percentage success">35%</div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon flight-icon">
-                      <i class="fas fa-plane"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Flights & Transport</div>
-                      <div class="category-amount">$7,064</div>
-                  </div>
-                  <div class="category-percentage warning">30%</div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon food-icon">
-                      <i class="fas fa-utensils"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Food & Dining</div>
-                      <div class="category-amount">$4,710</div>
-                  </div>
-                  <div class="category-percentage info">20%</div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon transport-icon">
-                      <i class="fas fa-taxi"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Local Transport</div>
-                      <div class="category-amount">$3,529</div>
-                  </div>
-                  <div class="category-percentage">15%</div>
-              </div>
+        <div class="widget hover-raise">
+          <div class="widget-title">EXPENSE CATEGORIES</div>
+
+          <div class="expense-category">
+            <div class="category-icon hotel-icon">
+              <i class="fas fa-hotel"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Hotels & Accommodation</div>
+              <div class="category-amount">$8,245</div>
+            </div>
+            <div class="category-percentage success">35%</div>
           </div>
+
+          <div class="expense-category">
+            <div class="category-icon flight-icon">
+              <i class="fas fa-plane"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Flights & Transport</div>
+              <div class="category-amount">$7,064</div>
+            </div>
+            <div class="category-percentage warning">30%</div>
+          </div>
+
+          <div class="expense-category">
+            <div class="category-icon food-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Food & Dining</div>
+              <div class="category-amount">$4,710</div>
+            </div>
+            <div class="category-percentage info">20%</div>
+          </div>
+
+          <div class="expense-category">
+            <div class="category-icon transport-icon">
+              <i class="fas fa-taxi"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Local Transport</div>
+              <div class="category-amount">$3,529</div>
+            </div>
+            <div class="category-percentage">15%</div>
+          </div>
+        </div>
       </div>
-      
+
       <div class="col-span-4 fade-in" style="animation-delay: 0.8s">
-          <div class="widget hover-raise">
-              <div class="widget-title">UPCOMING TRIPS</div>
-              
-              <div class="expense-category">
-                  <div class="category-icon flight-icon">
-                      <i class="fas fa-briefcase"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Tokyo Business Conference</div>
-                      <div class="category-amount">May 10-15, 2035</div>
-                  </div>
-                  <div class="location-marker">
-                      <i class="fas fa-map-marker-alt"></i>
-                  </div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon hotel-icon">
-                      <i class="fas fa-handshake"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Singapore Client Meeting</div>
-                      <div class="category-amount">May 22-24, 2035</div>
-                  </div>
-                  <div class="location-marker">
-                      <i class="fas fa-map-marker-alt"></i>
-                  </div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon transport-icon">
-                      <i class="fas fa-users"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Berlin Tech Summit</div>
-                      <div class="category-amount">June 5-9, 2035</div>
-                  </div>
-                  <div class="location-marker">
-                      <i class="fas fa-map-marker-alt"></i>
-                  </div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon food-icon">
-                      <i class="fas fa-graduation-cap"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">New York Training Program</div>
-                      <div class="category-amount">June 20-25, 2035</div>
-                  </div>
-                  <div class="location-marker">
-                      <i class="fas fa-map-marker-alt"></i>
-                  </div>
-              </div>
+        <div class="widget hover-raise">
+          <div class="widget-title">UPCOMING TRIPS</div>
+
+          <div class="expense-category">
+            <div class="category-icon flight-icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Tokyo Business Conference</div>
+              <div class="category-amount">May 10-15, 2035</div>
+            </div>
+            <div class="location-marker">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
           </div>
+
+          <div class="expense-category">
+            <div class="category-icon hotel-icon">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Singapore Client Meeting</div>
+              <div class="category-amount">May 22-24, 2035</div>
+            </div>
+            <div class="location-marker">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+          </div>
+
+          <div class="expense-category">
+            <div class="category-icon transport-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Berlin Tech Summit</div>
+              <div class="category-amount">June 5-9, 2035</div>
+            </div>
+            <div class="location-marker">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+          </div>
+
+          <div class="expense-category">
+            <div class="category-icon food-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">New York Training Program</div>
+              <div class="category-amount">June 20-25, 2035</div>
+            </div>
+            <div class="location-marker">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+          </div>
+        </div>
       </div>
-      
+
       <div class="col-span-4 fade-in" style="animation-delay: 0.9s">
-          <div class="widget hover-raise holographic">
-              <div class="widget-title">AI INSIGHTS <span class="ai-badge"><i class="fas fa-robot"></i> Smart</span></div>
-              
-              <div class="expense-category">
-                  <div class="category-icon info-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                      <i class="fas fa-lightbulb"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Hotels are 12% over budget</div>
-                      <div class="category-amount">Recommendation: Consider alternative lodging</div>
-                  </div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon info-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                      <i class="fas fa-lightbulb"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Flight prices dropping next month</div>
-                      <div class="category-amount">Recommendation: Delay booking Asia trips</div>
-                  </div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon info-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                      <i class="fas fa-lightbulb"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Expense trend analysis</div>
-                      <div class="category-amount">Q2 projected to be 18% higher than Q1</div>
-                  </div>
-              </div>
-              
-              <div class="expense-category">
-                  <div class="category-icon info-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                      <i class="fas fa-lightbulb"></i>
-                  </div>
-                  <div class="category-details">
-                      <div class="category-name">Budget optimization</div>
-                      <div class="category-amount">Potential savings: $2,450 this quarter</div>
-                  </div>
-              </div>
+        <div class="widget hover-raise holographic">
+          <div class="widget-title">
+            AI INSIGHTS
+            <span class="ai-badge"><i class="fas fa-robot"></i> Smart</span>
           </div>
+
+          <div class="expense-category">
+            <div
+              class="category-icon info-icon"
+              style="background: linear-gradient(135deg, #4facfe, #00f2fe)"
+            >
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Hotels are 12% over budget</div>
+              <div class="category-amount">
+                Recommendation: Consider alternative lodging
+              </div>
+            </div>
+          </div>
+
+          <div class="expense-category">
+            <div
+              class="category-icon info-icon"
+              style="background: linear-gradient(135deg, #4facfe, #00f2fe)"
+            >
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Flight prices dropping next month</div>
+              <div class="category-amount">
+                Recommendation: Delay booking Asia trips
+              </div>
+            </div>
+          </div>
+
+          <div class="expense-category">
+            <div
+              class="category-icon info-icon"
+              style="background: linear-gradient(135deg, #4facfe, #00f2fe)"
+            >
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Expense trend analysis</div>
+              <div class="category-amount">
+                Q2 projected to be 18% higher than Q1
+              </div>
+            </div>
+          </div>
+
+          <div class="expense-category">
+            <div
+              class="category-icon info-icon"
+              style="background: linear-gradient(135deg, #4facfe, #00f2fe)"
+            >
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="category-details">
+              <div class="category-name">Budget optimization</div>
+              <div class="category-amount">
+                Potential savings: $2,450 this quarter
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
+
       <!-- Fourth Row - Recent Transactions and Calendar -->
       <div class="col-span-8 fade-in" style="animation-delay: 1s">
-          <div class="table-container hover-raise">
-              <div class="table-header">
-                  <h3 class="table-title">Recent Transactions</h3>
-                  <div class="table-action">View All</div>
-              </div>
-              
-              <table>
-                  <thead>
-                      <tr>
-                          <th>Transaction</th>
-                          <th>Amount</th>
-                          <th>Date</th>
-                          <th>Category</th>
-                          <th>Status</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>
-                              <div class="user-details">
-                                  <div class="user-avatar-sm hotel-icon">
-                                      <i class="fas fa-hotel"></i>
-                                  </div>
-                                  <div>
-                                      <div class="user-name-sm">Hilton Hotel</div>
-                                      <div class="user-role-sm">Tokyo, Japan</div>
-                                  </div>
-                              </div>
-                          </td>
-                          <td>$1,850.00</td>
-                          <td>Apr 20, 2035</td>
-                          <td>Accommodation</td>
-                          <td><span class="status-badge approved">Approved</span></td>
-                      </tr>
-                      <tr>
-                          <td>
-                              <div class="user-details">
-                                  <div class="user-avatar-sm flight-icon">
-                                      <i class="fas fa-plane"></i>
-                                  </div>
-                                  <div>
-                                      <div class="user-name-sm">Global Airways</div>
-                                      <div class="user-role-sm">SFO to NRT</div>
-                                  </div>
-                              </div>
-                          </td>
-                          <td>$2,450.00</td>
-                          <td>Apr 18, 2035</td>
-                          <td>Travel</td>
-                          <td><span class="status-badge approved">Approved</span></td>
-                      </tr>
-                      <tr>
-                          <td>
-                              <div class="user-details">
-                                  <div class="user-avatar-sm food-icon">
-                                      <i class="fas fa-utensils"></i>
-                                  </div>
-                                  <div>
-                                      <div class="user-name-sm">Sakura Restaurant</div>
-                                      <div class="user-role-sm">Client Dinner</div>
-                                  </div>
-                              </div>
-                          </td>
-                          <td>$385.00</td>
-                          <td>Apr 15, 2035</td>
-                          <td>Meals</td>
-                          <td><span class="status-badge pending">Pending</span></td>
-                      </tr>
-                      <tr>
-                          <td>
-                              <div class="user-details">
-                                  <div class="user-avatar-sm transport-icon">
-                                      <i class="fas fa-taxi"></i>
-                                  </div>
-                                  <div>
-                                      <div class="user-name-sm">City Taxi</div>
-                                      <div class="user-role-sm">Local Transport</div>
-                                  </div>
-                              </div>
-                          </td>
-                          <td>$75.50</td>
-                          <td>Apr 12, 2035</td>
-                          <td>Transport</td>
-                          <td><span class="status-badge approved">Approved</span></td>
-                      </tr>
-                  </tbody>
-              </table>
+        <div class="table-container hover-raise">
+          <div class="table-header">
+            <h3 class="table-title">Recent Transactions</h3>
+            <div class="table-action">View All</div>
           </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="user-details">
+                    <div class="user-avatar-sm hotel-icon">
+                      <i class="fas fa-hotel"></i>
+                    </div>
+                    <div>
+                      <div class="user-name-sm">Hilton Hotel</div>
+                      <div class="user-role-sm">Tokyo, Japan</div>
+                    </div>
+                  </div>
+                </td>
+                <td>$1,850.00</td>
+                <td>Apr 20, 2035</td>
+                <td>Accommodation</td>
+                <td><span class="status-badge approved">Approved</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-details">
+                    <div class="user-avatar-sm flight-icon">
+                      <i class="fas fa-plane"></i>
+                    </div>
+                    <div>
+                      <div class="user-name-sm">Global Airways</div>
+                      <div class="user-role-sm">SFO to NRT</div>
+                    </div>
+                  </div>
+                </td>
+                <td>$2,450.00</td>
+                <td>Apr 18, 2035</td>
+                <td>Travel</td>
+                <td><span class="status-badge approved">Approved</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-details">
+                    <div class="user-avatar-sm food-icon">
+                      <i class="fas fa-utensils"></i>
+                    </div>
+                    <div>
+                      <div class="user-name-sm">Sakura Restaurant</div>
+                      <div class="user-role-sm">Client Dinner</div>
+                    </div>
+                  </div>
+                </td>
+                <td>$385.00</td>
+                <td>Apr 15, 2035</td>
+                <td>Meals</td>
+                <td><span class="status-badge pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-details">
+                    <div class="user-avatar-sm transport-icon">
+                      <i class="fas fa-taxi"></i>
+                    </div>
+                    <div>
+                      <div class="user-name-sm">City Taxi</div>
+                      <div class="user-role-sm">Local Transport</div>
+                    </div>
+                  </div>
+                </td>
+                <td>$75.50</td>
+                <td>Apr 12, 2035</td>
+                <td>Transport</td>
+                <td><span class="status-badge approved">Approved</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      
+
       <div class="col-span-4 fade-in" style="animation-delay: 1.1s">
-          <div class="widget hover-raise">
-              <div class="widget-title">SAVINGS FORECAST</div>
-              
-              <div class="chart-canvas" style="height: 200px;">
-                  <div class="chart-placeholder" style="background: linear-gradient(to right, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);">
-                      <div style="text-align: center; position: relative; z-index: 1;">
-                          <i class="fas fa-chart-pie" style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;"></i>
-                          <p>Potential savings visualization</p>
-                      </div>
-                  </div>
+        <div class="widget hover-raise">
+          <div class="widget-title">SAVINGS FORECAST</div>
+
+          <div class="chart-canvas" style="height: 200px">
+            <div
+              class="chart-placeholder"
+              style="
+                background: linear-gradient(
+                  to right,
+                  rgba(16, 185, 129, 0.1) 0%,
+                  rgba(59, 130, 246, 0.1) 100%
+                );
+              "
+            >
+              <div style="text-align: center; position: relative; z-index: 1">
+                <i
+                  class="fas fa-chart-pie"
+                  style="font-size: 2rem; color: #10b981; margin-bottom: 1rem"
+                ></i>
+                <p>Potential savings visualization</p>
               </div>
-              
-              <div style="margin-top: 1.5rem;">
-                  <div class="expense-category" style="margin-top: 0; padding-top: 0;">
-                      <div class="category-icon success-icon" style="background: linear-gradient(135deg, #10b981, #06d6a0);">
-                          <i class="fas fa-piggy-bank"></i>
-                      </div>
-                      <div class="category-details">
-                          <div class="category-name">Current Savings</div>
-                          <div class="category-amount">$5,240 (6.7% of budget)</div>
-                      </div>
-                  </div>
-                  
-                  <div class="expense-category">
-                      <div class="category-icon info-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
-                          <i class="fas fa-chart-line"></i>
-                      </div>
-                      <div class="category-details">
-                          <div class="category-name">Projected Year-End Savings</div>
-                          <div class="category-amount">$15,700 (8.2% of annual budget)</div>
-                      </div>
-                  </div>
-              </div>
+            </div>
           </div>
+
+          <div style="margin-top: 1.5rem">
+            <div class="expense-category" style="margin-top: 0; padding-top: 0">
+              <div
+                class="category-icon success-icon"
+                style="background: linear-gradient(135deg, #10b981, #06d6a0)"
+              >
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="category-details">
+                <div class="category-name">Current Savings</div>
+                <div class="category-amount">$5,240 (6.7% of budget)</div>
+              </div>
+            </div>
+
+            <div class="expense-category">
+              <div
+                class="category-icon info-icon"
+                style="background: linear-gradient(135deg, #3b82f6, #60a5fa)"
+              >
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="category-details">
+                <div class="category-name">Projected Year-End Savings</div>
+                <div class="category-amount">
+                  $15,700 (8.2% of annual budget)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
+
       <!-- Fifth Row - Quick Add and Currency Exchange -->
       <div class="col-span-6 fade-in" style="animation-delay: 1.2s">
-          <div class="widget hover-raise">
-              <div class="widget-title">QUICK EXPENSE ENTRY</div>
-              
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
-                  <div style="text-align: center; padding: 1.5rem; border-radius: 12px; background-color: rgba(59, 130, 246, 0.1); cursor: pointer; transition: all 0.3s ease;" class="holographic">
-                      <i class="fas fa-plane" style="font-size: 1.8rem; color: #3b82f6; margin-bottom: 0.8rem;"></i>
-                      <div style="font-weight: 600; font-size: 0.9rem;">Flight</div>
-                  </div>
-                  
-                  <div style="text-align: center; padding: 1.5rem; border-radius: 12px; background-color: rgba(245, 158, 11, 0.1); cursor: pointer; transition: all 0.3s ease;" class="holographic">
-                      <i class="fas fa-hotel" style="font-size: 1.8rem; color: #f59e0b; margin-bottom: 0.8rem;"></i>
-                      <div style="font-weight: 600; font-size: 0.9rem;">Hotel</div>
-                  </div>
-                  
-                  <div style="text-align: center; padding: 1.5rem; border-radius: 12px; background-color: rgba(16, 185, 129, 0.1); cursor: pointer; transition: all 0.3s ease;" class="holographic">
-                      <i class="fas fa-utensils" style="font-size: 1.8rem; color: #10b981; margin-bottom: 0.8rem;"></i>
-                      <div style="font-weight: 600; font-size: 0.9rem;">Meal</div>
-                  </div>
-                  
-                  <div style="text-align: center; padding: 1.5rem; border-radius: 12px; background-color: rgba(239, 68, 68, 0.1); cursor: pointer; transition: all 0.3s ease;" class="holographic">
-                      <i class="fas fa-taxi" style="font-size: 1.8rem; color: #ef4444; margin-bottom: 0.8rem;"></i>
-                      <div style="font-weight: 600; font-size: 0.9rem;">Transport</div>
-                  </div>
-                  
-                  <div style="text-align: center; padding: 1.5rem; border-radius: 12px; background-color: rgba(124, 58, 237, 0.1); cursor: pointer; transition: all 0.3s ease;" class="holographic">
-                      <i class="fas fa-shopping-bag" style="font-size: 1.8rem; color: #7c3aed; margin-bottom: 0.8rem;"></i>
-                      <div style="font-weight: 600; font-size: 0.9rem;">Shopping</div>
-                  </div>
-                  
-                  <div style="text-align: center; padding: 1.5rem; border-radius: 12px; background-color: rgba(20, 184, 166, 0.1); cursor: pointer; transition: all 0.3s ease;" class="holographic">
-                      <i class="fas fa-plus" style="font-size: 1.8rem; color: #14b8a6; margin-bottom: 0.8rem;"></i>
-                      <div style="font-weight: 600; font-size: 0.9rem;">Other</div>
-                  </div>
-              </div>
+        <div class="widget hover-raise">
+          <div class="widget-title">QUICK EXPENSE ENTRY</div>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 1rem;
+              margin-top: 1rem;
+            "
+          >
+            <div
+              style="
+                text-align: center;
+                padding: 1.5rem;
+                border-radius: 12px;
+                background-color: rgba(59, 130, 246, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              class="holographic"
+            >
+              <i
+                class="fas fa-plane"
+                style="font-size: 1.8rem; color: #3b82f6; margin-bottom: 0.8rem"
+              ></i>
+              <div style="font-weight: 600; font-size: 0.9rem">Flight</div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                padding: 1.5rem;
+                border-radius: 12px;
+                background-color: rgba(245, 158, 11, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              class="holographic"
+            >
+              <i
+                class="fas fa-hotel"
+                style="font-size: 1.8rem; color: #f59e0b; margin-bottom: 0.8rem"
+              ></i>
+              <div style="font-weight: 600; font-size: 0.9rem">Hotel</div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                padding: 1.5rem;
+                border-radius: 12px;
+                background-color: rgba(16, 185, 129, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              class="holographic"
+            >
+              <i
+                class="fas fa-utensils"
+                style="font-size: 1.8rem; color: #10b981; margin-bottom: 0.8rem"
+              ></i>
+              <div style="font-weight: 600; font-size: 0.9rem">Meal</div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                padding: 1.5rem;
+                border-radius: 12px;
+                background-color: rgba(239, 68, 68, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              class="holographic"
+            >
+              <i
+                class="fas fa-taxi"
+                style="font-size: 1.8rem; color: #ef4444; margin-bottom: 0.8rem"
+              ></i>
+              <div style="font-weight: 600; font-size: 0.9rem">Transport</div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                padding: 1.5rem;
+                border-radius: 12px;
+                background-color: rgba(124, 58, 237, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              class="holographic"
+            >
+              <i
+                class="fas fa-shopping-bag"
+                style="font-size: 1.8rem; color: #7c3aed; margin-bottom: 0.8rem"
+              ></i>
+              <div style="font-weight: 600; font-size: 0.9rem">Shopping</div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                padding: 1.5rem;
+                border-radius: 12px;
+                background-color: rgba(20, 184, 166, 0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              class="holographic"
+            >
+              <i
+                class="fas fa-plus"
+                style="font-size: 1.8rem; color: #14b8a6; margin-bottom: 0.8rem"
+              ></i>
+              <div style="font-weight: 600; font-size: 0.9rem">Other</div>
+            </div>
           </div>
+        </div>
       </div>
-      
+
       <div class="col-span-6 fade-in" style="animation-delay: 1.3s">
-          <div class="widget hover-raise">
-              <div class="widget-title">CURRENCY EXCHANGE</div>
-              
-              <div style="display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap;">
-                  <div style="flex: 1; min-width: 200px;">
-                      <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #64748b;">Top Currencies</div>
-                      
-                      <div class="expense-category" style="margin-top: 0; padding: 0.5rem;">
-                          <div style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.8rem; background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; font-weight: 600; font-size: 0.8rem;">€</div>
-                          <div class="category-details">
-                              <div class="category-name">EUR - Euro</div>
-                              <div class="category-amount">1 USD = 0.92 EUR</div>
-                          </div>
-                          <div class="trend-up">
-                              <i class="fas fa-arrow-up"></i> 0.3%
-                          </div>
-                      </div>
-                      
-                      <div class="expense-category" style="padding: 0.5rem;">
-                          <div style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.8rem; background-color: rgba(245, 158, 11, 0.1); color: #f59e0b; font-weight: 600; font-size: 0.8rem;">¥</div>
-                          <div class="category-details">
-                              <div class="category-name">JPY - Japanese Yen</div>
-                              <div class="category-amount">1 USD = 142.67 JPY</div>
-                          </div>
-                          <div class="trend-down">
-                              <i class="fas fa-arrow-down"></i> 0.8%
-                          </div>
-                      </div>
-                      
-                      <div class="expense-category" style="padding: 0.5rem;">
-                          <div style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.8rem; background-color: rgba(16, 185, 129, 0.1); color: #10b981; font-weight: 600; font-size: 0.8rem;">£</div>
-                          <div class="category-details">
-                              <div class="category-name">GBP - British Pound</div>
-                              <div class="category-amount">1 USD = 0.79 GBP</div>
-                          </div>
-                          <div class="trend-up">
-                              <i class="fas fa-arrow-up"></i> 0.5%
-                          </div>
-                      </div>
-                      
-                      <div class="expense-category" style="padding: 0.5rem;">
-                          <div style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.8rem; background-color: rgba(239, 68, 68, 0.1); color: #ef4444; font-weight: 600; font-size: 0.8rem;">¥</div>
-                          <div class="category-details">
-                              <div class="category-name">CNY - Chinese Yuan</div>
-                              <div class="category-amount">1 USD = 7.19 CNY</div>
-                          </div>
-                          <div class="trend-down">
-                              <i class="fas fa-arrow-down"></i> 0.2%
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column;">
-                      <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #64748b;">Quick Converter</div>
-                      
-                      <div style="background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1)); border-radius: 12px; padding: 1.5rem; height: 100%; display: flex; flex-direction: column; gap: 1rem;">
-                          <div style="display: flex; gap: 1rem; align-items: center;">
-                              <div style="flex: 2;">
-                                  <input type="text" value="1000" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.8); font-weight: 600; font-size: 1rem; text-align: right;">
-                              </div>
-                              <div style="flex: 1;">
-                                  <select style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.8); font-weight: 600;">
-                                      <option>USD</option>
-                                      <option>EUR</option>
-                                      <option>JPY</option>
-                                      <option>GBP</option>
-                                  </select>
-                              </div>
-                          </div>
-                          
-                          <div style="display: flex; align-items: center; justify-content: center;">
-                              <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.9); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-                                  <i class="fas fa-exchange-alt" style="color: #4361ee;"></i>
-                              </div>
-                          </div>
-                          
-                          <div style="display: flex; gap: 1rem; align-items: center;">
-                              <div style="flex: 2;">
-                                  <input type="text" value="142,670" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.8); font-weight: 600; font-size: 1rem; text-align: right;">
-                              </div>
-                              <div style="flex: 1;">
-                                  <select style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.8); font-weight: 600;">
-                                      <option>JPY</option>
-                                      <option>USD</option>
-                                      <option>EUR</option>
-                                      <option>GBP</option>
-                                  </select>
-                              </div>
-                          </div>
-                          
-                          <div style="text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #64748b;">
-                              Exchange rates updated: Apr 24, 2035 - 09:45 AM
-                          </div>
-                      </div>
-                  </div>
+        <div class="widget hover-raise">
+          <div class="widget-title">CURRENCY EXCHANGE</div>
+
+          <div
+            style="
+              display: flex;
+              gap: 1.5rem;
+              margin-top: 1rem;
+              flex-wrap: wrap;
+            "
+          >
+            <div style="flex: 1; min-width: 200px">
+              <div
+                style="
+                  font-weight: 600;
+                  font-size: 0.9rem;
+                  margin-bottom: 0.5rem;
+                  color: #64748b;
+                "
+              >
+                Top Currencies
               </div>
+
+              <div
+                class="expense-category"
+                style="margin-top: 0; padding: 0.5rem"
+              >
+                <div
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 0.8rem;
+                    background-color: rgba(59, 130, 246, 0.1);
+                    color: #3b82f6;
+                    font-weight: 600;
+                    font-size: 0.8rem;
+                  "
+                >
+                  €
+                </div>
+                <div class="category-details">
+                  <div class="category-name">EUR - Euro</div>
+                  <div class="category-amount">1 USD = 0.92 EUR</div>
+                </div>
+                <div class="trend-up"><i class="fas fa-arrow-up"></i> 0.3%</div>
+              </div>
+
+              <div class="expense-category" style="padding: 0.5rem">
+                <div
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 0.8rem;
+                    background-color: rgba(245, 158, 11, 0.1);
+                    color: #f59e0b;
+                    font-weight: 600;
+                    font-size: 0.8rem;
+                  "
+                >
+                  ¥
+                </div>
+                <div class="category-details">
+                  <div class="category-name">JPY - Japanese Yen</div>
+                  <div class="category-amount">1 USD = 142.67 JPY</div>
+                </div>
+                <div class="trend-down">
+                  <i class="fas fa-arrow-down"></i> 0.8%
+                </div>
+              </div>
+
+              <div class="expense-category" style="padding: 0.5rem">
+                <div
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 0.8rem;
+                    background-color: rgba(16, 185, 129, 0.1);
+                    color: #10b981;
+                    font-weight: 600;
+                    font-size: 0.8rem;
+                  "
+                >
+                  £
+                </div>
+                <div class="category-details">
+                  <div class="category-name">GBP - British Pound</div>
+                  <div class="category-amount">1 USD = 0.79 GBP</div>
+                </div>
+                <div class="trend-up"><i class="fas fa-arrow-up"></i> 0.5%</div>
+              </div>
+
+              <div class="expense-category" style="padding: 0.5rem">
+                <div
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 0.8rem;
+                    background-color: rgba(239, 68, 68, 0.1);
+                    color: #ef4444;
+                    font-weight: 600;
+                    font-size: 0.8rem;
+                  "
+                >
+                  ¥
+                </div>
+                <div class="category-details">
+                  <div class="category-name">CNY - Chinese Yuan</div>
+                  <div class="category-amount">1 USD = 7.19 CNY</div>
+                </div>
+                <div class="trend-down">
+                  <i class="fas fa-arrow-down"></i> 0.2%
+                </div>
+              </div>
+            </div>
+
+            <div
+              style="
+                flex: 1;
+                min-width: 200px;
+                display: flex;
+                flex-direction: column;
+              "
+            >
+              <div
+                style="
+                  font-weight: 600;
+                  font-size: 0.9rem;
+                  margin-bottom: 0.5rem;
+                  color: #64748b;
+                "
+              >
+                Quick Converter
+              </div>
+
+              <div
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    rgba(67, 97, 238, 0.1),
+                    rgba(114, 9, 183, 0.1)
+                  );
+                  border-radius: 12px;
+                  padding: 1.5rem;
+                  height: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 1rem;
+                "
+              >
+                <div style="display: flex; gap: 1rem; align-items: center">
+                  <div style="flex: 2">
+                    <input
+                      type="text"
+                      value="1000"
+                      style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border-radius: 10px;
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        background: rgba(255, 255, 255, 0.8);
+                        font-weight: 600;
+                        font-size: 1rem;
+                        text-align: right;
+                      "
+                    />
+                  </div>
+                  <div style="flex: 1">
+                    <select
+                      style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border-radius: 10px;
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        background: rgba(255, 255, 255, 0.8);
+                        font-weight: 600;
+                      "
+                    >
+                      <option>USD</option>
+                      <option>EUR</option>
+                      <option>JPY</option>
+                      <option>GBP</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <div
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 50%;
+                      background: rgba(255, 255, 255, 0.9);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                    "
+                  >
+                    <i class="fas fa-exchange-alt" style="color: #4361ee"></i>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; align-items: center">
+                  <div style="flex: 2">
+                    <input
+                      type="text"
+                      value="142,670"
+                      style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border-radius: 10px;
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        background: rgba(255, 255, 255, 0.8);
+                        font-weight: 600;
+                        font-size: 1rem;
+                        text-align: right;
+                      "
+                    />
+                  </div>
+                  <div style="flex: 1">
+                    <select
+                      style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border-radius: 10px;
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        background: rgba(255, 255, 255, 0.8);
+                        font-weight: 600;
+                      "
+                    >
+                      <option>JPY</option>
+                      <option>USD</option>
+                      <option>EUR</option>
+                      <option>GBP</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    text-align: center;
+                    margin-top: 0.5rem;
+                    font-size: 0.8rem;
+                    color: #64748b;
+                  "
+                >
+                  Exchange rates updated: Apr 24, 2035 - 09:45 AM
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
-  </div>
+    </div>
   </div>
 </div>

@@ -1,0 +1,618 @@
+<div class="user-management-container">
+  <div class="container">
+    <div class="header">
+      <div class="header-top">
+        <div class="header-title">
+          <div class="icon">
+            <i class="fas fa-users-cog"></i>
+          </div>
+          <div>
+            <h1>User Management</h1>
+            <p class="header-subtitle">
+              Manage and approve user accounts efficiently
+            </p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" (click)="toggleFilters()">
+            <i class="fas fa-filter"></i>
+            Filters
+            <span class="badge" *ngIf="hasActiveFilters()">{{
+              getActiveFilterCount()
+            }}</span>
+          </button>
+          <button class="btn btn-secondary" (click)="loadUnapprovedUsers()">
+            <i class="fas fa-user-clock"></i>
+            Unapproved Users
+          </button>
+          <button
+            class="btn btn-primary"
+            (click)="openBulkApprovalModal()"
+            [disabled]="selectedUsers.size === 0"
+          >
+            <i class="fas fa-check-double"></i>
+            Bulk Approve ({{ selectedUsers.size }})
+          </button>
+          <button class="btn btn-secondary" (click)="exportUsers()">
+            <i class="fas fa-download"></i>
+            Export
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-row">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ totalRecords }}</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card pending">
+        <div class="stat-row">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">
+              {{ getStatusCount(AccountStatus.UNAPPROVED) }}
+            </div>
+            <div class="stat-label">Pending Approval</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card active">
+        <div class="stat-row">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">
+              {{ getStatusCount(AccountStatus.ACTIVE) }}
+            </div>
+            <div class="stat-label">Active Users</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card blocked">
+        <div class="stat-row">
+          <div class="stat-icon">
+            <i class="fas fa-ban"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">
+              {{ getStatusCount(AccountStatus.BLOCKED) }}
+            </div>
+            <div class="stat-label">Blocked</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters-section" *ngIf="filterSection">
+      <div class="filters-header">
+        <div class="filters-title">
+          <i class="fas fa-sliders-h"></i>
+          Advanced Filters
+        </div>
+        <button class="btn btn-outline btn-sm" (click)="clearFilters()">
+          <i class="fas fa-times"></i>
+          Clear All
+        </button>
+      </div>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-search"></i>
+            Search
+          </label>
+          <input
+            type="text"
+            class="filter-input"
+            placeholder="Search by name or email..."
+            [(ngModel)]="filters.searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-user-tag"></i>
+            Role
+          </label>
+          <select
+            class="filter-input"
+            [(ngModel)]="selectedRole"
+            (ngModelChange)="onRoleFilter($event)"
+          >
+            <option [ngValue]="undefined">All Roles</option>
+            <option *ngFor="let role of roleOptions" [ngValue]="role.value">
+              {{ role.name }}
+            </option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-flag"></i>
+            Status
+          </label>
+          <select
+            class="filter-input"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="onStatusFilter($event)"
+          >
+            <option [ngValue]="undefined">All Statuses</option>
+            <option
+              *ngFor="let status of statusOptions"
+              [ngValue]="status.value"
+            >
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-shield-alt"></i>
+            Verification
+          </label>
+          <select
+            class="filter-input"
+            [(ngModel)]="selectedVerificationStatus"
+            (ngModelChange)="onVerificationFilter($event)"
+          >
+            <option [ngValue]="undefined">All</option>
+            <option [ngValue]="true">Verified</option>
+            <option [ngValue]="false">Not Verified</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-calendar"></i>
+            From Date
+          </label>
+          <input
+            type="date"
+            class="filter-input"
+            [(ngModel)]="filters.fromDate"
+            (ngModelChange)="loadUsers()"
+          />
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-calendar"></i>
+            To Date
+          </label>
+          <input
+            type="date"
+            class="filter-input"
+            [(ngModel)]="filters.toDate"
+            (ngModelChange)="loadUsers()"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading users...</p>
+      </div>
+    </div>
+
+    <div class="table-container" *ngIf="!loading">
+      <div class="table-header">
+        <div class="table-info">
+          Showing {{ getStartItem() }} to {{ getEndItem() }} of
+          {{ totalRecords }} users
+        </div>
+        <div class="header-actions">
+          <button
+            class="btn btn-outline btn-sm"
+            *ngIf="selectedUsers.size > 0"
+            (click)="selectedUsers.clear()"
+          >
+            <i class="fas fa-times"></i>
+            Clear Selection
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 40px">
+                <input
+                  type="checkbox"
+                  (change)="toggleSelectAll($event)"
+                  [checked]="isAllSelected()"
+                />
+              </th>
+              <th>User</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Verification</th>
+              <th>Activity</th>
+              <th>Joined</th>
+              <th style="width: 200px; text-align: center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let user of users"
+              [class.selected]="isSelected(user.userId)"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(user.userId)"
+                  (change)="toggleUserSelection(user.userId)"
+                />
+              </td>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">
+                    {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+                  </div>
+                  <div class="user-info">
+                    <div class="user-name">
+                      {{ user.firstName }} {{ user.lastName }}
+                    </div>
+                    <div class="user-email">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span
+                  class="role-badge"
+                  [ngClass]="getRoleBadgeClass(user.role)"
+                  *ngIf="user.role !== undefined"
+                >
+                  <i [class]="getRoleInfo(user.role)?.icon"></i>
+                  {{ getRoleInfo(user.role)?.name }}
+                </span>
+                <span
+                  class="badge badge-secondary"
+                  *ngIf="user.role === undefined"
+                >
+                  <i class="fas fa-question"></i> Not Assigned
+                </span>
+              </td>
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusBadgeClass(user.accountStatus)"
+                >
+                  <i [class]="getStatusInfo(user.accountStatus).icon"></i>
+                  {{ getStatusInfo(user.accountStatus).name }}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="!user.isVerified" class="status-badge not-verified">
+                  <i class="bi bi-patch-check-fill"></i>
+                  Not Verified
+                </span>
+                <span *ngIf="user.isVerified" class="status-badge verified">
+                  <i class="fas fa-times-circle"></i>
+                   Verified
+                </span>
+              </td>
+              <td>
+                <div class="activity-stats">
+                  <span class="activity-item">
+                    <i class="fas fa-arrow-down" style="color: #dc2626"></i>
+                    {{ user.totalExpenses }}
+                  </span>
+                  <span class="activity-item">
+                    <i class="fas fa-arrow-up" style="color: #16a34a"></i>
+                    {{ user.totalIncomes }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <span style="color: #64748b; font-size: 13px">{{
+                  user.createdAt | date : "short"
+                }}</span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    class="btn-icon success"
+                    (click)="quickApprove(user.userId)"
+                    title="Quick Approve as User"
+                    *ngIf="user.canBeApproved"
+                  >
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button
+                    class="btn-icon primary"
+                    title="Approve with Options"
+                    *ngIf="user.canBeApproved"
+                    (click)="openApprovalModal(user)"
+                  >
+                    <i class="fas fa-user-check"></i>
+                  </button>
+                  <button
+                    class="btn-icon info"
+                    title="Change Role"
+                    (click)="openRoleModal(user)"
+                  >
+                    <i class="fas fa-user-tag"></i>
+                  </button>
+                  <button
+                    class="btn-icon danger"
+                    title="Block User"
+                    *ngIf="user.canBeBlocked"
+                    (click)="quickBlock(user.userId)"
+                  >
+                    <i class="fas fa-ban"></i>
+                  </button>
+                  <button
+                    class="btn-icon secondary"
+                    title="View Details"
+                    (click)="viewUserDetails(user)"
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="users.length === 0">
+              <td colspan="8" class="no-data">
+                <i class="fas fa-inbox"></i>
+                <p>No users found</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-container">
+        <div class="table-info">
+          Showing {{ getStartItem() }} to {{ getEndItem() }} of
+          {{ totalRecords }} entries
+        </div>
+        <div class="pagination">
+          <button
+            class="page-btn"
+            (click)="previousPage()"
+            [disabled]="filters.pageNumber === 1"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="page-btn"
+            [class.active]="page === filters.pageNumber"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+
+          <button
+            class="page-btn"
+            (click)="nextPage()"
+            [disabled]="filters.pageNumber === getTotalPages()"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showBulkModal" (click)="closeBulkModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3><i class="fas fa-check-double"></i> Bulk User Approval</h3>
+        <button class="close-btn" (click)="closeBulkModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="info-text">
+          <i class="fas fa-info-circle"></i>
+          You are about to update {{ selectedUsers.size }} user(s)
+        </p>
+
+        <div class="form-group">
+          <label>Account Status *</label>
+          <select class="form-control" [(ngModel)]="bulkAction.status">
+            <option [ngValue]="undefined">Select Status</option>
+            <option
+              *ngFor="let status of statusOptions"
+              [ngValue]="status.value"
+            >
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Assign Role (Optional)</label>
+          <select class="form-control" [(ngModel)]="bulkAction.role">
+            <option [ngValue]="undefined">Don't Change Role</option>
+            <option *ngFor="let role of roleOptions" [ngValue]="role.value">
+              {{ role.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Remarks (Optional)</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            placeholder="Add any remarks or notes..."
+            [(ngModel)]="bulkAction.remarks"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeBulkModal()">
+          Cancel
+        </button>
+        <button
+          class="btn btn-success"
+          (click)="bulkApproveUsers()"
+          [disabled]="!bulkAction.status"
+        >
+          <i class="fas fa-check"></i> Approve Selected
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal-overlay"
+    *ngIf="showRoleModal && selectedUser"
+    (click)="closeRoleModal()"
+  >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-tag"></i> Update User Role</h3>
+        <button class="close-btn" (click)="closeRoleModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="user-info-box">
+          <strong
+            >{{ selectedUser.firstName }} {{ selectedUser.lastName }}</strong
+          >
+          <small>{{ selectedUser.email }}</small>
+        </div>
+
+        <div class="form-group">
+          <label>Select New Role *</label>
+          <div class="role-options">
+            <div
+              *ngFor="let role of roleOptions"
+              class="role-option"
+              [class.selected]="roleUpdateData.role === role.value"
+              (click)="roleUpdateData.role = role.value"
+            >
+              <div class="role-icon" [style.background]="role.color">
+                <i [class]="role.icon"></i>
+              </div>
+              <div class="role-info">
+                <strong>{{ role.name }}</strong>
+                <small>{{ role.description }}</small>
+              </div>
+              <i class="fas fa-check-circle check-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Remarks (Optional)</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            placeholder="Reason for role change..."
+            [(ngModel)]="roleUpdateData.remarks"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeRoleModal()">
+          Cancel
+        </button>
+        <button
+          class="btn btn-primary"
+          (click)="updateUserRoleFromModal()"
+          [disabled]="!roleUpdateData.role"
+        >
+          <i class="fas fa-save"></i> Update Role
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal-overlay"
+    *ngIf="showApprovalModal && selectedUser"
+    (click)="closeApprovalModal()"
+  >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-check"></i> Approve User</h3>
+        <button class="close-btn" (click)="closeApprovalModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="user-info-box">
+          <strong
+            >{{ selectedUser.firstName }} {{ selectedUser.lastName }}</strong
+          >
+          <small>{{ selectedUser.email }}</small>
+        </div>
+
+        <div class="form-group">
+          <label>Account Status *</label>
+          <select class="form-control" [(ngModel)]="approvalData.status">
+            <option [ngValue]="undefined">Select Status</option>
+            <option
+              *ngFor="let status of statusOptions"
+              [ngValue]="status.value"
+            >
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Assign Role *</label>
+          <div class="role-options">
+            <div
+              *ngFor="let role of roleOptions"
+              class="role-option"
+              [class.selected]="approvalData.role === role.value"
+              (click)="approvalData.role = role.value"
+            >
+              <div class="role-icon" [style.background]="role.color">
+                <i [class]="role.icon"></i>
+              </div>
+              <div class="role-info">
+                <strong>{{ role.name }}</strong>
+                <small>{{ role.description }}</small>
+              </div>
+              <i class="fas fa-check-circle check-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Remarks (Optional)</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            placeholder="Add approval notes..."
+            [(ngModel)]="approvalData.remarks"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeApprovalModal()">
+          Cancel
+        </button>
+        <button
+          class="btn btn-success"
+          (click)="approveUserFromModal()"
+          [disabled]="!approvalData.status"
+        >
+          <i class="fas fa-check"></i> Approve User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
