@@ -1,0 +1,527 @@
+<div class="approvals-container">
+  <div class="container">
+    <!-- Modern Header with Gradient -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="icon-wrapper">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="header-text">
+            <h1>User Approvals</h1>
+            <p class="subtitle">Review and manage pending user registrations</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-icon" (click)="refreshList()" title="Refresh">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+          <button
+            class="btn-primary"
+            (click)="openBulkApprovalModal()"
+            [disabled]="selectedUsers.size === 0"
+          >
+            <i class="fas fa-check-double"></i>
+            <span>Bulk Approve</span>
+            <span class="badge" *ngIf="selectedUsers.size > 0">{{
+              selectedUsers.size
+            }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card total-card">
+        <div class="stat-icon-bg">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ stats.totalPending }}</h2>
+          <p class="stat-label">Total Pending</p>
+        </div>
+        <div class="stat-trend">
+          <i class="fas fa-chart-line"></i>
+        </div>
+      </div>
+
+      <div
+        class="stat-card unapproved-card"
+        (click)="switchTab('unapproved')"
+        [class.active]="activeTab === 'unapproved'"
+      >
+        <div class="stat-icon-bg">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ stats.unapproved }}</h2>
+          <p class="stat-label">Unapproved Users</p>
+        </div>
+        <div class="stat-indicator" *ngIf="activeTab === 'unapproved'">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <div
+        class="stat-card pending-card"
+        (click)="switchTab('pending')"
+        [class.active]="activeTab === 'pending'"
+      >
+        <div class="stat-icon-bg">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-number">{{ stats.pendingApproval }}</h2>
+          <p class="stat-label">Pending Review</p>
+        </div>
+        <div class="stat-indicator" *ngIf="activeTab === 'pending'">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modern Search Section -->
+    <div class="search-wrapper">
+    
+      <div class="selection-info" *ngIf="selectedUsers.size > 0">
+        <span class="selection-badge">
+          <i class="fas fa-check-circle"></i>
+          {{ selectedUsers.size }} selected
+        </span>
+        <button class="btn-text" (click)="selectedUsers.clear()">
+          Clear all
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner-wrapper">
+        <div class="spinner"></div>
+        <p>Loading users...</p>
+      </div>
+    </div>
+
+    <!-- Modern Table Design -->
+    <div class="content-card" *ngIf="!loading">
+      <div class="table-header-section">
+        <div class="results-info">
+          <span class="results-text">
+            Showing <strong>{{ getStartItem() }}</strong> to
+            <strong>{{ getEndItem() }}</strong> of
+            <strong>{{ totalRecords }}</strong> users
+          </span>
+        </div>
+
+         <div class="search-container">
+        <div class="search-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search by name, email or any keyword..."
+          [(ngModel)]="filters.searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+        />
+        <div class="search-actions" *ngIf="filters.searchTerm">
+          <button
+            class="btn-clear"
+            (click)="filters.searchTerm = ''; onSearchChange('')"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th class="checkbox-col">
+                <label class="custom-checkbox">
+                  <input
+                    type="checkbox"
+                    (change)="toggleSelectAll($event)"
+                    [checked]="isAllSelected()"
+                  />
+                  <span class="checkmark"></span>
+                </label>
+              </th>
+              <th class="user-col">User</th>
+              <th class="date-col">Registered</th>
+              <th class="waiting-col">Waiting Time</th>
+              <th class="status-col">Email Status</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let user of pendingUsers"
+              class="table-row"
+              [class.selected-row]="isSelected(user.userId)"
+            >
+              <td class="checkbox-col">
+                <label class="custom-checkbox">
+                  <input
+                    type="checkbox"
+                    [checked]="isSelected(user.userId)"
+                    (change)="toggleUserSelection(user.userId)"
+                  />
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td class="user-col">
+                <div class="user-info-cell">
+                  <div class="user-avatar">
+                    <span
+                      >{{ user.firstName.charAt(0)
+                      }}{{ user.lastName.charAt(0) }}</span
+                    >
+                  </div>
+                  <div class="user-details">
+                    <div class="user-name">
+                      {{ user.firstName }} {{ user.lastName }}
+                    </div>
+                    <div class="user-email">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="date-col">
+                <span class="date-value">{{
+                  user.createdAt | date : "MMM d, y"
+                }}</span>
+                <span class="time-value">{{
+                  user.createdAt | date : "h:mm a"
+                }}</span>
+              </td>
+              <td class="waiting-col">
+                <span
+                  class="waiting-time"
+                  [class.urgent]="getDaysWaiting(user.createdAt) > 7"
+                >
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>{{ getDaysWaiting(user.createdAt) }} days</span>
+                </span>
+              </td>
+              <td class="status-col">
+                <span
+                  class="status-badge"
+                  [class.verified]="user.isVerified"
+                  [class.unverified]="!user.isVerified"
+                >
+                  <i
+                    [class.fa-check-circle]="user.isVerified"
+                    [class.fa-exclamation-circle]="!user.isVerified"
+                    class="fas"
+                  ></i>
+                  {{ user.isVerified ? "Verified" : "Not Verified" }}
+                </span>
+              </td>
+              <td class="actions-col">
+                <div class="action-group">
+                  <button
+                    class="action-btn approve-btn"
+                    (click)="quickApproveAsUser(user.userId)"
+                    title="Quick Approve as User"
+                  >
+                    <i class="fas fa-check"></i>
+                    <span>Approve</span>
+                  </button>
+                  <button
+                    class="action-btn custom-btn"
+                    (click)="openApprovalModal(user)"
+                    title="Custom Approval"
+                  >
+                    <i class="fas fa-cog"></i>
+                  </button>
+                  <button
+                    class="action-btn reject-btn"
+                    (click)="quickReject(user.userId)"
+                    title="Reject"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="pendingUsers.length === 0" class="empty-row">
+              <td colspan="6">
+                <div class="empty-state">
+                  <div class="empty-icon">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <h3>All Clear!</h3>
+                  <p>No pending approvals at the moment</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modern Pagination -->
+      <div class="pagination-section" *ngIf="totalRecords > 0">
+        <div class="pagination-info">
+          <div class="results-info">
+          <span class="results-text">
+            Showing <strong>{{ getStartItem() }}</strong> to
+            <strong>{{ getEndItem() }}</strong> of
+            <strong>{{ totalRecords }}</strong> users
+          </span>
+        </div>
+        </div>
+        <div class="pagination-controls">
+          <button
+            class="page-btn"
+            (click)="previousPage()"
+            [disabled]="filters.pageNumber === 1"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="page-number"
+            [class.active]="page === filters.pageNumber"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+          <button
+            class="page-btn"
+            (click)="nextPage()"
+            [disabled]="filters.pageNumber === getTotalPages()"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Approval Modal -->
+  <div
+    class="modal-backdrop"
+    *ngIf="showApprovalModal && selectedUser"
+    (click)="closeApprovalModal()"
+  >
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header-modern">
+        <div class="modal-title-wrapper">
+          <div class="modal-icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <h3>Approve User</h3>
+        </div>
+        <button class="modal-close" (click)="closeApprovalModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body-modern">
+        <div class="user-preview">
+          <div class="user-preview-avatar">
+            {{ selectedUser.firstName.charAt(0)
+            }}{{ selectedUser.lastName.charAt(0) }}
+          </div>
+          <div class="user-preview-info">
+            <strong
+              >{{ selectedUser.firstName }} {{ selectedUser.lastName }}</strong
+            >
+            <span>{{ selectedUser.email }}</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label"
+            >Select Role <span class="required">*</span></label
+          >
+          <div class="role-grid">
+            <div
+              *ngFor="let role of roleOptions"
+              class="role-card"
+              [class.selected]="approvalData.role === role.value"
+              (click)="approvalData.role = role.value"
+            >
+              <div class="role-header">
+                <div class="role-icon-wrapper" [style.background]="role.color">
+                  <i [class]="role.icon"></i>
+                </div>
+              </div>
+              <div class="role-body">
+                <strong>{{ role.name }}</strong>
+                <p>{{ role.description }}</p>
+              </div>
+              <i class="fas fa-check-circle role-check"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">Notes (Optional)</label>
+          <textarea
+            class="form-textarea"
+            rows="3"
+            placeholder="Add approval notes here..."
+            [(ngModel)]="approvalData.remarks"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer-modern">
+        <button class="btn-secondary" (click)="closeApprovalModal()">
+          Cancel
+        </button>
+        <button
+          class="btn-primary"
+          (click)="approveUserFromModal()"
+          [disabled]="!approvalData.role"
+        >
+          <i class="fas fa-check"></i>
+          Approve User
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Bulk Approval Modal  -->
+  <div class="modal-backdrop" *ngIf="showBulkModal" (click)="closeBulkModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header-modern">
+        <div class="modal-title-wrapper">
+          <div class="modal-icon bulk">
+            <i class="fas fa-check-double"></i>
+          </div>
+          <h3>Bulk Approval</h3>
+        </div>
+        <button class="modal-close" (click)="closeBulkModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body-modern">
+        <div class="info-banner">
+          <i class="fas fa-info-circle"></i>
+          <span
+            >You are approving
+            <strong>{{ selectedUsers.size }}</strong> user(s)</span
+          >
+        </div>
+
+        <div class="form-section">
+          <label class="form-label"
+            >Assign Role <span class="required">*</span></label
+          >
+          <div class="role-grid">
+            <div
+              *ngFor="let role of roleOptions"
+              class="role-card"
+              [class.selected]="bulkApprovalData.role === role.value"
+              (click)="bulkApprovalData.role = role.value"
+            >
+              <div class="role-header">
+                <div class="role-icon-wrapper" [style.background]="role.color">
+                  <i [class]="role.icon"></i>
+                </div>
+                <i class="fas fa-check-circle role-check"></i>
+              </div>
+              <div class="role-body">
+                <strong>{{ role.name }}</strong>
+                <p>{{ role.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">Bulk Notes (Optional)</label>
+          <textarea
+            class="form-textarea"
+            rows="3"
+            placeholder="Add notes for all selected users..."
+            [(ngModel)]="bulkApprovalData.remarks"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer-modern">
+        <button class="btn-secondary" (click)="closeBulkModal()">Cancel</button>
+        <button
+          class="btn-primary"
+          (click)="bulkApproveUsers()"
+          [disabled]="!bulkApprovalData.role"
+        >
+          <i class="fas fa-check-double"></i>
+          Approve All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Reject Modal -->
+  <div
+    class="modal-backdrop"
+    *ngIf="showRejectModal && selectedUser"
+    (click)="closeRejectModal()"
+  >
+    <div class="modal-card reject-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header-modern danger">
+        <div class="modal-title-wrapper">
+          <div class="modal-icon danger">
+            <i class="fas fa-ban"></i>
+          </div>
+          <h3>Reject User</h3>
+        </div>
+        <button class="modal-close" (click)="closeRejectModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body-modern">
+        <div class="user-preview danger">
+          <div class="user-preview-avatar">
+            {{ selectedUser.firstName.charAt(0)
+            }}{{ selectedUser.lastName.charAt(0) }}
+          </div>
+          <div class="user-preview-info">
+            <strong
+              >{{ selectedUser.firstName }} {{ selectedUser.lastName }}</strong
+            >
+            <span>{{ selectedUser.email }}</span>
+          </div>
+        </div>
+
+        <div class="warning-banner">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>
+            This action will permanently reject this user's registration and
+            prevent them from accessing the system.
+          </p>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">Rejection Reason (Optional)</label>
+          <textarea
+            class="form-textarea"
+            rows="3"
+            placeholder="Provide a reason for rejection..."
+            [(ngModel)]="rejectData.reason"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer-modern">
+        <button class="btn-secondary" (click)="closeRejectModal()">
+          Cancel
+        </button>
+        <button class="btn-danger" (click)="rejectUser()">
+          <i class="fas fa-ban"></i>
+          Reject User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

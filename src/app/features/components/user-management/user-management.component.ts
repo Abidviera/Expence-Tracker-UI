@@ -20,6 +20,13 @@ export class UserManagementComponent {
   loading = false;
   filterSection = false;
 
+  overallStats = {
+    totalUsers: 0,
+    unapprovedCount: 0,
+    pendingCount: 0,
+    activeCount: 0,
+    blockedCount: 0
+  };
 
   AccountStatus = AccountStatus;
   UserRole = UserRole;
@@ -74,6 +81,7 @@ export class UserManagementComponent {
 
   ngOnInit(): void {
     this.loadUsers();
+     this.loadUserStatistics();
     this.setupSearchDebounce();
   }
 
@@ -91,6 +99,23 @@ export class UserManagementComponent {
       this.filters.searchTerm = searchTerm;
       this.filters.pageNumber = 1;
       this.loadUsers();
+    });
+  }
+
+  loadUserStatistics(): void {
+    this.userService.getUserStatistics().subscribe({
+      next: (stats) => {
+        this.overallStats = {
+          totalUsers: stats.totalUsers,
+          unapprovedCount: stats.unapprovedCount,
+          pendingCount: stats.pendingCount,
+          activeCount: stats.activeCount,
+          blockedCount: stats.blockedCount
+        };
+      },
+      error: (error) => {
+        console.error('Error fetching statistics:', error);
+      }
     });
   }
 
@@ -127,7 +152,18 @@ export class UserManagementComponent {
   }
 
   getStatusCount(status: AccountStatus): number {
-    return this.statusCounts.get(status) || 0;
+    switch(status) {
+      case AccountStatus.UNAPPROVED:
+        return this.overallStats.unapprovedCount;
+      case AccountStatus.PENDING_APPROVAL:
+        return this.overallStats.pendingCount;
+      case AccountStatus.ACTIVE:
+        return this.overallStats.activeCount;
+      case AccountStatus.BLOCKED:
+        return this.overallStats.blockedCount;
+      default:
+        return 0;
+    }
   }
 
 

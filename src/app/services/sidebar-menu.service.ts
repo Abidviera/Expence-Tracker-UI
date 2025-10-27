@@ -36,14 +36,14 @@ export class SidebarMenuService {
      { path: 'features/ProfitManagement', title: 'Profit', icon: 'fas fa-file-alt', roles: [UserRole.Admin, UserRole.Accountant] },
      
     { heading: 'Management', roles: [UserRole.Admin, UserRole.Accountant] },
-    { path: 'approvals', title: 'Approvals', icon: 'fas fa-check-circle', roles: [UserRole.Admin] },
+    { path: 'features/Approvals', title: 'Approvals', icon: 'fas fa-check-circle', roles: [UserRole.Admin] },
     { path: 'analytics', title: 'Analytics', icon: 'fas fa-chart-bar', roles: [UserRole.Admin, UserRole.Accountant] },
     { path: 'reports', title: 'Reports', icon: 'fas fa-file-alt', roles: [UserRole.Admin, UserRole.Accountant] },
    
     
     { heading: 'Settings' },
     { path: 'preferences', title: 'Preferences', icon: 'fas fa-cog'},
-    { path: 'account', title: 'Account', icon: 'fas fa-user-shield' }
+    { path: 'features/Profile', title: 'Account', icon: 'fas fa-user-shield' }
   ];
 
   getMenuItemsForRole(role: UserRole): MenuItem[] {

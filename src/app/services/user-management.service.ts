@@ -4,7 +4,15 @@ import { Observable } from 'rxjs';
 import { PaginationResponse } from '../models/IncomePaginationRequest.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-
+export interface UserStatisticsDto {
+  totalUsers: number;
+  unapprovedCount: number;
+  pendingCount: number;
+  activeCount: number;
+  blockedCount: number;
+  verifiedCount: number;
+  roleDistribution: { role: string; count: number }[];
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +37,13 @@ export class UserManagementService {
     return this.http.get<PaginationResponse<UserManagementDto>>(
       `${this.apiUrl}GetPagedUsers`,
       { params }
+    );
+  }
+
+
+   getUserStatistics(): Observable<UserStatisticsDto> {
+    return this.http.get<UserStatisticsDto>(
+      `${this.apiUrl}GetUserStatistics`
     );
   }
 

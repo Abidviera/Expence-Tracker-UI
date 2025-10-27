@@ -12,6 +12,8 @@ import { IncomeListComponent } from './components/income-list/income-list.compon
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProfitManagementComponent } from './components/profit-management/profit-management.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import { ApprovalsComponent } from './components/approvals/approvals.component';
+import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
 
 
 @NgModule({
@@ -23,6 +25,8 @@ import { UserManagementComponent } from './components/user-management/user-manag
     IncomeListComponent,
     ProfitManagementComponent,
     UserManagementComponent,
+    ApprovalsComponent,
+    ProfileManagementComponent,
     
   ],
   imports: [
