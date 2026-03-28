@@ -13,10 +13,11 @@ export interface ExpensePaginationRequest {
   customerId?: string;
   CategoryId?: string;
   tripId?: string;
-  
+
   minPaid?: number;
   maxPaid?: number;
   minBalance?: number;
   maxBalance?: number;
   paymentStatus?: 'paid' | 'unpaid' | 'partial';
+  userId?: string;
 }

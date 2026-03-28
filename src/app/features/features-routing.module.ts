@@ -10,6 +10,8 @@ import { ProfitManagementComponent } from './components/profit-management/profit
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { ApprovalsComponent } from './components/approvals/approvals.component';
 import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
+import { CustomersListComponent } from './components/customers-list/customers-list.component';
+import { CustomerCreationComponent } from './components/customer-creation/customer-creation.component';
 
 
 const routes: Routes = [
@@ -25,6 +27,9 @@ const routes: Routes = [
   { path: 'incomesList', component: IncomeListComponent, canActivate: [AuthGuard]  },
   { path: 'incomes/edit/:id', component: IncomeCreationComponent ,canActivate: [AuthGuard]},
   { path: 'expense/edit/:id', component: ExpenseCreationComponent, canActivate: [AuthGuard] },
+  { path: 'customers', component: CustomersListComponent, canActivate: [AuthGuard] },
+  { path: 'customers/new', component: CustomerCreationComponent, canActivate: [AuthGuard] },
+  { path: 'customers/edit/:id', component: CustomerCreationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

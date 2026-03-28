@@ -33,9 +33,11 @@
             <form  [formGroup]="loginForm" (ngSubmit)="onSubmit()"  class="form-body form-float">
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email address" formControlName="email" required>
-                    <div class="input-icon">
-                        <i class="bi bi-envelope-fill"></i>
+                    <div class="form-input-wrapper">
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email address" formControlName="email" required>
+                        <div class="input-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
                     </div>
                     <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
                         <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
@@ -44,9 +46,11 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password" formControlName="password" required>
-                    <div class="input-icon">
-                        <i class="bi bi-lock-fill"></i>
+                    <div class="password-input-wrapper">
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-control password-field" id="password" placeholder="Enter your password" formControlName="password" required>
+                        <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+                            <i [class]="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+                        </button>
                     </div>
                     <div class="forgot-password">
                         <a href="#">Forgot Password?</a>

@@ -8,6 +8,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { DestinationsService } from '../../../services/destinations.service';
 import { IncomePaginationRequest } from '../../../models/IncomePaginationRequest.model';
 import { User } from '../../../models/user.model';
+import { UserRole } from '../../../enums/UserRole.enum';
 import { UserService } from '../../../services/user.service';
 import { CategoryService } from '../../../services/category.service';
 import { ModalService } from '../../../services/modal.service';
@@ -15,6 +16,7 @@ import { ExportService } from '../../../services/export.service';
 import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
 import { animation } from '@angular/animations';
 import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-details-popup/income-details-popup.component';
+import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 
 @Component({
   selector: 'app-income-list',
@@ -61,10 +63,17 @@ export class IncomeListComponent {
     private categoryService: CategoryService,
     private destinationService: DestinationsService,
      private modalService: ModalService,
-      private exportService: ExportService 
+      private exportService: ExportService,
+      private commonUtil: CommonUtil
   ) {}
 
   ngOnInit(): void {
+    const currentUser = this.commonUtil.getCurrentUser();
+    if (currentUser && currentUser.role !== UserRole.Admin) {
+      this.filters.userId = currentUser.userId ?? undefined;
+    } else {
+      this.filters.userId = undefined;
+    }
     this.loadInitialData();
   }
 
@@ -102,7 +111,7 @@ export class IncomeListComponent {
     this.isLoading = true;
     this.customerService.getCustomers().subscribe({
       next: (customers) => {
-        this.customers = customers;
+        this.customers = customers.data;
         this.isLoading = false;
       },
       error: (err) => {
@@ -196,6 +205,8 @@ export class IncomeListComponent {
   }
 
   resetFilters() {
+    const currentUser = this.commonUtil.getCurrentUser();
+    const isAdmin = currentUser && currentUser.role === UserRole.Admin;
     this.filters = {
       pageNumber: 1,
       pageSize: 10,
@@ -210,7 +221,7 @@ export class IncomeListComponent {
       maxPaid: undefined,
       minBalance: undefined,
       maxBalance: undefined,
-      userId: undefined,
+      userId: isAdmin ? undefined : (currentUser?.userId ?? undefined),
       CustomerId: undefined,
       CategoryId: undefined,
       TripId: undefined,

@@ -1,4 +1,4 @@
-export interface  Customer {
+export interface Customer {
   customerId: string;
   name: string;
   email: string;
@@ -7,6 +7,30 @@ export interface  Customer {
   location: string;
   address: string;
   createdAt: Date;
-   
-  }
-  
+}
+
+export interface CustomerCreateDto {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  country: string;
+  location: string;
+  address: string;
+}
+
+export interface CustomerPaginationRequest {
+  pageNumber: number;
+  pageSize: number;
+  searchTerm?: string;
+  sortColumn?: string;
+  sortDirection?: string;
+  country?: string;
+}
+
+export interface PaginationResponse<T> {
+  pageNumber: number;
+  pageSize: number;
+  totalRecords: number;
+  totalPages: number;
+  data: T[];
+}

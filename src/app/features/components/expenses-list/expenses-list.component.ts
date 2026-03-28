@@ -16,6 +16,8 @@ import { ToasterService } from '../../../services/toaster.service';
 import { PrintService } from '../../../services/print.service';
 import { InvoiceTemplate3Component } from '../../../shared/Templates/invoice-template3/invoice-template3.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonUtil } from '../../../shared/utilities/CommonUtil';
+import { UserRole } from '../../../enums/UserRole.enum';
 
 @Component({
   selector: 'app-expenses-list',
@@ -59,10 +61,17 @@ export class ExpensesListComponent {
     private modalService: ModalService,
     private toastService: ToasterService,
     private printService: PrintService,
-    private modalPrintService: NgbModal
+    private modalPrintService: NgbModal,
+    private commonUtil: CommonUtil
   ) {}
 
   ngOnInit(): void {
+    const currentUser = this.commonUtil.getCurrentUser();
+    if (currentUser && currentUser.role !== UserRole.Admin) {
+      this.filters.userId = currentUser.userId ?? undefined;
+    } else {
+      this.filters.userId = undefined;
+    }
     this.loadInitialData();
   }
 
@@ -189,7 +198,7 @@ export class ExpensesListComponent {
     this.isLoading = true;
     this.customerService.getCustomers().subscribe({
       next: (customers) => {
-        this.customers = customers;
+        this.customers = customers.data;
         this.isLoading = false;
       },
       error: (err) => {
@@ -229,6 +238,8 @@ export class ExpensesListComponent {
   }
 
   resetFilters() {
+    const currentUser = this.commonUtil.getCurrentUser();
+    const isAdmin = currentUser && currentUser.role === UserRole.Admin;
     this.filters = {
       pageNumber: 1,
       pageSize: 10,
@@ -246,6 +257,7 @@ export class ExpensesListComponent {
       customerId: undefined,
       CategoryId: undefined,
       tripId: undefined,
+      userId: isAdmin ? undefined : (currentUser?.userId ?? undefined),
     };
     this.selectedCategory = null;
     this.selectedCustomer = null;

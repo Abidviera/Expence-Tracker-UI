@@ -54,7 +54,7 @@ export class IncomeCreationComponent {
       categories: this.categoryService.getAllCategories(),
     }).subscribe({
       next: ({ customers, destinations, categories }) => {
-        this.customers = customers;
+        this.customers = customers.data;
         this.destinations = destinations;
         this.Categories = categories;
 

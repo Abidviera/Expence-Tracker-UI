@@ -15,6 +15,7 @@ import { ToasterService } from '../../../services/toaster.service';
 export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +45,10 @@ export class LoginComponent {
         rememberMe: true,
       });
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit(): void {

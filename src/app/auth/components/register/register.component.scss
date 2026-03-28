@@ -744,11 +744,57 @@ input:checked + .checkbox-slider:before {
     opacity: 0.5;
     transition: all 0.3s ease;
     font-size: 20px;
+    z-index: 2;
 }
 
-.form-control:focus + .input-icon {
+.form-control:focus ~ .input-icon {
     opacity: 1;
     transform: translateY(-50%) scale(1.2);
+}
+
+/* Wrapper anchors icon to input, not form-group */
+.form-input-wrapper {
+    position: relative;
+
+    .form-control {
+        padding-right: 50px;
+    }
+}
+
+/* Password wrapper keeps eye icon anchored to input */
+.password-input-wrapper {
+    position: relative;
+
+    .form-control {
+        padding-right: 50px;
+    }
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #5c0733;
+    opacity: 0.5;
+    font-size: 20px;
+    padding: 0;
+    transition: all 0.3s ease;
+    z-index: 2;
+    line-height: 1;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 

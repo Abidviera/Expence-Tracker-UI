@@ -34,7 +34,8 @@ export class SidebarMenuService {
     { path: 'travel-tours', title: 'Travel & Tours', icon: 'fas fa-route', roles: [UserRole.Admin, UserRole.User] },
     { path: 'features/incomesList', title: 'Income', icon: 'fas fa-store', roles: [UserRole.Admin, UserRole.User, UserRole.Accountant] },
      { path: 'features/ProfitManagement', title: 'Profit', icon: 'fas fa-file-alt', roles: [UserRole.Admin, UserRole.Accountant] },
-     
+     { path: 'features/customers', title: 'Customers', icon: 'fas fa-users', roles: [UserRole.Admin, UserRole.Accountant] },
+
     { heading: 'Management', roles: [UserRole.Admin, UserRole.Accountant] },
     { path: 'features/Approvals', title: 'Approvals', icon: 'fas fa-check-circle', roles: [UserRole.Admin] },
     { path: 'analytics', title: 'Analytics', icon: 'fas fa-chart-bar', roles: [UserRole.Admin, UserRole.Accountant] },

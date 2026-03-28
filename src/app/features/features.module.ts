@@ -14,6 +14,8 @@ import { ProfitManagementComponent } from './components/profit-management/profit
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { ApprovalsComponent } from './components/approvals/approvals.component';
 import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
+import { CustomersListComponent } from './components/customers-list/customers-list.component';
+import { CustomerCreationComponent } from './components/customer-creation/customer-creation.component';
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import { ProfileManagementComponent } from './components/profile-management/prof
     UserManagementComponent,
     ApprovalsComponent,
     ProfileManagementComponent,
-    
+    CustomersListComponent,
+    CustomerCreationComponent,
   ],
   imports: [
     CommonModule,

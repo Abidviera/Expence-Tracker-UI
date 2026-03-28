@@ -67,7 +67,9 @@ export class ExpenseCreationComponent {
       ]).toPromise();
 
       if (data) {
-        [this.customers, this.destinations, this.categories] = data;
+        this.customers = data[0].data;
+        this.destinations = data[1];
+        this.categories = data[2];
       }
     } catch (error) {
       console.error('Error loading initial data', error);

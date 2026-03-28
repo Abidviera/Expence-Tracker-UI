@@ -16,6 +16,8 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isLoading = false;
   roles = Object.values(UserRole);
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +53,14 @@ export class RegisterComponent {
     } else {
       confirmPassword?.setErrors(null);
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onSubmit(): void {
