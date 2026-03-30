@@ -20,6 +20,8 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { CountryMasterComponent } from './components/country-master/country-master.component';
 import { LocationListComponent } from './components/location-list/location-list.component';
 import { LocationMasterComponent } from './components/location-master/location-master.component';
+import { BaseChartDirective, ThemeService, withDefaultRegisterables, NG_CHARTS_CONFIGURATION } from 'ng2-charts';
+import { NgChartsConfiguration } from 'ng2-charts';
 
 
 @NgModule({
@@ -45,7 +47,12 @@ import { LocationMasterComponent } from './components/location-master/location-m
     FeaturesRoutingModule,
     SharedModule,
     FormsModule,
-    NgbModalModule
+    NgbModalModule,
+    BaseChartDirective
+  ],
+  providers: [
+    ThemeService,
+    { provide: NG_CHARTS_CONFIGURATION, useValue: withDefaultRegisterables() }
   ],
 })
 export class FeaturesModule { }
