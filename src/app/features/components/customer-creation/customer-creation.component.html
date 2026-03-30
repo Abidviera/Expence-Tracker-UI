@@ -57,31 +57,43 @@
 
             <div class="form-group">
               <div class="label-icon-row">
-                <label for="country">Country</label>
+                <label for="countryId" class="field-required">Country</label>
                 <i class="fas fa-globe"></i>
               </div>
               <div class="form-input-wrapper">
-                <input
-                  type="text"
-                  id="country"
-                  placeholder="Country name"
-                  [(ngModel)]="customer.country"
-                />
+                <select
+                  id="countryId"
+                  class="form-control"
+                  [(ngModel)]="customer.countryId"
+                  (ngModelChange)="onCountryChange($event)"
+                >
+                  <option value="">-- Select Country --</option>
+                  <option *ngFor="let country of countries" [value]="country.countryId">
+                    {{ country.countryName }} ({{ country.countryCode }})
+                  </option>
+                </select>
               </div>
             </div>
 
             <div class="form-group">
               <div class="label-icon-row">
-                <label for="location">Location</label>
+                <label for="locationId" class="field-required">Location</label>
                 <i class="fas fa-map-marker-alt"></i>
               </div>
               <div class="form-input-wrapper">
-                <input
-                  type="text"
-                  id="location"
-                  placeholder="City or region"
-                  [(ngModel)]="customer.location"
-                />
+                <select
+                  id="locationId"
+                  class="form-control"
+                  [(ngModel)]="customer.locationId"
+                  (ngModelChange)="onLocationChange($event)"
+                  [disabled]="!customer.countryId"
+                >
+                  <option value="">-- Select Location --</option>
+                  <option *ngFor="let location of filteredLocations" [value]="location.locationId">
+                    {{ location.locationName }}
+                    <span *ngIf="location.city"> - {{ location.city }}</span>
+                  </option>
+                </select>
               </div>
             </div>
           </div>
@@ -114,7 +126,7 @@
         <button type="button" class="btn btn-secondary" (click)="resetForm()">
           <i class="fas fa-refresh"></i> Reset
         </button>
-        <button type="submit" class="btn btn-primary" (click)="submitCustomer()">
+        <button type="submit" class="btn btn-primary" (click)="submitCustomer()" [disabled]="isLoading">
           {{ isEditMode ? 'Update' : 'Create' }} Customer
         </button>
       </div>

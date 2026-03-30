@@ -12,10 +12,14 @@ import { ApprovalsComponent } from './components/approvals/approvals.component';
 import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
 import { CustomersListComponent } from './components/customers-list/customers-list.component';
 import { CustomerCreationComponent } from './components/customer-creation/customer-creation.component';
+import { CountryListComponent } from './components/country-list/country-list.component';
+import { CountryMasterComponent } from './components/country-master/country-master.component';
+import { LocationListComponent } from './components/location-list/location-list.component';
+import { LocationMasterComponent } from './components/location-master/location-master.component';
 
 
 const routes: Routes = [
- 
+
   {path: 'dashboard', component:DashboardComponent, canActivate: [AuthGuard] },
   {path: 'ExpensesList', component:ExpensesListComponent, canActivate: [AuthGuard] },
   {path: 'ExpenseCreation', component:ExpenseCreationComponent, canActivate: [AuthGuard] },
@@ -30,6 +34,12 @@ const routes: Routes = [
   { path: 'customers', component: CustomersListComponent, canActivate: [AuthGuard] },
   { path: 'customers/new', component: CustomerCreationComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerCreationComponent, canActivate: [AuthGuard] },
+  { path: 'country', component: CountryListComponent, canActivate: [AuthGuard] },
+  { path: 'country/new', component: CountryMasterComponent, canActivate: [AuthGuard] },
+  { path: 'country/edit/:id', component: CountryMasterComponent, canActivate: [AuthGuard] },
+  { path: 'location', component: LocationListComponent, canActivate: [AuthGuard] },
+  { path: 'location/new', component: LocationMasterComponent, canActivate: [AuthGuard] },
+  { path: 'location/edit/:id', component: LocationMasterComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

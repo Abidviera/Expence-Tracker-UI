@@ -16,6 +16,10 @@ import { ApprovalsComponent } from './components/approvals/approvals.component';
 import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
 import { CustomersListComponent } from './components/customers-list/customers-list.component';
 import { CustomerCreationComponent } from './components/customer-creation/customer-creation.component';
+import { CountryListComponent } from './components/country-list/country-list.component';
+import { CountryMasterComponent } from './components/country-master/country-master.component';
+import { LocationListComponent } from './components/location-list/location-list.component';
+import { LocationMasterComponent } from './components/location-master/location-master.component';
 
 
 @NgModule({
@@ -31,6 +35,10 @@ import { CustomerCreationComponent } from './components/customer-creation/custom
     ProfileManagementComponent,
     CustomersListComponent,
     CustomerCreationComponent,
+    CountryListComponent,
+    CountryMasterComponent,
+    LocationListComponent,
+    LocationMasterComponent,
   ],
   imports: [
     CommonModule,

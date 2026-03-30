@@ -3,7 +3,9 @@ export interface Customer {
   name: string;
   email: string;
   phoneNumber: string;
+  countryId?: string;
   country: string;
+  locationId?: string;
   location: string;
   address: string;
   createdAt: Date;
@@ -13,7 +15,9 @@ export interface CustomerCreateDto {
   name: string;
   email: string;
   phoneNumber: string;
+  countryId?: string;
   country: string;
+  locationId?: string;
   location: string;
   address: string;
 }

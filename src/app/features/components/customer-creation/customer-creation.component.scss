@@ -202,6 +202,29 @@ label {
   margin-left: 3px;
 }
 
+.form-control {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  color: #333333;
+
+  &:focus {
+    outline: none;
+    border-color: #5c0733;
+    box-shadow: 0 0 0 3px rgba(92, 7, 51, 0.1);
+  }
+
+  &:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;

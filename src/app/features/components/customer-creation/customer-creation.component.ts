@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
-import { Customer, CustomerCreateDto } from '../../../models/Customer.model';
+import { CountryService } from '../../../services/country.service';
+import { CustomerCreateDto } from '../../../models/Customer.model';
+import { Country, Location } from '../../../models/Country.model';
 import { ToasterService } from '../../../services/toaster.service';
-import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 
 @Component({
   selector: 'app-customer-creation',
@@ -16,17 +17,64 @@ export class CustomerCreationComponent implements OnInit {
   isEditMode = false;
   isLoading = false;
   customerId: string | null = null;
+  countries: Country[] = [];
+  locations: Location[] = [];
+  filteredLocations: Location[] = [];
 
   constructor(
     private customerService: CustomerService,
+    private countryService: CountryService,
     private toasterService: ToasterService,
     private router: Router,
-    private route: ActivatedRoute,
-    private commonUtil: CommonUtil
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.loadCountries();
     this.checkForEditMode();
+  }
+
+  private loadCountries(): void {
+    this.countryService.getActiveCountries().subscribe({
+      next: (countries) => {
+        this.countries = countries;
+      },
+    });
+  }
+
+  onCountryChange(countryId: string): void {
+    this.customer.countryId = countryId || undefined;
+    this.customer.country = '';
+    this.customer.locationId = undefined;
+    this.customer.location = '';
+    this.filteredLocations = [];
+
+    if (countryId) {
+      this.countryService.getLocationsByCountry(countryId).subscribe({
+        next: (locations) => {
+          this.filteredLocations = locations.filter(l => l.isActive);
+          this.locations = [...this.locations, ...locations];
+        },
+      });
+    }
+  }
+
+  onLocationChange(locationId: string): void {
+    if (locationId) {
+      const location = this.filteredLocations.find(l => l.locationId === locationId);
+      if (location) {
+        this.customer.locationId = locationId;
+        this.customer.location = location.locationName;
+        const country = this.countries.find(c => c.countryId === location.countryId);
+        if (country) {
+          this.customer.countryId = country.countryId;
+          this.customer.country = country.countryName;
+        }
+      }
+    } else {
+      this.customer.locationId = undefined;
+      this.customer.location = '';
+    }
   }
 
   private checkForEditMode(): void {
@@ -48,10 +96,33 @@ export class CustomerCreationComponent implements OnInit {
       name: customer.name || '',
       email: customer.email || '',
       phoneNumber: customer.phoneNumber || '',
+      countryId: customer.countryId || '',
       country: customer.country || '',
+      locationId: customer.locationId || '',
       location: customer.location || '',
       address: customer.address || '',
     };
+
+    if (customer.countryId) {
+      this.countryService.getLocationsByCountry(customer.countryId).subscribe({
+        next: (locations) => {
+          this.filteredLocations = locations.filter(l => l.isActive);
+          this.locations = locations;
+        },
+      });
+    } else if (customer.country) {
+      const matchedCountry = this.countries.find(
+        c => c.countryName === customer.country || c.countryCode === customer.country
+      );
+      if (matchedCountry) {
+        this.countryService.getLocationsByCountry(matchedCountry.countryId).subscribe({
+          next: (locations) => {
+            this.filteredLocations = locations.filter(l => l.isActive);
+            this.locations = locations;
+          },
+        });
+      }
+    }
   }
 
   private loadCustomer(id: string): void {
@@ -74,7 +145,9 @@ export class CustomerCreationComponent implements OnInit {
       name: '',
       email: '',
       phoneNumber: '',
+      countryId: undefined,
       country: '',
+      locationId: undefined,
       location: '',
       address: '',
     };
@@ -82,6 +155,7 @@ export class CustomerCreationComponent implements OnInit {
 
   resetForm(): void {
     this.customer = this.getEmptyCustomer();
+    this.filteredLocations = [];
   }
 
   submitCustomer(): void {
@@ -89,6 +163,16 @@ export class CustomerCreationComponent implements OnInit {
 
     if (!this.customer.name || this.customer.name.trim() === '') {
       this.toasterService.error('Customer name is required');
+      return;
+    }
+
+    if (!this.customer.countryId) {
+      this.toasterService.error('Please select a country from the master list');
+      return;
+    }
+
+    if (!this.customer.locationId) {
+      this.toasterService.error('Please select a location from the master list');
       return;
     }
 

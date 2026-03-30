@@ -1,0 +1,90 @@
+<div class="CustomerCreation">
+  <div class="container-fluid">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>{{ isEditMode ? 'Update' : 'Add' }} Location</h2>
+        <p>Enter the location details below</p>
+      </div>
+
+      <div class="form-body">
+        <div class="form-section">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="countryId" class="field-required">Country</label>
+                <i class="fas fa-globe"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <select
+                  id="countryId"
+                  class="form-control"
+                  [(ngModel)]="location.countryId"
+                >
+                  <option value="">-- Select Country --</option>
+                  <option *ngFor="let country of countries" [value]="country.countryId">
+                    {{ country.countryName }} ({{ country.countryCode }})
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="locationName" class="field-required">Location Name</label>
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <input
+                  type="text"
+                  id="locationName"
+                  placeholder="e.g. Bangkok Downtown, Tbilisi Center"
+                  [(ngModel)]="location.locationName"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="city">City</label>
+                <i class="fas fa-city"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <input
+                  type="text"
+                  id="city"
+                  placeholder="e.g. Bangkok, Tbilisi"
+                  [(ngModel)]="location.city"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="isActive">Status</label>
+                <i class="fas fa-toggle-on"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <select id="isActive" class="form-control" [(ngModel)]="location.isActive">
+                  <option [ngValue]="true">Active</option>
+                  <option [ngValue]="false">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn btn-view-list view-list" routerLink="/features/location">
+          <i class="fas fa-list"></i> View List
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">
+          <i class="fas fa-refresh"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="submitLocation()" [disabled]="isLoading">
+          {{ isEditMode ? 'Update' : 'Create' }} Location
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

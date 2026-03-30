@@ -1,0 +1,21 @@
+@import '../customers-list/customers-list.component';
+
+.status-active {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #e7f7ed;
+  color: #0a6634;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status-inactive {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #fde8e8;
+  color: #c81e1e;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}

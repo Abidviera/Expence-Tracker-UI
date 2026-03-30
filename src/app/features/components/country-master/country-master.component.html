@@ -1,0 +1,86 @@
+<div class="CustomerCreation">
+  <div class="container-fluid">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>{{ isEditMode ? 'Update' : 'Add' }} Country</h2>
+        <p>Enter the country details below</p>
+      </div>
+
+      <div class="form-body">
+        <div class="form-section">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="countryCode" class="field-required">Country Code</label>
+                <i class="fas fa-flag"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <input
+                  type="text"
+                  id="countryCode"
+                  placeholder="e.g. THA, GEO, MYS"
+                  maxlength="10"
+                  [(ngModel)]="country.countryCode"
+                  (input)="country.countryCode = country.countryCode.toUpperCase()"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="countryName" class="field-required">Country Name</label>
+                <i class="fas fa-globe"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <input
+                  type="text"
+                  id="countryName"
+                  placeholder="e.g. Thailand, Georgia, Malaysia"
+                  [(ngModel)]="country.countryName"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="region">Region / Zone</label>
+                <i class="fas fa-map"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <select id="region" class="form-control" [(ngModel)]="country.region">
+                  <option value="">Select Region</option>
+                  <option *ngFor="let r of regions" [value]="r">{{ r }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="isActive">Status</label>
+                <i class="fas fa-toggle-on"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <select id="isActive" class="form-control" [(ngModel)]="country.isActive">
+                  <option [ngValue]="true">Active</option>
+                  <option [ngValue]="false">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn btn-view-list view-list" routerLink="/features/country">
+          <i class="fas fa-list"></i> View List
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">
+          <i class="fas fa-refresh"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="submitCountry()" [disabled]="isLoading">
+          {{ isEditMode ? 'Update' : 'Create' }} Country
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
