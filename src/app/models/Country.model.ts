@@ -100,6 +100,7 @@ export interface ReportSummary {
   totalIncome: number;
   netProfit: number;
   averageExpensePerCustomer: number;
+  totalOutstandingBalance: number;
 }
 
 export interface CountryBreakdown {

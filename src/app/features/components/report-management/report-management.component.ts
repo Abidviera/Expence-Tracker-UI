@@ -345,6 +345,7 @@ export class ReportManagementComponent implements OnInit {
       ['Total Expenses', this.reportData.summary.totalExpenses],
       ['Net Profit', this.reportData.summary.netProfit],
       ['Avg Expense/Customer', this.reportData.summary.averageExpensePerCustomer],
+      ['Total Outstanding Balance', this.reportData.summary.totalOutstandingBalance],
       [''],
       ['--- COUNTRY BREAKDOWN ---'],
       ['Country', 'Code', 'Region', 'Customers', 'Income', 'Expenses', 'Net Profit'],
@@ -505,6 +506,7 @@ export class ReportManagementComponent implements OnInit {
   hasCountryData() { return (this.reportData?.countryBreakdown?.length ?? 0) > 0; }
   hasLocationData() { return (this.reportData?.locationBreakdown?.length ?? 0) > 0; }
   hasCustomerData() { return (this.reportData?.customerDetails?.length ?? 0) > 0; }
+  getTotalOutstandingBalance(): number { return this.reportData?.summary?.totalOutstandingBalance ?? 0; }
 
   getTopCountries(count: number): CountryBreakdown[] {
     return (this.reportData?.countryBreakdown ?? []).slice(0, count);

@@ -566,6 +566,7 @@ export class DashboardComponent implements OnInit {
   getNetProfit(): number { return this.dashboardData?.netProfit ?? 0; }
   getTotalCustomers(): number { return this.dashboardData?.totalCustomers ?? 0; }
   getPendingApprovals(): number { return this.dashboardData?.pendingApprovals ?? 0; }
+  getTotalOutstandingBalance(): number { return this.dashboardData?.totalOutstandingBalance ?? 0; }
   getIncomeChange(): number { return this.dashboardData?.incomeChangePercent ?? 0; }
   getExpenseChange(): number { return this.dashboardData?.expenseChangePercent ?? 0; }
   hasPendingApprovals(): boolean { return !!(this.dashboardData?.pendingApprovals && this.dashboardData.pendingApprovals > 0); }

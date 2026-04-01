@@ -14,6 +14,8 @@ $red-bg: rgba(239, 68, 68, 0.1);
 $amber: #f59e0b;
 $amber-light: #fef3c7;
 $amber-bg: rgba(245, 158, 11, 0.1);
+$orange: #f97316;
+$orange-bg: rgba(249, 115, 22, 0.1);
 $purple: #7c3aed;
 $purple-bg: rgba(124, 58, 237, 0.1);
 $blue: #3b82f6;
@@ -285,6 +287,7 @@ $font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-seri
 .kpi-loss .kpi-icon-wrap { background: $red-bg; color: $red; }
 .kpi-customers .kpi-icon-wrap { background: $blue-bg; color: $blue; }
 .kpi-pending .kpi-icon-wrap { background: $amber-bg; color: $amber; }
+.kpi-outstanding .kpi-icon-wrap { background: $orange-bg; color: $orange; }
 
 .kpi-change {
   display: flex;
@@ -362,6 +365,11 @@ $font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-seri
   &.loss-fill { background: $red; }
   &.customer-fill { background: $blue; }
   &.pending-fill { background: $amber; }
+  &.outstanding-fill { background: $orange; }
+}
+
+.outstanding-value {
+  color: $orange !important;
 }
 
 @keyframes barGrow {

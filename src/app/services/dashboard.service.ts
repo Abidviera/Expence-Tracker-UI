@@ -40,6 +40,7 @@ export interface DashboardData {
   totalCustomers: number;
   totalTrips: number;
   pendingApprovals: number;
+  totalOutstandingBalance: number;
   monthlyIncome: MonthlyData[];
   monthlyExpenses: MonthlyData[];
   incomeByCategory: CategoryBreakdown[];

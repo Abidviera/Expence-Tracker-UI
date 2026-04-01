@@ -125,6 +125,21 @@
           <div class="kpi-bar"><div class="kpi-bar-fill customer-fill"></div></div>
         </div>
 
+        <!-- Outstanding Balance -->
+        <div class="kpi-card kpi-outstanding">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="kpi-value outstanding-value">{{ formatCurrency(getTotalOutstandingBalance()) }}</div>
+          <div class="kpi-label">Outstanding Balance</div>
+          <div class="kpi-sub">To be paid by all customers</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill outstanding-fill"></div></div>
+        </div>
+
         <!-- Pending Approvals (conditional) -->
         <div class="kpi-card kpi-pending" *ngIf="hasPendingApprovals()">
           <div class="kpi-top">
