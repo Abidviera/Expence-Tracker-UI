@@ -1,391 +1,361 @@
 <div class="main-content">
   <div class="dashboard-container">
 
-    <!-- Header -->
-    <div class="dashboard-header">
-      <div class="dashboard-left">
-        <h1 class="welcome-message">
-          Welcome back, {{ user?.firstName }} {{ user?.lastName }}!
-        </h1>
-        <!-- Universal Date Filter Bar -->
-        <div class="filter-bar">
-          <div class="filter-buttons">
+    <!-- ─── Header ─── -->
+    <div class="dash-header">
+      <div class="dash-header-left">
+        <div class="dash-greeting">{{ getGreeting() }}, {{ user?.firstName }}</div>
+        <div class="dash-date">{{ getTodayDate() }}</div>
+        <div class="dash-filter-bar">
+          <div class="filter-pills">
             <button
               *ngFor="let opt of filterOptions"
-              class="filter-btn"
+              class="filter-pill"
               [class.active]="selectedFilter === opt.key"
               (click)="onFilterChange(opt.key)">
               {{ opt.label }}
             </button>
           </div>
-          <div class="custom-date-range" *ngIf="showCustomDates">
-            <input
-              type="date"
-              class="form-control date-input"
-              [(ngModel)]="customFromDate"
-              (change)="onCustomDateChange()"
-              placeholder="From Date" />
-            <span class="date-separator">to</span>
-            <input
-              type="date"
-              class="form-control date-input"
-              [(ngModel)]="customToDate"
-              (change)="onCustomDateChange()"
-              placeholder="To Date" />
+          <div class="custom-range" *ngIf="showCustomDates">
+            <input type="date" class="date-input" [(ngModel)]="customFromDate" (change)="onCustomDateChange()">
+            <span class="range-sep">—</span>
+            <input type="date" class="date-input" [(ngModel)]="customToDate" (change)="onCustomDateChange()">
           </div>
         </div>
       </div>
-
-      <div class="dashboard-right">
-        <button class="icon-button" aria-label="Refresh" (click)="refreshData()" title="Refresh Data">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      <div class="dash-header-right">
+        <button class="header-btn btn-icon" (click)="refreshData()" title="Refresh">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+            <path d="M8 16H3v5"/>
           </svg>
         </button>
-        <button class="icon-button" aria-label="Notifications">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
-          <span class="notification-badge" *ngIf="hasPendingApprovals()">{{ getPendingApprovals() }}</span>
-        </button>
-        <button class="action-button" routerLink="/features/ExpenseCreation">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        <button class="header-btn btn-primary" routerLink="/features/ExpenseCreation">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"/>
           </svg>
           New Expense
         </button>
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div *ngIf="loading" class="loading-state">
-      <div class="spinner"></div>
-      <p>Loading dashboard...</p>
+    <!-- ─── Loading ─── -->
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <span>Loading your dashboard...</span>
     </div>
 
     <div *ngIf="!loading && hasData()">
 
-      <!-- First Row - Key Stats Cards -->
-      <div class="dashboard-grid">
+      <!-- ─── KPI Cards Row ─── -->
+      <div class="kpi-row">
 
-        <!-- Total Income -->
-        <div class="col-span-3 fade-in" style="animation-delay: 0.1s">
-          <div class="widget hover-raise">
-            <span class="widget-badge success" [class.hidden]="!showIncomeChange()">
-              <i class="fas" [ngClass]="getChangeIcon(getIncomeChange())"></i>
-              {{ getIncomeChange() }}%
-            </span>
-            <span class="widget-title">TOTAL INCOME</span>
-            <div class="widget-value">{{ formatCurrency(getTotalIncome()) }}</div>
-            <div class="widget-trend" *ngIf="getTotalIncomeLastPeriod() > 0">
-              <i class="fas" [ngClass]="getChangeIcon(getIncomeChange()) + ' ' + getChangeClass(getIncomeChange())"></i>
-              <span>{{ getIncomeChange() }}% vs last month</span>
+        <!-- Income -->
+        <div class="kpi-card kpi-income">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
             </div>
-            <div class="widget-icon"><i class="fas fa-wallet"></i></div>
-            <div class="animated-bg">
-              <div class="animated-circle circle1"></div>
-              <div class="animated-circle circle2"></div>
+            <div class="kpi-change" [class.positive]="getIncomeChange() > 0" [class.negative]="getIncomeChange() < 0" *ngIf="showIncomeChange()">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 17l5-5 5 5H7z"/></svg>
+              {{ getIncomeChange() }}%
             </div>
           </div>
+          <div class="kpi-value">{{ formatCurrency(getTotalIncome()) }}</div>
+          <div class="kpi-label">Total Income</div>
+          <div class="kpi-sub" *ngIf="showIncomeChange()">{{ getIncomeChange() > 0 ? 'Up' : 'Down' }} from last period</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill income-fill"></div></div>
         </div>
 
-        <!-- Total Expenses -->
-        <div class="col-span-3 fade-in" style="animation-delay: 0.2s">
-          <div class="widget hover-raise">
-            <span class="widget-badge danger" [class.hidden]="!showExpenseChange()">
-              <i class="fas" [ngClass]="getChangeIcon(getExpenseChange())"></i>
-              {{ getExpenseChange() }}%
-            </span>
-            <span class="widget-title">TOTAL EXPENSES</span>
-            <div class="widget-value">{{ formatCurrency(getTotalExpenses()) }}</div>
-            <div class="widget-trend" *ngIf="getTotalExpensesLastPeriod() > 0">
-              <i class="fas" [ngClass]="getChangeIcon(getExpenseChange()) + ' ' + getChangeClass(getExpenseChange())"></i>
-              <span>{{ getExpenseChange() }}% vs last month</span>
+        <!-- Expenses -->
+        <div class="kpi-card kpi-expense">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+              </svg>
             </div>
-            <div class="widget-icon"><i class="fas fa-dollar-sign"></i></div>
-            <div class="animated-bg">
-              <div class="animated-circle circle2"></div>
-              <div class="animated-circle circle3"></div>
+            <div class="kpi-change" [class.positive]="getExpenseChange() < 0" [class.negative]="getExpenseChange() > 0" *ngIf="showExpenseChange()">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 13l5-5 5 5H7z"/></svg>
+              {{ getExpenseChange() }}%
             </div>
           </div>
+          <div class="kpi-value">{{ formatCurrency(getTotalExpenses()) }}</div>
+          <div class="kpi-label">Total Expenses</div>
+          <div class="kpi-sub" *ngIf="showExpenseChange()">{{ getExpenseChange() > 0 ? 'Up' : 'Down' }} from last period</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill expense-fill"></div></div>
         </div>
 
         <!-- Net Profit -->
-        <div class="col-span-3 fade-in" style="animation-delay: 0.3s">
-          <div class="widget hover-raise" [class.profit-positive-box]="isProfitable()" [class.profit-negative-box]="!isProfitable()">
-            <span class="widget-badge" [class.success]="isProfitable()" [class.danger]="!isProfitable()">
-              <i class="fas" [ngClass]="isProfitable() ? 'fa-arrow-up' : 'fa-arrow-down'"></i>
+        <div class="kpi-card" [class.kpi-profit]="isProfitable()" [class.kpi-loss]="!isProfitable()">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+              </svg>
+            </div>
+            <div class="kpi-badge" [class.badge-profit]="isProfitable()" [class.badge-loss]="!isProfitable()">
               {{ isProfitable() ? 'Profit' : 'Loss' }}
-            </span>
-            <span class="widget-title">NET PROFIT</span>
-            <div class="widget-value" [class.profit-positive-text]="isProfitable()" [class.profit-negative-text]="!isProfitable()">
-              {{ getNetProfitDisplay() }}
             </div>
-            <div class="widget-trend">
-              <i class="fas" [ngClass]="getNetProfitClass()"></i>
-              <span>{{ isProfitable() ? 'You are profitable!' : 'Over budget' }}</span>
+          </div>
+          <div class="kpi-value" [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">
+            {{ getNetProfitDisplay() }}
+          </div>
+          <div class="kpi-label">Net Profit</div>
+          <div class="kpi-sub">{{ isProfitable() ? 'Healthy bottom line' : 'Over expenses threshold' }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill" [class.profit-fill]="isProfitable()" [class.loss-fill]="!isProfitable()"></div></div>
+        </div>
+
+        <!-- Customers -->
+        <div class="kpi-card kpi-customers">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
             </div>
-            <div class="widget-icon"><i class="fas fa-chart-line"></i></div>
-            <div class="animated-bg">
-              <div class="animated-circle circle1"></div>
-              <div class="animated-circle circle3"></div>
+          </div>
+          <div class="kpi-value">{{ getTotalCustomers() }}</div>
+          <div class="kpi-label">Active Customers</div>
+          <div class="kpi-sub">Total registered accounts</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill customer-fill"></div></div>
+        </div>
+
+        <!-- Pending Approvals (conditional) -->
+        <div class="kpi-card kpi-pending" *ngIf="hasPendingApprovals()">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
             </div>
+            <div class="kpi-badge badge-pending">{{ getPendingApprovals() }}</div>
+          </div>
+          <div class="kpi-value">{{ getPendingApprovals() }}</div>
+          <div class="kpi-label">Pending Approvals</div>
+          <div class="kpi-sub">Needs your attention</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill pending-fill"></div></div>
+        </div>
+
+      </div>
+
+      <!-- ─── Main Charts Row ─── -->
+      <div class="charts-row">
+
+        <!-- Bar Chart -->
+        <div class="chart-card col-bar">
+          <div class="chart-card-head">
+            <div>
+              <h2 class="chart-card-title">Income vs Expenses</h2>
+              <p class="chart-card-sub">Monthly comparison over the last 12 months</p>
+            </div>
+            <div class="chart-meta-badge">12 Months</div>
+          </div>
+          <div class="chart-wrap" style="height: 300px;">
+            <canvas baseChart [type]="barChartType" [data]="barChartData" [options]="barChartOptions"></canvas>
           </div>
         </div>
 
-        <!-- Total Customers -->
-        <div class="col-span-3 fade-in" style="animation-delay: 0.4s">
-          <div class="widget hover-raise">
-            <span class="widget-badge info">{{ getTotalCustomers() }}</span>
-            <span class="widget-title">TOTAL CUSTOMERS</span>
-            <div class="widget-value">{{ getTotalCustomers() }}</div>
-            <div class="widget-trend">
-              <i class="fas fa-users" style="color: #64748b;"></i>
-              <span>All active customers</span>
-            </div>
-            <div class="widget-icon"><i class="fas fa-users"></i></div>
-            <div class="animated-bg">
-              <div class="animated-circle circle2"></div>
-              <div class="animated-circle circle3"></div>
+        <!-- Budget Overview Card -->
+        <div class="chart-card col-side">
+          <div class="chart-card-head">
+            <div>
+              <h2 class="chart-card-title">Budget Overview</h2>
+              <p class="chart-card-sub">Financial summary</p>
             </div>
           </div>
-        </div>
-
-        <!-- Pending Approvals -->
-        <div class="col-span-3 fade-in" style="animation-delay: 0.5s" *ngIf="hasPendingApprovals()">
-          <div class="widget hover-raise">
-            <span class="widget-badge warning">{{ getPendingApprovals() }}</span>
-            <span class="widget-title">PENDING APPROVALS</span>
-            <div class="widget-value">{{ getPendingApprovals() }}</div>
-            <div class="widget-trend">
-              <i class="fas fa-clipboard-list" style="color: #64748b;"></i>
-              <span>Requires attention</span>
+          <div class="budget-content">
+            <div class="budget-figure">
+              <span class="budget-figure-label">Total Income</span>
+              <span class="budget-figure-value income-color">{{ formatAmount(getTotalIncome()) }}</span>
             </div>
-            <div class="widget-icon"><i class="fas fa-clipboard-list"></i></div>
-            <div class="animated-bg">
-              <div class="animated-circle circle2"></div>
-              <div class="animated-circle circle3"></div>
+            <div class="budget-divider"></div>
+            <div class="budget-figure">
+              <span class="budget-figure-label">Total Expenses</span>
+              <span class="budget-figure-value expense-color">-{{ formatAmount(getTotalExpenses()) }}</span>
+            </div>
+            <div class="budget-divider"></div>
+            <div class="budget-figure net-figure">
+              <span class="budget-figure-label">Net Profit</span>
+              <span class="budget-figure-value net-color" [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">
+                {{ getNetProfitDisplay() }}
+              </span>
+            </div>
+          </div>
+          <div class="budget-progress-section">
+            <div class="budget-progress-header">
+              <span>Budget Utilization</span>
+              <span class="budget-pct">{{ getBudgetUsedPercent() }}%</span>
+            </div>
+            <div class="budget-progress-track">
+              <div class="budget-progress-fill"
+                   [style.width.%]="getBudgetUsedPercent()"
+                   [class.bp-under]="getBudgetUsedPercent() < 70"
+                   [class.bp-warn]="getBudgetUsedPercent() >= 70 && getBudgetUsedPercent() < 90"
+                   [class.bp-over]="getBudgetUsedPercent() >= 90">
+              </div>
+            </div>
+            <div class="budget-remaining">
+              <span>Remaining</span>
+              <span [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">{{ getBudgetRemaining() }}</span>
+            </div>
+          </div>
+          <div class="budget-mini-stats">
+            <div class="mini-stat">
+              <div class="mini-stat-dot income-dot"></div>
+              <span>{{ getTotalCustomers() }} Customers</span>
+            </div>
+            <div class="mini-stat" *ngIf="hasPendingApprovals()">
+              <div class="mini-stat-dot pending-dot"></div>
+              <span>{{ getPendingApprovals() }} Pending</span>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Second Row - Bar Chart + Budget Status -->
-      <div class="dashboard-grid">
+      <!-- ─── Line Chart + Category Row ─── -->
+      <div class="charts-row">
 
-        <!-- Income vs Expense Bar Chart -->
-        <div class="col-span-8 fade-in" style="animation-delay: 0.6s">
-          <div class="chart-container futuristic-border hover-raise">
-            <div class="chart-header">
-              <h3 class="chart-title">Income vs Expenses (Last 12 Months)</h3>
-              <div class="chart-filters">
-                <button class="chart-filter" (click)="refreshData()">
-                  <i class="fas fa-sync-alt"></i>
-                </button>
-              </div>
+        <!-- Net Profit Line Chart -->
+        <div class="chart-card col-profit">
+          <div class="chart-card-head">
+            <div>
+              <h2 class="chart-card-title">Net Profit Trend</h2>
+              <p class="chart-card-sub">Profitability over the last 12 months</p>
             </div>
-            <div class="chart-canvas" style="height: 300px;">
-              <canvas baseChart
-                [type]="profitChartType"
-                [data]="profitChartData"
-                [options]="profitChartOptions">
-              </canvas>
+            <div class="profit-indicator" [class.pi-up]="isProfitable()" [class.pi-down]="!isProfitable()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path *ngIf="isProfitable()" d="M7 14l5-5 5 5H7z"/>
+                <path *ngIf="!isProfitable()" d="M7 10l5 5 5-5H7z"/>
+              </svg>
+              {{ isProfitable() ? 'Profitable' : 'Loss' }}
             </div>
+          </div>
+          <div class="chart-wrap" style="height: 240px;">
+            <canvas baseChart [type]="lineChartType" [data]="lineChartData" [options]="lineChartOptions"></canvas>
           </div>
         </div>
 
-        <!-- Budget Overview -->
-        <div class="col-span-4 fade-in" style="animation-delay: 0.7s">
-          <div class="stats-card hover-raise">
-            <div class="stats-card-bg"></div>
-            <div class="stats-card-content">
-              <h3 class="stats-card-title">Budget Overview</h3>
-              <div class="stats-card-value">{{ formatAmount(getTotalIncome()) }}</div>
-              <div class="stats-card-subtitle">Total Income this month</div>
-
-              <div class="card-progress">
-                <div class="progress-bar" [style.width.%]="getBudgetUsedPercent()"></div>
-              </div>
-
-              <div class="card-stats">
-                <div class="card-stat">
-                  <div class="card-stat-value">{{ getBudgetUsedPercent() }}%</div>
-                  <div class="card-stat-label">Expenses Used</div>
-                </div>
-                <div class="card-stat">
-                  <div class="card-stat-value">{{ getBudgetRemaining() }}</div>
-                  <div class="card-stat-label">Remaining</div>
-                </div>
-              </div>
-
-              <div style="margin-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                  <span style="font-size: 0.8rem; opacity: 0.8;">Income</span>
-                  <span style="font-weight: 600;">{{ formatAmount(getTotalIncome()) }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                  <span style="font-size: 0.8rem; opacity: 0.8;">Expenses</span>
-                  <span style="font-weight: 600; color: #fca5a5;">-{{ formatAmount(getTotalExpenses()) }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.15);">
-                  <span style="font-size: 0.85rem; font-weight: 600;">Net Profit</span>
-                  <span style="font-weight: 700;" [class.profit-green]="isProfitable()" [class.profit-red]="!isProfitable()">
-                    {{ getNetProfitDisplay() }}
-                  </span>
-                </div>
-              </div>
+        <!-- Income by Category -->
+        <div class="chart-card col-donut">
+          <div class="chart-card-head">
+            <div>
+              <h2 class="chart-card-title">Income Sources</h2>
+              <p class="chart-card-sub">Breakdown by category</p>
             </div>
+          </div>
+          <div class="donut-wrap" *ngIf="hasIncomeCategories()">
+            <div class="donut-canvas">
+              <canvas baseChart [type]="incomeDonutType" [data]="incomeDonutData" [options]="donutOptions"></canvas>
+            </div>
+          </div>
+          <div class="donut-empty" *ngIf="!hasIncomeCategories()">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+            </svg>
+            <p>No income data</p>
           </div>
         </div>
 
-      </div>
-
-      <!-- Third Row - Donut Charts -->
-      <div class="dashboard-grid">
-
-        <!-- Income by Category Donut -->
-        <div class="col-span-4 fade-in" style="animation-delay: 0.75s">
-          <div class="widget hover-raise">
-            <span class="widget-title">INCOME BY CATEGORY</span>
-            <div style="height: 220px; display: flex; align-items: center; justify-content: center;" *ngIf="hasIncomeCategories()">
-              <canvas baseChart
-                type="doughnut"
-                [data]="incomeDonutData"
-                [options]="incomeDonutOptions">
-              </canvas>
-            </div>
-            <div *ngIf="!hasIncomeCategories()" class="empty-state">
-              <i class="fas fa-chart-pie" style="font-size: 2rem; color: #ccc; margin-bottom: 0.5rem;"></i>
-              <p style="color: #999; font-size: 0.85rem;">No income data this month</p>
-            </div>
-            <div *ngIf="hasIncomeCategories()" style="margin-top: 0.5rem;">
-              <div class="expense-category" *ngFor="let cat of getIncomeCategorySlice()">
-                <div class="category-icon" [ngClass]="getCategoryIconClass(cat.categoryName)">
-                  <i class="fas" [ngClass]="getCategoryIcon(cat.categoryName)"></i>
-                </div>
-                <div class="category-details">
-                  <div class="category-name">{{ cat.categoryName }}</div>
-                  <div class="category-amount">{{ formatAmount(cat.totalAmount) }}</div>
-                </div>
-                <div class="category-percentage" style="color: #10b981;">{{ cat.percentage }}%</div>
-              </div>
+        <!-- Expenses by Category -->
+        <div class="chart-card col-donut">
+          <div class="chart-card-head">
+            <div>
+              <h2 class="chart-card-title">Expense Breakdown</h2>
+              <p class="chart-card-sub">Breakdown by category</p>
             </div>
           </div>
-        </div>
-
-        <!-- Expense by Category Donut -->
-        <div class="col-span-4 fade-in" style="animation-delay: 0.8s">
-          <div class="widget hover-raise">
-            <span class="widget-title">EXPENSES BY CATEGORY</span>
-            <div style="height: 220px; display: flex; align-items: center; justify-content: center;" *ngIf="hasExpenseCategories()">
-              <canvas baseChart
-                type="doughnut"
-                [data]="expenseDonutData"
-                [options]="expenseDonutOptions">
-              </canvas>
-            </div>
-            <div *ngIf="!hasExpenseCategories()" class="empty-state">
-              <i class="fas fa-chart-pie" style="font-size: 2rem; color: #ccc; margin-bottom: 0.5rem;"></i>
-              <p style="color: #999; font-size: 0.85rem;">No expense data this month</p>
-            </div>
-            <div *ngIf="hasExpenseCategories()" style="margin-top: 0.5rem;">
-              <div class="expense-category" *ngFor="let cat of getExpenseCategorySlice()">
-                <div class="category-icon" [ngClass]="getCategoryIconClass(cat.categoryName)">
-                  <i class="fas" [ngClass]="getCategoryIcon(cat.categoryName)"></i>
-                </div>
-                <div class="category-details">
-                  <div class="category-name">{{ cat.categoryName }}</div>
-                  <div class="category-amount">{{ formatAmount(cat.totalAmount) }}</div>
-                </div>
-                <div class="category-percentage" style="color: #ef4444;">{{ cat.percentage }}%</div>
-              </div>
+          <div class="donut-wrap" *ngIf="hasExpenseCategories()">
+            <div class="donut-canvas">
+              <canvas baseChart [type]="expenseDonutType" [data]="expenseDonutData" [options]="donutOptions"></canvas>
             </div>
           </div>
-        </div>
-
-        <!-- Net Profit Trend Line Chart -->
-        <div class="col-span-4 fade-in" style="animation-delay: 0.85s">
-          <div class="widget hover-raise">
-            <span class="widget-title">PROFIT TREND (Last 12 Months)</span>
-            <div class="chart-canvas" style="height: 220px;">
-              <canvas baseChart
-                [type]="lineChartType"
-                [data]="lineChartData"
-                [options]="lineChartOptions">
-              </canvas>
-            </div>
+          <div class="donut-empty" *ngIf="!hasExpenseCategories()">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+            </svg>
+            <p>No expense data</p>
           </div>
         </div>
 
       </div>
 
-      <!-- Fourth Row - Recent Transactions -->
-      <div class="dashboard-grid">
-        <div class="col-span-12 fade-in" style="animation-delay: 0.9s">
-          <div class="table-container hover-raise">
-            <div class="table-header">
-              <h3 class="table-title">Recent Transactions</h3>
-              <div class="table-action" routerLink="/features/ExpensesList">View All</div>
-            </div>
+      <!-- ─── Recent Transactions Table ─── -->
+      <div class="table-card">
+        <div class="table-card-head">
+          <div>
+            <h2 class="chart-card-title">Recent Transactions</h2>
+            <p class="chart-card-sub">Latest income and expense entries</p>
+          </div>
+          <a class="view-all-link" routerLink="/features/ExpensesList">View All</a>
+        </div>
 
-            <div *ngIf="getRecentTransactions().length === 0" class="empty-state" style="padding: 2rem; text-align: center;">
-              <i class="fas fa-inbox" style="font-size: 2.5rem; color: #ccc; margin-bottom: 1rem;"></i>
-              <p style="color: #999;">No transactions yet. Start by adding an expense or income.</p>
-            </div>
+        <div class="table-empty" *ngIf="getRecentTransactions().length === 0">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 10h8M8 14h5"/>
+          </svg>
+          <p>No transactions recorded yet</p>
+        </div>
 
-            <table *ngIf="getRecentTransactions().length > 0">
-              <thead>
-                <tr>
-                  <th>Transaction</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Category</th>
-                  <th>Customer</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let tx of getRecentTransactions()">
-                  <td>
-                    <div class="user-details">
-                      <div class="user-avatar-sm" [ngClass]="getTransactionIconClass(tx.transactionType)">
-                        <i class="fas" [ngClass]="tx.transactionType === 'Income' ? 'fa-arrow-down' : 'fa-arrow-up'"></i>
-                      </div>
-                      <div>
-                        <div class="user-name-sm">{{ tx.title }}</div>
-                        <div class="user-role-sm">{{ tx.transactionType }}</div>
-                      </div>
+        <div class="table-wrapper" *ngIf="getRecentTransactions().length > 0">
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Transaction</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Customer</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tx of getRecentTransactions()" class="table-row">
+                <td>
+                  <div class="tx-cell">
+                    <div class="tx-icon" [ngClass]="getTransactionIconClass(tx.transactionType)">
+                      <svg *ngIf="tx.transactionType === 'Income'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 19V5M5 12l7-7 7 7"/>
+                      </svg>
+                      <svg *ngIf="tx.transactionType !== 'Income'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14M19 12l-7 7-7-7"/>
+                      </svg>
                     </div>
-                  </td>
-                  <td>
-                    <span [class.income-text]="tx.transactionType === 'Income'" [class.expense-text]="tx.transactionType === 'Expense'">
-                      {{ tx.transactionType === 'Income' ? '+' : '-' }}{{ formatCurrency(tx.amount) }}
-                    </span>
-                  </td>
-                  <td>{{ tx.date | date:'MMM dd, yyyy' }}</td>
-                  <td>{{ tx.categoryName }}</td>
-                  <td>{{ tx.customerName || '-' }}</td>
-                  <td>
-                    <span class="status-badge" [ngClass]="getStatusClass(tx.status)">
-                      {{ tx.status }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    <div class="tx-info">
+                      <span class="tx-title">{{ tx.title }}</span>
+                      <span class="tx-type">{{ tx.transactionType }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="amount-cell" [class.amt-income]="tx.transactionType === 'Income'" [class.amt-expense]="tx.transactionType !== 'Income'">
+                    {{ tx.transactionType === 'Income' ? '+' : '-' }}{{ formatCurrency(tx.amount) }}
+                  </span>
+                </td>
+                <td><span class="date-cell">{{ tx.date | date:'MMM dd, yyyy' }}</span></td>
+                <td><span class="cat-tag"><i class="fas" [ngClass]="getCategoryIcon(tx.categoryName)"></i> {{ tx.categoryName }}</span></td>
+                <td><span class="customer-cell">{{ tx.customerName || '—' }}</span></td>
+                <td><span class="status-pill" [ngClass]="getStatusClass(tx.status)">{{ tx.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
     </div>
 
-    <!-- No Data State -->
-    <div *ngIf="!loading && !hasData()" class="empty-state" style="padding: 4rem; text-align: center;">
-      <i class="fas fa-chart-bar" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
-      <p style="color: #999; font-size: 1rem;">No dashboard data available. Please ensure you have income or expense records.</p>
+    <!-- ─── No Data ─── -->
+    <div *ngIf="!loading && !hasData()" class="no-data-state">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.2">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+      </svg>
+      <h3>No Dashboard Data</h3>
+      <p>Start by adding income or expense records to see your dashboard.</p>
     </div>
 
   </div>

@@ -1,0 +1,538 @@
+<div class="main-content">
+  <div class="report-container">
+
+    <!-- ─── Page Header ─── -->
+    <div class="report-header">
+      <div class="report-header-left">
+        <div class="report-title-row">
+          <div class="report-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <h1 class="report-page-title">Financial Reports</h1>
+        </div>
+        <p class="report-subtitle">Generate comprehensive financial reports with multi-dimensional breakdowns</p>
+      </div>
+      <div class="report-header-right" *ngIf="hasGenerated">
+        <button class="action-btn btn-export-pdf" (click)="exportToPdf()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Export PDF
+        </button>
+        <button class="action-btn btn-export-excel" (click)="exportToExcel()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          Export Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── Report Generator Card ─── -->
+    <div class="generator-card">
+      <div class="generator-card-head">
+        <div class="generator-title-wrap">
+          <div class="generator-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="generator-title">Generate Report</h2>
+            <p class="generator-sub">Configure filters and generate a comprehensive financial report</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="generator-body">
+        <div class="filter-row">
+          <!-- Period Filter -->
+          <div class="filter-group">
+            <label class="filter-label">Period</label>
+            <div class="filter-pills">
+              <button
+                *ngFor="let opt of filterOptions"
+                class="filter-pill"
+                [class.active]="selectedFilter === opt.key"
+                (click)="onFilterChange(opt.key)">
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Date Range -->
+          <div class="filter-group custom-range-group" *ngIf="showCustomDates">
+            <label class="filter-label">Date Range</label>
+            <div class="date-range-inputs">
+              <input type="date" class="form-input date-input" [(ngModel)]="customFromDate" (change)="onCustomDateChange()">
+              <span class="range-sep">—</span>
+              <input type="date" class="form-input date-input" [(ngModel)]="customToDate" (change)="onCustomDateChange()">
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-row row-2">
+          <!-- Country Filter -->
+          <div class="filter-group">
+            <label class="filter-label">Country</label>
+            <select class="form-input select-input" [(ngModel)]="selectedCountryId" (change)="onCountryChange()">
+              <option value="">All Countries</option>
+              <option *ngFor="let c of countries" [value]="c.countryId">{{ c.countryName }} ({{ c.countryCode }})</option>
+            </select>
+          </div>
+
+          <!-- Location Filter -->
+          <div class="filter-group">
+            <label class="filter-label">Location</label>
+            <select class="form-input select-input" [(ngModel)]="selectedLocationId" [disabled]="!selectedCountryId && locations.length === 0">
+              <option value="">All Locations</option>
+              <option *ngFor="let l of locations" [value]="l.locationId">{{ l.locationName }} — {{ l.city }}</option>
+            </select>
+          </div>
+
+          <!-- Generate Button -->
+          <div class="filter-group generate-group">
+            <label class="filter-label">&nbsp;</label>
+            <button class="generate-btn" (click)="generateReport()" [disabled]="loading">
+              <span *ngIf="!loading">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                Generate Report
+              </span>
+              <span *ngIf="loading" class="loading-text">
+                <span class="btn-spinner"></span>
+                Generating...
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Loading State ─── -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <span>Generating your report...</span>
+    </div>
+
+    <!-- ─── Report Content ─── -->
+    <div *ngIf="!loading && hasGenerated && reportData">
+
+      <!-- Report Meta Bar -->
+      <div class="report-meta-bar" *ngIf="getReportMeta() as meta">
+        <div class="meta-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          <span>{{ meta.period }}</span>
+        </div>
+        <div class="meta-sep"></div>
+        <div class="meta-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>{{ meta.by }}</span>
+        </div>
+        <div class="meta-sep"></div>
+        <div class="meta-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>{{ meta.date }}</span>
+        </div>
+        <div class="meta-sep"></div>
+        <div class="meta-item meta-title">{{ meta.title }}</div>
+      </div>
+
+      <!-- ─── Section Tabs ─── -->
+      <div class="section-tabs">
+        <button class="section-tab" [class.active]="activeSection === 'summary'" (click)="activeSection = 'summary'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Summary
+        </button>
+        <button class="section-tab" [class.active]="activeSection === 'country'" (click)="activeSection = 'country'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Country Analysis
+        </button>
+        <button class="section-tab" [class.active]="activeSection === 'location'" (click)="activeSection = 'location'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Location Analysis
+        </button>
+        <button class="section-tab" [class.active]="activeSection === 'customer'" (click)="activeSection = 'customer'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Customer Details
+        </button>
+      </div>
+
+      <!-- ─── SUMMARY SECTION ─── -->
+      <div *ngIf="activeSection === 'summary'">
+
+        <!-- KPI Row -->
+        <div class="kpi-row" *ngIf="getSummary() as s">
+          <div class="kpi-card kpi-income">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="kpi-value">{{ formatCurrency(s.totalIncome) }}</div>
+            <div class="kpi-label">Total Income</div>
+          </div>
+          <div class="kpi-card kpi-expense">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+            <div class="kpi-value">{{ formatCurrency(s.totalExpenses) }}</div>
+            <div class="kpi-label">Total Expenses</div>
+          </div>
+          <div class="kpi-card" [class.kpi-profit]="s.netProfit >= 0" [class.kpi-loss]="s.netProfit < 0">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+            <div class="kpi-value" [class.text-profit]="s.netProfit >= 0" [class.text-loss]="s.netProfit < 0">{{ formatCurrency(s.netProfit) }}</div>
+            <div class="kpi-label">Net Profit</div>
+          </div>
+          <div class="kpi-card kpi-customers">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="kpi-value">{{ s.totalCustomers }}</div>
+            <div class="kpi-label">Active Customers</div>
+          </div>
+          <div class="kpi-card kpi-countries">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <div class="kpi-value">{{ s.totalCountries }}</div>
+            <div class="kpi-label">Countries</div>
+          </div>
+          <div class="kpi-card kpi-locations">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div class="kpi-value">{{ s.totalLocations }}</div>
+            <div class="kpi-label">Locations</div>
+          </div>
+          <div class="kpi-card kpi-avg">
+            <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <div class="kpi-value">{{ formatCurrency(s.averageExpensePerCustomer) }}</div>
+            <div class="kpi-label">Avg Expense/Customer</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <!-- Country Comparison Bar Chart -->
+          <div class="chart-card col-wide">
+            <div class="chart-head">
+              <div>
+                <h3 class="chart-title">Income vs Expenses by Country</h3>
+                <p class="chart-sub">Comparative analysis across {{ getCountryBreakdown().length }} countries</p>
+              </div>
+              <span class="chart-badge">Top Countries</span>
+            </div>
+            <div class="chart-wrap" style="height: 280px;">
+              <canvas baseChart [type]="barChartType" [data]="countryBarData" [options]="countryBarOptions"></canvas>
+            </div>
+          </div>
+
+          <!-- Profit by Country Donut -->
+          <div class="chart-card col-narrow">
+            <div class="chart-head">
+              <div>
+                <h3 class="chart-title">Profit by Country</h3>
+                <p class="chart-sub">Distribution of net profit</p>
+              </div>
+            </div>
+            <div class="donut-wrap" *ngIf="hasCountryData()">
+              <div class="donut-canvas">
+                <canvas baseChart [type]="doughnutChartType" [data]="profitDonutData" [options]="donutOptions"></canvas>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="!hasCountryData()">
+              <p>No country data available</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Country Table -->
+        <div class="quick-table-card">
+          <div class="quick-table-head">
+            <h3 class="quick-table-title">Country Overview</h3>
+            <button class="link-btn" (click)="activeSection = 'country'">View Full Analysis</button>
+          </div>
+          <div class="table-wrap">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>Region</th>
+                  <th>Customers</th>
+                  <th>Income</th>
+                  <th>Expenses</th>
+                  <th>Net Profit</th>
+                  <th>Margin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of getTopCountries(6)" class="table-row">
+                  <td>
+                    <div class="country-cell">
+                      <div class="country-flag">{{ c.countryCode }}</div>
+                      <span class="country-name">{{ c.countryName }}</span>
+                    </div>
+                  </td>
+                  <td><span class="region-tag">{{ c.region }}</span></td>
+                  <td><span class="num-cell">{{ c.customerCount }}</span></td>
+                  <td><span class="income-cell">{{ formatCurrency(c.totalIncome) }}</span></td>
+                  <td><span class="expense-cell">{{ formatCurrency(c.totalExpenses) }}</span></td>
+                  <td>
+                    <span class="profit-cell" [class.text-profit]="c.netProfit >= 0" [class.text-loss]="c.netProfit < 0">
+                      {{ formatCurrency(c.netProfit) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="margin-bar-wrap">
+                      <div class="margin-bar" [style.width.%]="c.totalIncome > 0 ? Math.min(Math.round((c.netProfit / c.totalIncome) * 100), 100) : 0"></div>
+                      <span class="margin-pct">{{ c.totalIncome > 0 ? Math.round((c.netProfit / c.totalIncome) * 100) : 0 }}%</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── COUNTRY ANALYSIS SECTION ─── -->
+      <div *ngIf="activeSection === 'country'">
+        <div class="section-intro">
+          <h2 class="section-heading">Country-Wise Financial Analysis</h2>
+          <p class="section-desc">Detailed breakdown of income, expenses, and profit across {{ getCountryBreakdown().length }} countries</p>
+        </div>
+
+        <div class="country-cards">
+          <div *ngFor="let c of getCountryBreakdown()" class="country-detail-card">
+            <div class="cdc-header" (click)="toggleCountryRow(c.countryName)" [class.expanded]="isCountryExpanded(c.countryName)">
+              <div class="cdc-left">
+                <div class="cdc-flag">{{ c.countryCode }}</div>
+                <div class="cdc-info">
+                  <div class="cdc-name">{{ c.countryName }}</div>
+                  <div class="cdc-meta">{{ c.region }} &middot; {{ c.customerCount }} customer{{ c.customerCount !== 1 ? 's' : '' }}</div>
+                </div>
+              </div>
+              <div class="cdc-stats">
+                <div class="cdc-stat">
+                  <div class="cdc-stat-value income-color">{{ formatCurrency(c.totalIncome) }}</div>
+                  <div class="cdc-stat-label">Income</div>
+                </div>
+                <div class="cdc-stat">
+                  <div class="cdc-stat-value expense-color">{{ formatCurrency(c.totalExpenses) }}</div>
+                  <div class="cdc-stat-label">Expenses</div>
+                </div>
+                <div class="cdc-stat">
+                  <div class="cdc-stat-value" [class.text-profit]="c.netProfit >= 0" [class.text-loss]="c.netProfit < 0">
+                    {{ formatCurrency(c.netProfit) }}
+                  </div>
+                  <div class="cdc-stat-label">Net Profit</div>
+                </div>
+                <div class="cdc-expand">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline [attr.points]="isCountryExpanded(c.countryName) ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Expanded Customer List -->
+            <div class="cdc-customers" *ngIf="isCountryExpanded(c.countryName)">
+              <table class="inner-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Location</th>
+                    <th>Income</th>
+                    <th>Expenses</th>
+                    <th>Net Profit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cust of c.customers">
+                    <td><span class="cust-name">{{ cust.customerName }}</span></td>
+                    <td><span class="cust-email">{{ cust.email }}</span></td>
+                    <td><span class="cust-location">{{ cust.locationName || '—' }}</span></td>
+                    <td><span class="income-cell">{{ formatCurrency(cust.totalIncome) }}</span></td>
+                    <td><span class="expense-cell">{{ formatCurrency(cust.totalExpenses) }}</span></td>
+                    <td><span [class.text-profit]="cust.netProfit >= 0" [class.text-loss]="cust.netProfit < 0">{{ formatCurrency(cust.netProfit) }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="!hasCountryData()">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <p>No country data available for the selected period</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── LOCATION ANALYSIS SECTION ─── -->
+      <div *ngIf="activeSection === 'location'">
+        <div class="section-intro">
+          <h2 class="section-heading">Location-Wise Financial Analysis</h2>
+          <p class="section-desc">Detailed breakdown of financial performance across {{ getLocationBreakdown().length }} locations</p>
+        </div>
+
+        <div class="country-cards">
+          <div *ngFor="let l of getLocationBreakdown()" class="country-detail-card">
+            <div class="cdc-header" (click)="toggleLocationRow(l.locationName)" [class.expanded]="isLocationExpanded(l.locationName)">
+              <div class="cdc-left">
+                <div class="cdc-flag location-flag">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div class="cdc-info">
+                  <div class="cdc-name">{{ l.locationName }}</div>
+                  <div class="cdc-meta">{{ l.countryName }} &middot; {{ l.city }} &middot; {{ l.customerCount }} customer{{ l.customerCount !== 1 ? 's' : '' }}</div>
+                </div>
+              </div>
+              <div class="cdc-stats">
+                <div class="cdc-stat">
+                  <div class="cdc-stat-value income-color">{{ formatCurrency(l.totalIncome) }}</div>
+                  <div class="cdc-stat-label">Income</div>
+                </div>
+                <div class="cdc-stat">
+                  <div class="cdc-stat-value expense-color">{{ formatCurrency(l.totalExpenses) }}</div>
+                  <div class="cdc-stat-label">Expenses</div>
+                </div>
+                <div class="cdc-stat">
+                  <div class="cdc-stat-value" [class.text-profit]="l.netProfit >= 0" [class.text-loss]="l.netProfit < 0">
+                    {{ formatCurrency(l.netProfit) }}
+                  </div>
+                  <div class="cdc-stat-label">Net Profit</div>
+                </div>
+                <div class="cdc-expand">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline [attr.points]="isLocationExpanded(l.locationName) ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="cdc-customers" *ngIf="isLocationExpanded(l.locationName)">
+              <table class="inner-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>Income</th>
+                    <th>Expenses</th>
+                    <th>Net Profit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cust of l.customers">
+                    <td><span class="cust-name">{{ cust.customerName }}</span></td>
+                    <td><span class="cust-email">{{ cust.email }}</span></td>
+                    <td><span class="cust-location">{{ cust.countryName }}</span></td>
+                    <td><span class="income-cell">{{ formatCurrency(cust.totalIncome) }}</span></td>
+                    <td><span class="expense-cell">{{ formatCurrency(cust.totalExpenses) }}</span></td>
+                    <td><span [class.text-profit]="cust.netProfit >= 0" [class.text-loss]="cust.netProfit < 0">{{ formatCurrency(cust.netProfit) }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="!hasLocationData()">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <p>No location data available for the selected period</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── CUSTOMER DETAILS SECTION ─── -->
+      <div *ngIf="activeSection === 'customer'">
+        <div class="section-intro">
+          <h2 class="section-heading">Customer Financial Details</h2>
+          <p class="section-desc">{{ getSortedCustomers().length }} customer records &mdash; click column headers to sort</p>
+        </div>
+
+        <div class="table-card">
+          <div class="table-wrap">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th class="sortable" (click)="sortCustomers('customerName')">
+                    Customer <i class="fas" [ngClass]="getSortIcon('customerName')"></i>
+                  </th>
+                  <th>Contact</th>
+                  <th class="sortable" (click)="sortCustomers('countryName')">
+                    Country <i class="fas" [ngClass]="getSortIcon('countryName')"></i>
+                  </th>
+                  <th>Location</th>
+                  <th class="sortable text-right" (click)="sortCustomers('totalIncome')">
+                    Income <i class="fas" [ngClass]="getSortIcon('totalIncome')"></i>
+                  </th>
+                  <th class="sortable text-right" (click)="sortCustomers('totalExpenses')">
+                    Expenses <i class="fas" [ngClass]="getSortIcon('totalExpenses')"></i>
+                  </th>
+                  <th class="sortable text-right" (click)="sortCustomers('netProfit')">
+                    Net Profit <i class="fas" [ngClass]="getSortIcon('netProfit')"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of getSortedCustomers()" class="table-row">
+                  <td>
+                    <div class="customer-cell">
+                      <div class="customer-avatar">{{ c.customerName.charAt(0).toUpperCase() }}</div>
+                      <span class="customer-name">{{ c.customerName }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="contact-cell">
+                      <span class="contact-email">{{ c.email }}</span>
+                      <span class="contact-phone">{{ c.phoneNumber || '—' }}</span>
+                    </div>
+                  </td>
+                  <td><span class="region-tag">{{ c.countryName || '—' }}</span></td>
+                  <td><span class="cust-location">{{ c.locationName || '—' }}</span></td>
+                  <td class="text-right"><span class="income-cell">{{ formatCurrency(c.totalIncome) }}</span></td>
+                  <td class="text-right"><span class="expense-cell">{{ formatCurrency(c.totalExpenses) }}</span></td>
+                  <td class="text-right">
+                    <span [class.text-profit]="c.netProfit >= 0" [class.text-loss]="c.netProfit < 0" class="profit-val">
+                      {{ formatCurrency(c.netProfit) }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="empty-state" *ngIf="!hasCustomerData()">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <p>No customer records found for the selected period</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── Initial State (No Report Yet) ─── -->
+    <div *ngIf="!loading && !hasGenerated" class="initial-state">
+      <div class="initial-graphic">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="1">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <h3>Ready to Generate Your Report</h3>
+      <p>Configure the filters above and click "Generate Report" to view comprehensive financial analysis</p>
+    </div>
+
+  </div>
+</div>

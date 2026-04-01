@@ -1,16 +1,20 @@
 .ExpenceTracker {
   display: flex;
   height: 100vh;
+  max-height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 .main-section {
-  flex-grow: 1;
+  flex: 1;
+  height: 100vh;
+  max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1rem;
 
-  scrollbar-width: none; 
+  scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
@@ -20,7 +24,16 @@
 
 @media (max-width: 768px) {
 
-  .main-section{
+  .ExpenceTracker {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .main-section {
+    height: auto;
+    max-height: none;
+    overflow: visible;
     padding-top: 80px;
   }
 }

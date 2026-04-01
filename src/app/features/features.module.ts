@@ -24,11 +24,13 @@ import { CategoryListComponent } from './components/category-list/category-list.
 import { CategoryMasterComponent } from './components/category-master/category-master.component';
 import { BaseChartDirective, ThemeService, withDefaultRegisterables, NG_CHARTS_CONFIGURATION } from 'ng2-charts';
 import { NgChartsConfiguration } from 'ng2-charts';
+import { ReportManagementComponent } from './components/report-management/report-management.component';
 
 
 @NgModule({
   declarations: [
     DashboardComponent,
+    ReportManagementComponent,
     ExpensesListComponent,
     ExpenseCreationComponent,
     IncomeCreationComponent,

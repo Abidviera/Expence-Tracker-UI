@@ -6,7 +6,9 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
   z-index: 1000;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
@@ -315,6 +317,7 @@
     right: 0;
     width: 100%;
     height: auto;
+    max-height: none;
     min-height: auto;
     flex-direction: row;
     background: linear-gradient(90deg, #5c0733, #8c0b4e);
