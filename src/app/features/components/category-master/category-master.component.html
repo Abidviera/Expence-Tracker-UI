@@ -1,0 +1,60 @@
+<div class="CustomerCreation">
+  <div class="container-fluid">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>{{ isEditMode ? 'Update' : 'Add' }} Category</h2>
+        <p>Enter the category details below</p>
+      </div>
+
+      <div class="form-body">
+        <div class="form-section">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="label-icon-row">
+                <label for="categoryName" class="field-required">Category Name</label>
+                <i class="fas fa-tag"></i>
+              </div>
+              <div class="form-input-wrapper">
+                <input
+                  type="text"
+                  id="categoryName"
+                  placeholder="e.g. Food, Transport, Utilities"
+                  maxlength="100"
+                  [(ngModel)]="category.name"
+                />
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <div class="label-icon-row">
+                <label for="description">Description</label>
+                <i class="fas fa-align-left"></i>
+              </div>
+              <div class="form-textarea-wrapper">
+                <textarea
+                  id="description"
+                  placeholder="Enter a brief description for this category..."
+                  maxlength="250"
+                  rows="3"
+                  [(ngModel)]="category.description"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn btn-view-list view-list" routerLink="/features/category">
+          <i class="fas fa-list"></i> View List
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">
+          <i class="fas fa-refresh"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="submitCategory()" [disabled]="isLoading">
+          {{ isEditMode ? 'Update' : 'Create' }} Category
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

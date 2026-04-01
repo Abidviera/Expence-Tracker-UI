@@ -37,8 +37,9 @@ export class SidebarMenuService {
      { path: 'features/customers', title: 'Customers', icon: 'fas fa-users', roles: [UserRole.Admin, UserRole.Accountant] },
 
     { heading: 'Master Data', roles: [UserRole.Admin] },
-    { path: 'features/country', title: 'Country Master', icon: 'fas fa-globe', roles: [UserRole.Admin] },
-    { path: 'features/location', title: 'Location Master', icon: 'fas fa-map-marker-alt', roles: [UserRole.Admin] },
+    { path: 'features/country', title: 'Country', icon: 'fas fa-globe', roles: [UserRole.Admin] },
+    { path: 'features/location', title: 'Location', icon: 'fas fa-map-marker-alt', roles: [UserRole.Admin] },
+    { path: 'features/category', title: 'Category', icon: 'fas fa-tags', roles: [UserRole.Admin] },
 
     { heading: 'Management', roles: [UserRole.Admin, UserRole.Accountant] },
     { path: 'features/Approvals', title: 'Approvals', icon: 'fas fa-check-circle', roles: [UserRole.Admin] },

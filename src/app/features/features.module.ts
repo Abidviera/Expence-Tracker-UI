@@ -20,6 +20,8 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { CountryMasterComponent } from './components/country-master/country-master.component';
 import { LocationListComponent } from './components/location-list/location-list.component';
 import { LocationMasterComponent } from './components/location-master/location-master.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
+import { CategoryMasterComponent } from './components/category-master/category-master.component';
 import { BaseChartDirective, ThemeService, withDefaultRegisterables, NG_CHARTS_CONFIGURATION } from 'ng2-charts';
 import { NgChartsConfiguration } from 'ng2-charts';
 
@@ -41,6 +43,8 @@ import { NgChartsConfiguration } from 'ng2-charts';
     CountryMasterComponent,
     LocationListComponent,
     LocationMasterComponent,
+    CategoryListComponent,
+    CategoryMasterComponent,
   ],
   imports: [
     CommonModule,

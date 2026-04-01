@@ -1,0 +1,18 @@
+@import '../customer-creation/customer-creation.component';
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #5c0733;
+  box-shadow: 0 0 0 3px rgba(92, 7, 51, 0.1);
+}

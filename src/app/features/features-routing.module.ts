@@ -16,6 +16,8 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { CountryMasterComponent } from './components/country-master/country-master.component';
 import { LocationListComponent } from './components/location-list/location-list.component';
 import { LocationMasterComponent } from './components/location-master/location-master.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
+import { CategoryMasterComponent } from './components/category-master/category-master.component';
 
 
 const routes: Routes = [
@@ -40,6 +42,9 @@ const routes: Routes = [
   { path: 'location', component: LocationListComponent, canActivate: [AuthGuard] },
   { path: 'location/new', component: LocationMasterComponent, canActivate: [AuthGuard] },
   { path: 'location/edit/:id', component: LocationMasterComponent, canActivate: [AuthGuard] },
+  { path: 'category', component: CategoryListComponent, canActivate: [AuthGuard] },
+  { path: 'category/new', component: CategoryMasterComponent, canActivate: [AuthGuard] },
+  { path: 'category/edit/:id', component: CategoryMasterComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
