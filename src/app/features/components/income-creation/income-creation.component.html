@@ -45,26 +45,28 @@
             </app-searchable-dropdown>
 
             <app-searchable-dropdown
-              [options]="destinations"
-              optionLabel="name"
-              optionValue="id"
-              [label]="'Trip'"
-              [required]="true"
-              placeholder="Associated trip"
-              (selectionChange)="onTripSelect($event)"
-              [(ngModel)]="income.tripId"
+              [options]="countries"
+              optionLabel="countryName"
+              optionValue="countryId"
+              [label]="'Country'"
+              [required]="false"
+              placeholder="Select a Country"
+              (selectionChange)="onCountrySelect($event)"
+              [(ngModel)]="income.countryId"
             >
             </app-searchable-dropdown>
 
-            <div class="form-group">
-              <label for="location">Location</label>
-              <input
-                type="text"
-                id="location"
-                placeholder="Where was this expense made?"
-                [(ngModel)]="income.location"
-              />
-            </div>
+            <app-searchable-dropdown
+              [options]="locations"
+              optionLabel="locationName"
+              optionValue="locationId"
+              [label]="'Location'"
+              [required]="false"
+              placeholder="Select a Location"
+              (selectionChange)="onLocationSelect($event)"
+              [(ngModel)]="income.locationId"
+            >
+            </app-searchable-dropdown>
 
             <div class="form-group">
               <label for="amount" class="field-required">Amount</label>

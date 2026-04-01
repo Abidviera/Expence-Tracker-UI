@@ -5,10 +5,9 @@ import { IncomeService } from '../../../services/income.service';
 import { IncomeDto } from '../../../models/Income.model';
 import { ToasterService } from '../../../services/toaster.service';
 import { Customer } from '../../../models/Customer.model';
-import { Destinations } from '../../../models/Destinations.model';
 import { Categories } from '../../../models/ExpenseCategories.model';
 import { CustomerService } from '../../../services/customer.service';
-import { DestinationsService } from '../../../services/destinations.service';
+import { CountryService } from '../../../services/country.service';
 import { CategoryService } from '../../../services/category.service';
 import { forkJoin } from 'rxjs';
 
@@ -22,12 +21,14 @@ export class IncomeCreationComponent {
   isLoading = false;
   isEditMode = false;
   customers: Customer[] = [];
-  destinations: Destinations[] = [];
+  countries: any[] = [];
+  locations: any[] = [];
   Categories: Categories[] = [];
 
   selectedCategory: Categories | null = null;
   selectedCustomer: Customer | null = null;
-  selectedTrip: Destinations | null = null;
+  selectedCountry: any = null;
+  selectedLocation: any = null;
 
   income: IncomeDto = this.getDefaultIncome();
 
@@ -38,7 +39,7 @@ export class IncomeCreationComponent {
     private router: Router,
     private toastService: ToasterService,
     private customerService: CustomerService,
-    private destinationService: DestinationsService,
+    private countryService: CountryService,
     private categoryService: CategoryService
   ) {}
 
@@ -50,12 +51,12 @@ export class IncomeCreationComponent {
     const incomeId = this.route.snapshot.paramMap.get('id');
     forkJoin({
       customers: this.customerService.getCustomers(),
-      destinations: this.destinationService.getAllDestinations(),
+      countries: this.countryService.getActiveCountries(),
       categories: this.categoryService.getAllCategories(),
     }).subscribe({
-      next: ({ customers, destinations, categories }) => {
+      next: ({ customers, countries, categories }) => {
         this.customers = customers.data;
-        this.destinations = destinations;
+        this.countries = countries;
         this.Categories = categories;
 
         if (incomeId) {
@@ -85,12 +86,12 @@ export class IncomeCreationComponent {
       addedBy: '',
       categoryId: '',
       customerId: '',
-      tripId: '',
+      countryId: '',
+      locationId: '',
     };
   }
 
   updateBalance(): void {
-    // Ensure paid amount doesn't exceed the total amount
     if (this.income.paid > this.income.amount) {
       this.income.paid = this.income.amount;
       this.toastService.warning('Paid amount cannot exceed the total amount');
@@ -102,7 +103,7 @@ export class IncomeCreationComponent {
       next: (income) => {
         this.income = {
           ...income,
-           paid: income.paid || 0,
+          paid: income.paid || 0,
           date: new Date(income.date),
         };
         console.log(income);
@@ -120,21 +121,44 @@ export class IncomeCreationComponent {
       this.Categories.find((c) => c.id === income.categoryId) || null;
     this.selectedCustomer =
       this.customers.find((c) => c.customerId === income.customerId) || null;
-    this.selectedTrip =
-      this.destinations.find((d) => d.id === income.tripId) || null;
+
+    if (income.countryId) {
+      this.selectedCountry = this.countries.find(
+        (c) => c.countryId === income.countryId
+      ) || null;
+      this.loadLocationsForEdit(income.countryId);
+    }
   }
+
+  private loadLocationsForEdit(countryId: string): void {
+    this.countryService.getLocationsByCountry(countryId).subscribe({
+      next: (locations) => {
+        this.locations = locations;
+        if (this.income.locationId) {
+          this.selectedLocation =
+            this.locations.find(
+              (l) => l.locationId === this.income.locationId
+            ) || null;
+        }
+      },
+      error: () => {
+        console.error('Error loading locations for edit');
+      },
+    });
+  }
+
   private validateIncome(): boolean {
-  if (this.income.paid > this.income.amount) {
-    this.toastService.error('Paid amount cannot exceed the total amount');
-    return false;
+    if (this.income.paid > this.income.amount) {
+      this.toastService.error('Paid amount cannot exceed the total amount');
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 
   submitIncome(): void {
     if (!this.validateIncome()) {
-    return;
-  }
+      return;
+    }
     this.income.tax = 0;
     if (this.isEditMode && this.income.incomeId) {
       this.updateIncome();
@@ -148,10 +172,10 @@ export class IncomeCreationComponent {
       .updateIncome(this.income.incomeId!, this.income)
       .subscribe({
         next: () => {
-           this.handleSuccess(
-          'Income updated successfully',
-          '/features/incomesList'
-        ),
+          this.handleSuccess(
+            'Income updated successfully',
+            '/features/incomesList'
+          );
           this.resetForm();
         },
         error: (err) => {
@@ -160,7 +184,7 @@ export class IncomeCreationComponent {
       });
   }
 
-    private handleSuccess(message: string, navigateTo?: string): void {
+  private handleSuccess(message: string, navigateTo?: string): void {
     this.toastService.success(message);
     if (navigateTo) {
       this.router.navigate([navigateTo]);
@@ -193,21 +217,44 @@ export class IncomeCreationComponent {
       categoryId: '',
       location: '',
       customerId: '',
-      tripId: '',
+      countryId: '',
+      locationId: '',
     };
     this.selectedCategory = null;
     this.selectedCustomer = null;
-    this.selectedTrip = null;
+    this.selectedCountry = null;
+    this.selectedLocation = null;
+    this.locations = [];
   }
 
   onCustomerSelect(customer: Customer): void {
     this.income.customerId = customer?.customerId;
     this.selectedCustomer = customer || null;
   }
-  onTripSelect(destination: Destinations): void {
-    this.income.tripId = destination?.id;
-    this.selectedTrip = destination || null;
+
+  onCountrySelect(country: any): void {
+    this.selectedCountry = country || null;
+    this.selectedLocation = null;
+    this.locations = [];
+    this.income.countryId = country?.countryId;
+    this.income.locationId = '';
+    if (country?.countryId) {
+      this.countryService.getLocationsByCountry(country.countryId).subscribe({
+        next: (locations) => {
+          this.locations = locations;
+        },
+        error: (err) => {
+          console.error('Error loading locations', err);
+        },
+      });
+    }
   }
+
+  onLocationSelect(location: any): void {
+    this.selectedLocation = location || null;
+    this.income.locationId = location?.locationId;
+  }
+
   onCategorySelect(category: Categories): void {
     this.income.categoryId = category?.id;
     this.selectedCategory = category || null;

@@ -13,7 +13,7 @@ import {
   providedIn: 'root',
 })
 export class ExpenseService {
-  private readonly apiUrl = `${environment.apiUrl}`;
+  private readonly apiUrl = `${environment.apiUrl}api/expense/`;
   constructor(private http: HttpClient) {}
 
   getPagedExpenses(request: ExpensePaginationRequest): Observable<any> {

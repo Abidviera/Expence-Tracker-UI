@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter,forwardRef, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'app-searchable-dropdown',
@@ -13,7 +13,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class SearchableDropdownComponent  implements ControlValueAccessor{
+export class SearchableDropdownComponent implements ControlValueAccessor, OnChanges {
   @Input() options: any[] = [];
   @Input() optionLabel: string = 'label';
   @Input() optionValue: string = 'value';
@@ -33,7 +33,8 @@ export class SearchableDropdownComponent  implements ControlValueAccessor{
   filteredOptions: any[] = [];
   searchText = '';
   selectedOption: any = null;
-  
+  private _lastValue: any = null;
+
   private onChange: any = () => {};
   private onTouched: any = () => {};
   
@@ -43,9 +44,17 @@ export class SearchableDropdownComponent  implements ControlValueAccessor{
     this.filteredOptions = [...this.options];
   }
   
-  ngOnChanges() {
+  ngOnChanges(_changes: SimpleChanges) {
     this.filteredOptions = [...this.options];
     this.filterOptions();
+    // Re-apply selected value when options are populated asynchronously
+    if (this._lastValue && this.options.length > 0) {
+      const selected = this.options.find(option => option[this.optionValue] === this._lastValue);
+      if (selected) {
+        this.selectedOption = selected;
+        this.searchText = selected[this.optionLabel];
+      }
+    }
   }
   
   toggleDropdown() {
@@ -76,12 +85,21 @@ export class SearchableDropdownComponent  implements ControlValueAccessor{
   }
   
   writeValue(value: any): void {
-    if (value) {
-      const selected = this.options.find(option => option[this.optionValue] === value);
-      if (selected) {
-        this.selectedOption = selected;
-        this.searchText = selected[this.optionLabel];
-      }
+    if (!value) {
+      this._lastValue = null;
+      this.selectedOption = null;
+      this.searchText = '';
+      return;
+    }
+    // Extract the ID if a full object is passed (e.g., { locationId: "guid", locationName: "..." })
+    const resolvedValue = (typeof value === 'object' && value !== null && this.optionValue in value)
+      ? value[this.optionValue]
+      : value;
+    this._lastValue = resolvedValue;
+    const selected = this.options.find(option => option[this.optionValue] === resolvedValue);
+    if (selected) {
+      this.selectedOption = selected;
+      this.searchText = selected[this.optionLabel];
     } else {
       this.selectedOption = null;
       this.searchText = '';
@@ -98,7 +116,7 @@ export class SearchableDropdownComponent  implements ControlValueAccessor{
   
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    if (!this.dropdown.nativeElement.contains(event.target)) {
+    if (this.dropdown?.nativeElement && !this.dropdown.nativeElement.contains(event.target)) {
       this.isOpen = false;
     }
   }

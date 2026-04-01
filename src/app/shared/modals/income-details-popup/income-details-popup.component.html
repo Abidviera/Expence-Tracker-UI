@@ -10,7 +10,7 @@
       </button>
     </div>
 
- 
+
     <div class="modal-body">
 
       <div class="status-section">
@@ -23,9 +23,9 @@
         </div>
       </div>
 
-    
+
       <div class="content-grid">
- 
+
         <div class="content-column">
           <div class="detail-card">
             <h5 class="card-title">
@@ -47,7 +47,7 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Location</div>
-                <div class="detail-value">{{ income.location || 'Not specified' }}</div>
+                <div class="detail-value">{{ income.locationText || income.location || 'Not specified' }}</div>
               </div>
               <div class="detail-row">
                 <div class="detail-label">Category</div>
@@ -72,7 +72,7 @@
           </div>
         </div>
 
-    
+
         <div class="content-column">
           <div class="detail-card">
             <h5 class="card-title">
@@ -107,28 +107,38 @@
 
           <div class="detail-card">
             <h5 class="card-title">
-              <i class="fas fa-plane"></i>
-              Trip Information
+              <i class="fas fa-globe"></i>
+              Location Information
             </h5>
             <div class="card-content">
-              <div class="trip-card" *ngIf="income.trip">
-                <div class="trip-image" >
-                    <img src="images/pexels-pixabay-210243.jpg" alt="reer">
-                  <div class="trip-price">{{ income.trip?.price | currency }}</div>
-                </div>
-                <div class="trip-details">
-                  <div class="trip-name">{{ income.trip?.name }}</div>
-                  <div class="trip-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    {{ income.trip?.city }}, {{ income.trip?.country }}
-                  </div>
-                  <div class="trip-description">{{ income.trip?.description }}</div>
+              @if (income.country) {
+              <div class="detail-row">
+                <div class="detail-label">Country</div>
+                <div class="detail-value">
+                  <i class="fas fa-flag"></i>
+                  {{ income.country?.countryName }}
+                  <span class="code">({{ income.country?.countryCode }})</span>
                 </div>
               </div>
-              <div class="no-data" *ngIf="!income.trip">
-                <i class="fas fa-plane-slash"></i>
-                <span>No trip associated</span>
+              }
+              @if (income.location) {
+              <div class="detail-row">
+                <div class="detail-label">Location</div>
+                <div class="detail-value">
+                  <i class="fas fa-map-marker-alt"></i>
+                  {{ income.location?.locationName }}
+                  @if (income.location?.city) {
+                  <span class="city">, {{ income.location?.city }}</span>
+                  }
+                </div>
               </div>
+              }
+              @if (!income.country && !income.location) {
+              <div class="no-data">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>No location associated</span>
+              </div>
+              }
             </div>
           </div>
         </div>
@@ -159,7 +169,7 @@
       </div>
     </div>
 
-  
+
     <div class="modal-footer">
       <div class="button-group">
         <button class="btn btn-outline"  (click)="closeModal()">

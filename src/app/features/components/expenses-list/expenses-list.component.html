@@ -82,14 +82,28 @@
         </app-searchable-dropdown>
 
         <app-searchable-dropdown
-          [options]="destinations"
-          optionLabel="name"
-          optionValue="id"
-          [label]="'Trip'"
+          [options]="countries"
+          optionLabel="countryName"
+          optionValue="countryId"
+          [label]="'Country'"
           [required]="true"
-          placeholder="Select a Destination"
-          (selectionChange)="onTripSelect($event)"
-          [(ngModel)]="selectedDestination"
+          placeholder="Select a Country"
+          (selectionChange)="onCountrySelect($event)"
+          [(ngModel)]="selectedCountry"
+          [inputClass]="'ExpenseFilterInput'"
+          [labelClass]="'ExpenseFilterLabel'"
+        >
+        </app-searchable-dropdown>
+
+        <app-searchable-dropdown
+          [options]="locations"
+          optionLabel="locationName"
+          optionValue="locationId"
+          [label]="'Location'"
+          [required]="true"
+          placeholder="Select a Location"
+          (selectionChange)="onLocationSelect($event)"
+          [(ngModel)]="selectedLocation"
           [inputClass]="'ExpenseFilterInput'"
           [labelClass]="'ExpenseFilterLabel'"
         >
@@ -221,9 +235,16 @@
           </span>
         </div>
 
-        <div class="active-filter" *ngIf="selectedDestination">
-          Trip: {{ selectedDestination.name }}
-          <span (click)="clearTrip()" style="cursor: pointer">
+        <div class="active-filter" *ngIf="selectedCountry">
+          Country: {{ selectedCountry.countryName }}
+          <span (click)="clearCountry()" style="cursor: pointer">
+            <i class="fas fa-times-circle"></i>
+          </span>
+        </div>
+
+        <div class="active-filter" *ngIf="selectedLocation">
+          Location: {{ selectedLocation.locationName }}
+          <span (click)="clearLocation()" style="cursor: pointer">
             <i class="fas fa-times-circle"></i>
           </span>
         </div>

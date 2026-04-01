@@ -44,30 +44,27 @@
             >
             </app-searchable-dropdown>
 
-            <!-- <div class="form-group">
-              <label for="date" class="field-required">Date & Time</label>
-              <input type="date" id="date" required   [(ngModel)]="expense.date"/>
-            </div> -->
-
-            <div class="form-group">
-              <label for="location">Location</label>
-              <input
-                type="text"
-                id="location"
-                placeholder="Where was this expense made?"
-                [(ngModel)]="expense.location"
-              />
-            </div>
+            <app-searchable-dropdown
+              [options]="countries"
+              optionLabel="countryName"
+              optionValue="countryId"
+              [label]="'Country'"
+              [required]="false"
+              placeholder="Select a Country"
+              (selectionChange)="onCountrySelect($event)"
+              [(ngModel)]="expense.countryId"
+            >
+            </app-searchable-dropdown>
 
             <app-searchable-dropdown
-              [options]="destinations"
-              optionLabel="name"
-              optionValue="id"
-              [label]="'Trip'"
-              [required]="true"
-              placeholder="Associated trip"
-              (selectionChange)="onTripSelect($event)"
-              [(ngModel)]="expense.tripId "
+              [options]="locations"
+              optionLabel="locationName"
+              optionValue="locationId"
+              [label]="'Location'"
+              [required]="false"
+              placeholder="Select a Location"
+              (selectionChange)="onLocationSelect($event)"
+              [(ngModel)]="expense.locationId"
             >
             </app-searchable-dropdown>
 

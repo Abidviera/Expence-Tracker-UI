@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { IncomeService } from '../../../services/income.service';
 import { Router } from '@angular/router';
 import { Customer } from '../../../models/Customer.model';
-import { Destinations } from '../../../models/Destinations.model';
 import { Categories } from '../../../models/ExpenseCategories.model';
 import { CustomerService } from '../../../services/customer.service';
-import { DestinationsService } from '../../../services/destinations.service';
+import { CountryService } from '../../../services/country.service';
 import { IncomePaginationRequest } from '../../../models/IncomePaginationRequest.model';
 import { User } from '../../../models/user.model';
 import { UserRole } from '../../../enums/UserRole.enum';
@@ -27,13 +26,15 @@ import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 export class IncomeListComponent {
   filterSection = false;
   isLoading = false;
-   exportPopup = false;
+  exportPopup = false;
   selectedCategory: Categories | null = null;
   selectedCustomer: Customer | null = null;
-  selectedDestination: Destinations | null = null;
+  selectedCountry: any = null;
+  selectedLocation: any = null;
   Categories: Categories[] = [];
   customers: Customer[] = [];
-  destinations: Destinations[] = [];
+  countries: any[] = [];
+  locations: any[] = [];
 
   users: User[] = [];
   incomes: any[] = [];
@@ -50,9 +51,10 @@ export class IncomeListComponent {
     minAmount: undefined,
     maxAmount: undefined,
     userId: undefined,
-    CustomerId: undefined,
-    CategoryId: undefined,
-    TripId: undefined,
+    customerId: undefined,
+    categoryId: undefined,
+    countryId: undefined,
+    locationId: undefined,
   };
 
   constructor(
@@ -61,10 +63,10 @@ export class IncomeListComponent {
     private userService: UserService,
     private customerService: CustomerService,
     private categoryService: CategoryService,
-    private destinationService: DestinationsService,
-     private modalService: ModalService,
-      private exportService: ExportService,
-      private commonUtil: CommonUtil
+    private countryService: CountryService,
+    private modalService: ModalService,
+    private exportService: ExportService,
+    private commonUtil: CommonUtil
   ) {}
 
   ngOnInit(): void {
@@ -85,15 +87,16 @@ export class IncomeListComponent {
       this.loadAllUsers(),
       this.loadAllCategories(),
       this.loadAllCustomers(),
-      this.loadAllDestinations(),
+      this.loadAllCountries(),
     ]).finally(() => {
       this.isLoading = false;
     });
   }
 
-  exportPopups(){
-    this.exportPopup = !this.exportPopup
+  exportPopups() {
+    this.exportPopup = !this.exportPopup;
   }
+
   loadAllCategories(): void {
     this.isLoading = true;
     this.categoryService.getAllCategories().subscribe({
@@ -102,11 +105,12 @@ export class IncomeListComponent {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading customers', err);
+        console.error('Error loading categories', err);
         this.isLoading = false;
       },
     });
   }
+
   loadAllCustomers(): void {
     this.isLoading = true;
     this.customerService.getCustomers().subscribe({
@@ -120,23 +124,38 @@ export class IncomeListComponent {
       },
     });
   }
-  loadAllDestinations(): void {
+
+  loadAllCountries(): void {
     this.isLoading = true;
-    this.destinationService.getAllDestinations().subscribe({
-      next: (destinations) => {
-        this.destinations = destinations;
+    this.countryService.getActiveCountries().subscribe({
+      next: (countries) => {
+        this.countries = countries;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading customers', err);
+        console.error('Error loading countries', err);
         this.isLoading = false;
       },
     });
   }
 
-    private resetPagination(): void {
+  loadLocationsByCountry(countryId: string): void {
+    this.countryService.getLocationsByCountry(countryId).subscribe({
+      next: (locations) => {
+        this.locations = locations;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading locations', err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private resetPagination(): void {
     this.filters.pageNumber = 1;
   }
+
   toggleFilters() {
     this.filterSection = !this.filterSection;
   }
@@ -159,34 +178,34 @@ export class IncomeListComponent {
 
   onSearchChange(searchTerm: string) {
     this.filters.searchTerm = searchTerm;
-     this.resetPagination();
+    this.resetPagination();
     this.loadIncomes();
   }
 
   onDateFilter(fromDate: string, toDate: string) {
     this.filters.fromDate = fromDate;
     this.filters.toDate = toDate;
-      this.resetPagination();
+    this.resetPagination();
     this.loadIncomes();
   }
 
   onAmountFilter(minAmount: number | undefined, maxAmount: number | undefined) {
     this.filters.minAmount = minAmount;
     this.filters.maxAmount = maxAmount;
-      this.resetPagination();
+    this.resetPagination();
     this.loadIncomes();
   }
 
   onUserFilter(userId?: string) {
     this.filters.userId = userId || undefined;
-     this.resetPagination();
+    this.resetPagination();
     this.loadIncomes();
   }
 
   onSortChange(sortColumn: string, sortDirection: string) {
     this.filters.sortColumn = sortColumn;
     this.filters.sortDirection = sortDirection;
-     this.resetPagination();
+    this.resetPagination();
     this.loadIncomes();
   }
 
@@ -222,17 +241,19 @@ export class IncomeListComponent {
       minBalance: undefined,
       maxBalance: undefined,
       userId: isAdmin ? undefined : (currentUser?.userId ?? undefined),
-      CustomerId: undefined,
-      CategoryId: undefined,
-      TripId: undefined,
-      paymentStatus: undefined
+      customerId: undefined,
+      categoryId: undefined,
+      countryId: undefined,
+      locationId: undefined,
+      paymentStatus: undefined,
     };
 
     this.selectedUser = null;
     this.selectedCustomer = null;
-    this.selectedDestination = null;
+    this.selectedCountry = null;
+    this.selectedLocation = null;
     this.selectedCategory = null;
-     this.selectedPaymentStatus = null;
+    this.selectedPaymentStatus = null;
 
     this.loadIncomes();
   }
@@ -290,7 +311,7 @@ export class IncomeListComponent {
     }
   }
 
-   deleteIncome(incomeId: string): void {
+  deleteIncome(incomeId: string): void {
     this.modalService.confirm(
       'Delete Income',
       'Are you sure you want to delete this income?'
@@ -313,14 +334,15 @@ export class IncomeListComponent {
 
   editIncome(incomeId: string): void {
     this.router.navigate(['/features/incomes/edit', incomeId]);
-    console.log(incomeId)
+    console.log(incomeId);
   }
 
   hasActiveFilters(): boolean {
     return !!(
-       this.selectedUser ||
+      this.selectedUser ||
       this.selectedCustomer ||
-      this.selectedDestination ||
+      this.selectedCountry ||
+      this.selectedLocation ||
       this.selectedCategory ||
       this.selectedPaymentStatus ||
       this.filters.fromDate ||
@@ -360,19 +382,28 @@ export class IncomeListComponent {
 
   clearSelectedCustomer(): void {
     this.selectedCustomer = null;
-    this.filters.CustomerId = undefined;
+    this.filters.customerId = undefined;
     this.loadIncomes();
   }
 
-  clearSelectedDestination(): void {
-    this.selectedDestination = null;
-    this.filters.TripId = undefined;
+  clearSelectedCountry(): void {
+    this.selectedCountry = null;
+    this.selectedLocation = null;
+    this.locations = [];
+    this.filters.countryId = undefined;
+    this.filters.locationId = undefined;
+    this.loadIncomes();
+  }
+
+  clearSelectedLocation(): void {
+    this.selectedLocation = null;
+    this.filters.locationId = undefined;
     this.loadIncomes();
   }
 
   clearSelectedCategory(): void {
     this.selectedCategory = null;
-    this.filters.CategoryId = undefined;
+    this.filters.categoryId = undefined;
     this.loadIncomes();
   }
 
@@ -387,7 +418,7 @@ export class IncomeListComponent {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading customers', err);
+        console.error('Error loading users', err);
         this.isLoading = false;
       },
     });
@@ -402,50 +433,54 @@ export class IncomeListComponent {
     console.log('selectedCategory:', selectedCategory);
     this.onCategoryFilter(this.selectedCategory?.id);
   }
+
   onCustomerSelect(selectedCustomer: Customer): void {
     this.selectedCustomer = selectedCustomer;
-    console.log('selectedCategory:', selectedCustomer);
+    console.log('selectedCustomer:', selectedCustomer);
     this.onCustomerFilter(this.selectedCustomer?.customerId);
   }
-  onTripSelect(selectedTrip: Destinations): void {
-    this.selectedDestination = selectedTrip;
-    console.log('selectedCategory:', selectedTrip);
-    this.onDestinationFilter(this.selectedDestination.id);
-  }
 
-  onCustomerFilter(customerId: string) {
-    this.filters.CustomerId = customerId || undefined;
-     this.resetPagination();
+  onCountrySelect(selectedCountry: any): void {
+    this.selectedCountry = selectedCountry;
+    this.selectedLocation = null;
+    this.locations = [];
+    this.filters.countryId = selectedCountry?.countryId || undefined;
+    this.filters.locationId = undefined;
+    if (selectedCountry?.countryId) {
+      this.loadLocationsByCountry(selectedCountry.countryId);
+    }
+    this.resetPagination();
     this.loadIncomes();
   }
 
-  onDestinationFilter(DestinationID: string) {
-    this.filters.TripId = DestinationID || undefined;
+  onLocationSelect(selectedLocation: any): void {
+    this.selectedLocation = selectedLocation;
+    this.filters.locationId = selectedLocation?.locationId || undefined;
+    this.resetPagination();
+    this.loadIncomes();
+  }
 
-    if (this.selectedDestination) {
-      this.selectedDestination.id = DestinationID;
-    }
-     this.resetPagination();
+  onCustomerFilter(customerId: string) {
+    this.filters.customerId = customerId || undefined;
+    this.resetPagination();
     this.loadIncomes();
   }
 
   onCategoryFilter(CategoryId: string) {
-    this.filters.CategoryId = CategoryId || undefined;
-
+    this.filters.categoryId = CategoryId || undefined;
     if (this.selectedCategory) {
       this.selectedCategory.id = CategoryId;
     }
-     this.resetPagination();
+    this.resetPagination();
     this.loadIncomes();
   }
-
 
   openExportModal(): void {
     const modalRef = this.modalService.open(ExportModalComponent, {
       centered: true,
       size: 'md',
       windowClass: 'export-modal',
-      animation: false 
+      animation: false,
     });
 
     modalRef.componentInstance.exportRequested.subscribe((format: 'excel' | 'csv') => {
@@ -460,41 +495,39 @@ export class IncomeListComponent {
     modalRef.componentInstance.modalClosed.subscribe(() => {
       modalRef.close();
     });
-}
-
+  }
 
   exportToExcel(): void {
-   
     const exportData = this.incomes.map(income => ({
       'User': `${income.addedByUser?.firstName} ${income.addedByUser?.lastName || ''}`,
       'Date': this.formatDateForExport(income.date),
       'Source': income.source,
       'Customer': income.customer?.name || '',
       'Category': income.category?.name || '',
+      'Country': income.country?.countryName || '',
+      'Location': income.location?.locationName || '',
       'Description': income.description || '',
       'Amount': income.amount,
       'Tax': income.tax || 0,
-      'Location': income.location || '',
-      'Trip': income.trip?.name || ''
+      'LocationText': income.locationText || '',
     }));
 
     this.exportService.exportToExcel(exportData, 'incomes');
   }
 
-
   exportToCsv(): void {
-
     const exportData = this.incomes.map(income => ({
       'User': `${income.addedByUser?.firstName} ${income.addedByUser?.lastName || ''}`,
       'Date': this.formatDateForExport(income.date),
       'Source': income.source,
       'Customer': income.customer?.name || '',
       'Category': income.category?.name || '',
+      'Country': income.country?.countryName || '',
+      'Location': income.location?.locationName || '',
       'Description': income.description || '',
       'Amount': income.amount,
       'Tax': income.tax || 0,
-      'Location': income.location || '',
-      'Trip': income.trip?.name || ''
+      'LocationText': income.locationText || '',
     }));
 
     this.exportService.exportToCsv(exportData, 'incomes');
@@ -506,31 +539,28 @@ export class IncomeListComponent {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
-
   showIncomeDetails(income: any): void {
-  const modalRef = this.modalService.open(IncomeDetailsPopupComponent, {
-    centered: true,
-    size: 'xl',
-    windowClass: 'income-details-modal'
-  });
-  modalRef.componentInstance.income = income;
-  console.log(income)
-}
+    const modalRef = this.modalService.open(IncomeDetailsPopupComponent, {
+      centered: true,
+      size: 'xl',
+      windowClass: 'income-details-modal',
+    });
+    modalRef.componentInstance.income = income;
+    console.log(income);
+  }
 
   paymentStatusOptions = [
     { name: 'Paid', value: 'paid' },
     { name: 'Unpaid', value: 'unpaid' },
-    { name: 'Partial', value: 'partial' }
+    { name: 'Partial', value: 'partial' },
   ];
   selectedPaymentStatus: any = null;
 
-
-
-   onPaymentStatusSelect(status: any): void {
+  onPaymentStatusSelect(status: any): void {
     this.selectedPaymentStatus = status;
     this.filters.paymentStatus = status?.value;
     this.resetPagination();
@@ -568,7 +598,4 @@ export class IncomeListComponent {
     this.filters.maxBalance = undefined;
     this.loadIncomes();
   }
-
-
-  
 }

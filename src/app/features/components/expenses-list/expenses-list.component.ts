@@ -3,9 +3,8 @@ import { ExpensePaginationRequest } from '../../../models/ExpensePaginationReque
 import { ExpenseService } from '../../../services/expense.service';
 import { Categories } from '../../../models/ExpenseCategories.model';
 import { Customer } from '../../../models/Customer.model';
-import { Destinations } from '../../../models/Destinations.model';
 import { CustomerService } from '../../../services/customer.service';
-import { DestinationsService } from '../../../services/destinations.service';
+import { CountryService } from '../../../services/country.service';
 import { CategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
 import { Expense } from '../../../models/Expense.model';
@@ -30,10 +29,12 @@ export class ExpensesListComponent {
   isLoading = false;
   Categories: Categories[] = [];
   customers: Customer[] = [];
-  destinations: Destinations[] = [];
+  countries: any[] = [];
+  locations: any[] = [];
   selectedCategory: Categories | null = null;
   selectedCustomer: Customer | null = null;
-  selectedDestination: Destinations | null = null;
+  selectedCountry: any = null;
+  selectedLocation: any = null;
   expenses: any[] = [];
   totalRecords = 0;
 
@@ -48,15 +49,16 @@ export class ExpensesListComponent {
     minAmount: undefined,
     maxAmount: undefined,
     customerId: undefined,
-    CategoryId: undefined,
-    tripId: undefined,
+    categoryId: undefined,
+    countryId: undefined,
+    locationId: undefined,
   };
 
   constructor(
     private expenseService: ExpenseService,
     private customerService: CustomerService,
     private categoryService: CategoryService,
-    private destinationService: DestinationsService,
+    private countryService: CountryService,
     private router: Router,
     private modalService: ModalService,
     private toastService: ToasterService,
@@ -81,7 +83,7 @@ export class ExpensesListComponent {
       this.loadExpenses(),
       this.loadAllExpenceCategories(),
       this.loadAllCustomers(),
-      this.loadAllDestinations(),
+      this.loadAllCountries(),
     ]).finally(() => {
       this.isLoading = false;
     });
@@ -124,15 +126,28 @@ export class ExpensesListComponent {
     this.loadExpenses();
   }
 
-  onTripFilter(tripId: string) {
-    this.filters.tripId = tripId || undefined;
+  onCountrySelect(selectedCountry: any): void {
+    this.selectedCountry = selectedCountry;
+    this.selectedLocation = null;
+    this.locations = [];
+    this.filters.countryId = selectedCountry?.countryId || undefined;
+    this.filters.locationId = undefined;
+    if (selectedCountry?.countryId) {
+      this.loadLocationsByCountry(selectedCountry.countryId);
+    }
+    this.filters.pageNumber = 1;
+    this.loadExpenses();
+  }
+
+  onLocationSelect(selectedLocation: any): void {
+    this.selectedLocation = selectedLocation;
+    this.filters.locationId = selectedLocation?.locationId || undefined;
     this.filters.pageNumber = 1;
     this.loadExpenses();
   }
 
   onCustomerFilter(customerId: string) {
     this.filters.customerId = customerId || undefined;
-
     if (this.selectedCustomer) {
       this.selectedCustomer.customerId = customerId;
     }
@@ -140,19 +155,8 @@ export class ExpensesListComponent {
     this.loadExpenses();
   }
 
-  onDestinationFilter(DestinationID: string) {
-    this.filters.tripId = DestinationID || undefined;
-
-    if (this.selectedDestination) {
-      this.selectedDestination.id = DestinationID;
-    }
-    this.filters.pageNumber = 1;
-    this.loadExpenses();
-  }
-
   onCategoryFilter(CategoryId: string) {
-    this.filters.CategoryId = CategoryId || undefined;
-
+    this.filters.categoryId = CategoryId || undefined;
     if (this.selectedCategory) {
       this.selectedCategory.id = CategoryId;
     }
@@ -189,11 +193,12 @@ export class ExpensesListComponent {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading customers', err);
+        console.error('Error loading categories', err);
         this.isLoading = false;
       },
     });
   }
+
   loadAllCustomers(): void {
     this.isLoading = true;
     this.customerService.getCustomers().subscribe({
@@ -207,15 +212,29 @@ export class ExpensesListComponent {
       },
     });
   }
-  loadAllDestinations(): void {
+
+  loadAllCountries(): void {
     this.isLoading = true;
-    this.destinationService.getAllDestinations().subscribe({
-      next: (destinations) => {
-        this.destinations = destinations;
+    this.countryService.getActiveCountries().subscribe({
+      next: (countries) => {
+        this.countries = countries;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading customers', err);
+        console.error('Error loading countries', err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  loadLocationsByCountry(countryId: string): void {
+    this.countryService.getLocationsByCountry(countryId).subscribe({
+      next: (locations) => {
+        this.locations = locations;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading locations', err);
         this.isLoading = false;
       },
     });
@@ -226,15 +245,11 @@ export class ExpensesListComponent {
     console.log('selectedCategory:', selectedCategory);
     this.onCategoryFilter(this.selectedCategory?.id);
   }
+
   onCustomerSelect(selectedCustomer: Customer): void {
     this.selectedCustomer = selectedCustomer;
-    console.log('selectedCategory:', selectedCustomer);
+    console.log('selectedCustomer:', selectedCustomer);
     this.onCustomerFilter(this.selectedCustomer?.customerId);
-  }
-  onTripSelect(selectedTrip: Destinations): void {
-    this.selectedDestination = selectedTrip;
-    console.log('selectedCategory:', selectedTrip);
-    this.onDestinationFilter(this.selectedDestination.id);
   }
 
   resetFilters() {
@@ -250,19 +265,21 @@ export class ExpensesListComponent {
       toDate: '',
       minAmount: undefined,
       maxAmount: undefined,
-       minPaid: undefined,
+      minPaid: undefined,
       maxPaid: undefined,
       minBalance: undefined,
       maxBalance: undefined,
       customerId: undefined,
-      CategoryId: undefined,
-      tripId: undefined,
+      categoryId: undefined,
+      countryId: undefined,
+      locationId: undefined,
       userId: isAdmin ? undefined : (currentUser?.userId ?? undefined),
     };
     this.selectedCategory = null;
     this.selectedCustomer = null;
-    this.selectedDestination = null;
-      this.selectedPaymentStatus = null;
+    this.selectedCountry = null;
+    this.selectedLocation = null;
+    this.selectedPaymentStatus = null;
     this.loadExpenses();
   }
 
@@ -270,13 +287,14 @@ export class ExpensesListComponent {
     return !!(
       this.selectedCategory ||
       this.selectedCustomer ||
-      this.selectedDestination ||
+      this.selectedCountry ||
+      this.selectedLocation ||
       this.filters.fromDate ||
       this.filters.toDate ||
       this.filters.minAmount !== undefined ||
       this.filters.maxAmount !== undefined ||
       this.selectedPaymentStatus ||
-          this.filters.minPaid !== undefined ||
+      this.filters.minPaid !== undefined ||
       this.filters.maxPaid !== undefined ||
       this.filters.minBalance !== undefined ||
       this.filters.maxBalance !== undefined
@@ -285,7 +303,7 @@ export class ExpensesListComponent {
 
   clearCategory(): void {
     this.selectedCategory = null;
-    this.filters.CategoryId = undefined;
+    this.filters.categoryId = undefined;
     this.loadExpenses();
   }
 
@@ -295,9 +313,18 @@ export class ExpensesListComponent {
     this.loadExpenses();
   }
 
-  clearTrip(): void {
-    this.selectedDestination = null;
-    this.filters.tripId = undefined;
+  clearCountry(): void {
+    this.selectedCountry = null;
+    this.selectedLocation = null;
+    this.locations = [];
+    this.filters.countryId = undefined;
+    this.filters.locationId = undefined;
+    this.loadExpenses();
+  }
+
+  clearLocation(): void {
+    this.selectedLocation = null;
+    this.filters.locationId = undefined;
     this.loadExpenses();
   }
 
@@ -366,7 +393,6 @@ export class ExpensesListComponent {
     }
   }
 
-  // In your ExpenseListComponent
   editExpense(expense: any) {
     console.log(expense);
     this.router.navigate(['/features/ExpenseCreation'], {
@@ -431,29 +457,26 @@ export class ExpensesListComponent {
       });
   }
 
-
-    paymentStatusOptions = [
+  paymentStatusOptions = [
     { name: 'Paid', value: 'paid' },
     { name: 'Unpaid', value: 'unpaid' },
-    { name: 'Partial', value: 'partial' }
+    { name: 'Partial', value: 'partial' },
   ];
   selectedPaymentStatus: any = null;
 
+  onPaidFilter(minPaid: number | undefined, maxPaid: number | undefined) {
+    this.filters.minPaid = minPaid === undefined || isNaN(minPaid) ? undefined : minPaid;
+    this.filters.maxPaid = maxPaid === undefined || isNaN(maxPaid) ? undefined : maxPaid;
+    this.filters.pageNumber = 1;
+    this.loadExpenses();
+  }
 
-
-onPaidFilter(minPaid: number | undefined, maxPaid: number | undefined) {
-  this.filters.minPaid = minPaid === undefined || isNaN(minPaid) ? undefined : minPaid;
-  this.filters.maxPaid = maxPaid === undefined || isNaN(maxPaid) ? undefined : maxPaid;
-  this.filters.pageNumber = 1;
-  this.loadExpenses();
-}
-
-onBalanceFilter(minBalance: number | undefined, maxBalance: number | undefined) {
-  this.filters.minBalance = minBalance === undefined || isNaN(minBalance) ? undefined : minBalance;
-  this.filters.maxBalance = maxBalance === undefined || isNaN(maxBalance) ? undefined : maxBalance;
-  this.filters.pageNumber = 1;
-  this.loadExpenses();
-}
+  onBalanceFilter(minBalance: number | undefined, maxBalance: number | undefined) {
+    this.filters.minBalance = minBalance === undefined || isNaN(minBalance) ? undefined : minBalance;
+    this.filters.maxBalance = maxBalance === undefined || isNaN(maxBalance) ? undefined : maxBalance;
+    this.filters.pageNumber = 1;
+    this.loadExpenses();
+  }
 
   onPaymentStatusSelect(status: any) {
     this.filters.paymentStatus = status?.value;
@@ -483,25 +506,15 @@ onBalanceFilter(minBalance: number | undefined, maxBalance: number | undefined) 
     return this.paymentStatusOptions.find(opt => opt.value === status)?.name || status;
   }
 
+  PrintOut(expense: any) {
+    const modalRef = this.modalPrintService.open(InvoiceTemplate3Component, {
+      centered: true,
+      scrollable: false,
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+    });
 
- PrintOut(expense: any) {
-  const modalRef = this.modalPrintService.open(InvoiceTemplate3Component, {
-    centered: true,
-    scrollable: false,
-    size: 'lg',
-    backdrop: 'static',
-    keyboard: false,
-  });
-  
-  
-  modalRef.componentInstance.expenseData = expense;
-
-
-  // If you want to print automatically without showing the modal
-  // modalRef.componentInstance.expenseData = expense;
-  // setTimeout(() => {
-  //   modalRef.componentInstance.printInvoice();
-  //   modalRef.close();
-  // }, 100);
-}
+    modalRef.componentInstance.expenseData = expense;
+  }
 }
