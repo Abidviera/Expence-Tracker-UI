@@ -10,6 +10,8 @@ import { CustomerService } from '../../../services/customer.service';
 import { CountryService } from '../../../services/country.service';
 import { CategoryService } from '../../../services/category.service';
 import { forkJoin } from 'rxjs';
+import { CurrencyService } from '../../../services/currency.service';
+import { CurrencyFormatService } from '../../../services/currency-format.service';
 
 @Component({
   selector: 'app-income-creation',
@@ -40,11 +42,25 @@ export class IncomeCreationComponent {
     private toastService: ToasterService,
     private customerService: CustomerService,
     private countryService: CountryService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private currencyService: CurrencyService,
+    private currencyFormatService: CurrencyFormatService,
   ) {}
 
   ngOnInit(): void {
     this.initializeComponent();
+    this.loadActiveCurrency();
+  }
+
+  private loadActiveCurrency(): void {
+    this.currencyService.getActiveCurrencies().subscribe({
+      next: (currencies) => {
+        if (currencies && currencies.length > 0) {
+          this.currencyFormatService.setActiveCurrency(currencies[0]);
+        }
+      },
+      error: () => {},
+    });
   }
 
   private initializeComponent(): void {

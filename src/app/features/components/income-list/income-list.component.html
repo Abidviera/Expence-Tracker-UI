@@ -456,8 +456,8 @@
             <td class="expense-description">
               {{ income.description || "-" }}
             </td>
-              <td class="amount">{{ income.paid | currency }}</td>
-    <td class="amount">{{ income.amount - income.paid | currency }}</td>
+              <td class="amount">{{ income.paid | currencyDisplay }}</td>
+    <td class="amount">{{ income.amount - income.paid | currencyDisplay }}</td>
       <td>
       <span class="status-badges" [ngClass]="{
         'status-paid': income.paid === income.amount,
@@ -474,7 +474,7 @@
       </span>
     </td>
 
-            <td class="amount">{{ income.amount | currency }}</td>
+            <td class="amount">{{ income.amount | currencyDisplay }}</td>
 
             <td>
               <div class="action-buttons">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IncomeService } from '../../../services/income.service';
 import { Router } from '@angular/router';
 import { Customer } from '../../../models/Customer.model';
@@ -16,6 +16,8 @@ import { ExportModalComponent } from '../../../shared/modals/export-modal/export
 import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-details-popup/income-details-popup.component';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 import { DateFilterService, FilterKey } from '../../../services/date-filter.service';
+import { CurrencyService } from '../../../services/currency.service';
+import { CurrencyFormatService } from '../../../services/currency-format.service';
 
 @Component({
   selector: 'app-income-list',
@@ -23,7 +25,7 @@ import { DateFilterService, FilterKey } from '../../../services/date-filter.serv
   templateUrl: './income-list.component.html',
   styleUrl: './income-list.component.scss',
 })
-export class IncomeListComponent {
+export class IncomeListComponent implements OnInit {
   filterSection = false;
   isLoading = false;
   exportPopup = false;
@@ -76,10 +78,13 @@ export class IncomeListComponent {
     private exportService: ExportService,
     private commonUtil: CommonUtil,
     private dateFilterService: DateFilterService,
+    private currencyService: CurrencyService,
+    private currencyFormatService: CurrencyFormatService,
   ) {}
 
   ngOnInit(): void {
     this.filterOptions = this.dateFilterService.options;
+    this.loadActiveCurrency();
     const currentUser = this.commonUtil.getCurrentUser();
     if (currentUser && currentUser.role !== UserRole.Admin) {
       this.filters.userId = currentUser.userId ?? undefined;
@@ -643,5 +648,16 @@ export class IncomeListComponent {
     this.filters.minBalance = undefined;
     this.filters.maxBalance = undefined;
     this.loadIncomes();
+  }
+
+  private loadActiveCurrency(): void {
+    this.currencyService.getActiveCurrencies().subscribe({
+      next: (currencies) => {
+        if (currencies && currencies.length > 0) {
+          this.currencyFormatService.setActiveCurrency(currencies[0]);
+        }
+      },
+      error: () => {},
+    });
   }
 }

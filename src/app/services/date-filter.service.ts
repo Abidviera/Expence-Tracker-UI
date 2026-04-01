@@ -76,7 +76,7 @@ export class DateFilterService {
     }
 
     return {
-      filterKey,
+      filterKey: 'custom',
       fromDate: from.toISOString(),
       toDate: to.toISOString(),
     };

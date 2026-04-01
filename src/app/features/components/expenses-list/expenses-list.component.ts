@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ExpensePaginationRequest } from '../../../models/ExpensePaginationRequest.model';
 import { ExpenseService } from '../../../services/expense.service';
 import { Categories } from '../../../models/ExpenseCategories.model';
@@ -16,6 +16,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 import { UserRole } from '../../../enums/UserRole.enum';
 import { DateFilterService, FilterKey } from '../../../services/date-filter.service';
+import { CurrencyService } from '../../../services/currency.service';
+import { CurrencyFormatService } from '../../../services/currency-format.service';
 
 @Component({
   selector: 'app-expenses-list',
@@ -23,7 +25,7 @@ import { DateFilterService, FilterKey } from '../../../services/date-filter.serv
   templateUrl: './expenses-list.component.html',
   styleUrl: './expenses-list.component.scss',
 })
-export class ExpensesListComponent {
+export class ExpensesListComponent implements OnInit {
   filterSection: boolean = false;
   isLoading = false;
   Categories: Categories[] = [];
@@ -71,10 +73,14 @@ export class ExpensesListComponent {
     private modalPrintService: NgbModal,
     private commonUtil: CommonUtil,
     private dateFilterService: DateFilterService,
+    private currencyService: CurrencyService,
+    private currencyFormatService: CurrencyFormatService,
   ) {}
 
   ngOnInit(): void {
     this.filterOptions = this.dateFilterService.options;
+    this.loadActiveCurrency();
+    this.loadExpenses();
     const currentUser = this.commonUtil.getCurrentUser();
     if (currentUser && currentUser.role !== UserRole.Admin) {
       this.filters.userId = currentUser.userId ?? undefined;
@@ -559,5 +565,16 @@ export class ExpensesListComponent {
     });
 
     modalRef.componentInstance.expenseData = expense;
+  }
+
+  private loadActiveCurrency(): void {
+    this.currencyService.getActiveCurrencies().subscribe({
+      next: (currencies) => {
+        if (currencies && currencies.length > 0) {
+          this.currencyFormatService.setActiveCurrency(currencies[0]);
+        }
+      },
+      error: () => {},
+    });
   }
 }

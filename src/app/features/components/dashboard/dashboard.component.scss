@@ -850,3 +850,537 @@ $font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-seri
 @media (max-width: 420px) {
   .kpi-row { grid-template-columns: 1fr; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Analytics Navigation ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.analytics-nav {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+  background: $white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.analytics-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: $font;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: $slate-500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  svg { color: $slate-400; transition: color 0.2s; }
+
+  &:hover {
+    background: $slate-50;
+    color: $primary;
+    border-color: $slate-200;
+    svg { color: $primary; }
+  }
+
+  &.active {
+    background: linear-gradient(135deg, $primary, $primary-light);
+    color: $white;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba($primary, 0.25);
+    svg { color: $white; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Analytics Section Header ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: $slate-900;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.section-sub {
+  font-size: 0.82rem;
+  color: $slate-400;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Analytics KPI Row ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.analytics-kpi-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.analytics-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: $white;
+  border-radius: $radius;
+  padding: 1rem 1.25rem;
+  box-shadow: $shadow-sm;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  min-width: 160px;
+  flex: 1;
+}
+
+.ak-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: $slate-500;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.ak-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: $slate-900;
+  letter-spacing: -0.02em;
+}
+
+.ak-sub {
+  font-size: 0.75rem;
+  color: $slate-400;
+  font-weight: 500;
+}
+
+/* ─── CLV tier colors ─── */
+.kpi-clv .kpi-icon-wrap { background: $amber-bg; color: $amber; }
+.kpi-growth .kpi-icon-wrap { background: $purple-bg; color: $purple; }
+.kpi-anomaly .kpi-icon-wrap { background: $red-bg; color: $red; }
+.kpi-collection .kpi-icon-wrap { background: $blue-bg; color: $blue; }
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Tab Switcher ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.tab-switcher {
+  display: flex;
+  gap: 0.25rem;
+  background: $slate-100;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.tab-btn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: $font;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: $slate-500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.active {
+    background: $white;
+    color: $primary;
+    box-shadow: $shadow-sm;
+  }
+
+  &:hover:not(.active) { color: $slate-700; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Country Code Badge ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.country-code {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: $slate-100;
+  color: $slate-500;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  margin-left: 0.35rem;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Margin / Percentage Badges ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.margin-badge, .growth-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+
+  &.text-profit {
+    background: $green-bg;
+    color: $green;
+  }
+  &.text-loss {
+    background: $red-bg;
+    color: $red;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Performance Labels ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.perf-high, .perf-profit { background: $green-bg; color: $green; }
+.perf-loss { background: $red-bg; color: $red; }
+.perf-expense { background: $orange-bg; color: darken($orange, 5%); }
+.perf-neutral { background: $slate-100; color: $slate-600; }
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Tier Badges ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.tier-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+
+  &.tier-platinum { background: linear-gradient(135deg, #e5e9f0, #c0c8d8); color: #2c3e50; border: 1px solid #b0bccb; }
+  &.tier-gold { background: $amber-bg; color: darken($amber, 15%); }
+  &.tier-silver { background: rgba(#94a3b8, 0.15); color: $slate-600; }
+  &.tier-bronze { background: rgba(#d97706, 0.1); color: #92400e; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Severity Badges ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.severity-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 100px;
+
+  &.severity-critical { background: $red-bg; color: $red; }
+  &.severity-high { background: $orange-bg; color: darken($orange, 5%); }
+  &.severity-medium { background: $amber-bg; color: darken($amber, 10%); }
+  &.severity-low { background: $slate-100; color: $slate-600; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Z-Score Badge ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.zscore-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: $slate-100;
+  color: $slate-700;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Reason Cell ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.reason-cell {
+  font-size: 0.78rem;
+  color: $slate-500;
+  max-width: 250px;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Heatmap ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.heatmap-bar-wrap {
+  width: 100px;
+  height: 8px;
+  background: $slate-100;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.heatmap-bar {
+  height: 100%;
+  background: $amber;
+  border-radius: 4px;
+  transition: width 1s ease;
+
+  &.hot { background: $red; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Payment Stats Grid ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.payment-stats-grid {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.payment-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: $slate-600;
+}
+
+.ps-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ps-label { flex: 1; }
+.ps-value { font-weight: 700; }
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Growth Metrics ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.growth-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.growth-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: $slate-50;
+  border-radius: $radius;
+  border: 1px solid $slate-100;
+}
+
+.gm-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $slate-500;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.gm-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: $slate-800;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Recurring Stats ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.recurring-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.rec-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.rec-stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $slate-500;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.rec-stat-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Budget Status ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.budget-over { background: $red-bg; color: $red; }
+.budget-under { background: $green-bg; color: $green; }
+.budget-on { background: $amber-bg; color: darken($amber, 5%); }
+
+/* ══════════════════════════════════════════════════════════════════════════════ */
+/* ─── Insight Cards ─── */
+/* ══════════════════════════════════════════════════════════════════════════════ */
+
+.insight-summary-card {
+  background: linear-gradient(135deg, rgba($primary, 0.04), rgba($primary-light, 0.08));
+  border: 1px solid rgba($primary, 0.12);
+  border-radius: $radius-lg;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.insight-summary-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: $slate-800;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.insight-metrics-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.insight-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.im-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: $slate-500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.im-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $slate-800;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.insight-section {
+  background: $white;
+  border-radius: $radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow-sm;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.insight-section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $slate-700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid $slate-100;
+
+  &.warning { color: $red; }
+}
+
+.insight-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  li {
+    font-size: 0.82rem;
+    color: $slate-600;
+    line-height: 1.5;
+    padding-left: 1.25rem;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: $green;
+    }
+  }
+}
+
+.warning-list li::before { background: $red; }
+
+/* ─── Growth classes ─── */
+.growth-positive { color: $green !important; }
+.growth-negative { color: $red !important; }
+.growth-neutral { color: $slate-500 !important; }
+
+/* ─── Status pill reuses ─── */
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 100px;
+  text-transform: capitalize;
+  letter-spacing: 0.2px;
+
+  &.status-approved { background: $green-bg; color: $green; }
+  &.status-pending { background: $amber-bg; color: darken($amber, 8%); }
+  &.status-rejected { background: $red-bg; color: $red; }
+}
+
+/* ─── Responsive for analytics ─── */
+@media (max-width: 900px) {
+  .analytics-nav { gap: 0.3rem; }
+  .analytics-nav-btn { padding: 0.4rem 0.65rem; font-size: 0.75rem; }
+  .analytics-kpi-row { gap: 0.75rem; }
+  .analytics-kpi { min-width: 140px; }
+  .growth-metrics-grid { grid-template-columns: 1fr; }
+  .insights-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .analytics-nav { overflow-x: auto; flex-wrap: nowrap; }
+  .analytics-kpi-row { flex-direction: column; }
+  .analytics-kpi { min-width: auto; }
+}

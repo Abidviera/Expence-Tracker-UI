@@ -14,6 +14,8 @@ import { ToasterService } from '../../../services/toaster.service';
 import { CategoryService } from '../../../services/category.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { CurrencyService } from '../../../services/currency.service';
+import { CurrencyFormatService } from '../../../services/currency-format.service';
 
 @Component({
   selector: 'app-expense-creation',
@@ -30,6 +32,7 @@ export class ExpenseCreationComponent {
 
   isEditMode = false;
   isLoading = false;
+  activeCurrencySymbol = '';
 
   expenseId: string | null = null;
   userId: string = '';
@@ -46,10 +49,31 @@ export class ExpenseCreationComponent {
     private categoryService: CategoryService,
     private router: Router,
     private route: ActivatedRoute,
+    private currencyService: CurrencyService,
+    private currencyFormatService: CurrencyFormatService,
   ) {}
 
   ngOnInit(): void {
     this.initializeComponent();
+    this.loadActiveCurrency();
+  }
+
+  private loadActiveCurrency(): void {
+    this.currencyService.getActiveCurrencies().subscribe({
+      next: (currencies) => {
+        if (currencies && currencies.length > 0) {
+          const active = currencies[0];
+          this.currencyFormatService.setActiveCurrency(active);
+          this.activeCurrencySymbol = active.imageUrl
+            ? `<img src="${active.imageUrl}" class="currency-icon-img" alt="${active.code}" />`
+            : active.symbol;
+          if (this.expense.currency === 'USD' || !this.expense.currency) {
+            this.expense.currency = active.code;
+          }
+        }
+      },
+      error: () => {},
+    });
   }
 
   private initializeComponent(): void {

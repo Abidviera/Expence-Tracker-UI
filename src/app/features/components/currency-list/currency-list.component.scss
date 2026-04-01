@@ -1,0 +1,30 @@
+@import '../category-list/category-list.component';
+
+.currency-img {
+  width: 36px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 3px;
+  border: 1px solid #e8e8e8;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.text-muted {
+  color: #999;
+  font-style: italic;
+}

@@ -19,6 +19,10 @@ import { LocationListComponent } from './components/location-list/location-list.
 import { LocationMasterComponent } from './components/location-master/location-master.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { CategoryMasterComponent } from './components/category-master/category-master.component';
+import { CurrencyListComponent } from './components/currency-list/currency-list.component';
+import { CurrencyMasterComponent } from './components/currency-master/currency-master.component';
+import { TaxListComponent } from './components/tax-list/tax-list.component';
+import { TaxMasterComponent } from './components/tax-master/tax-master.component';
 
 
 const routes: Routes = [
@@ -47,6 +51,12 @@ const routes: Routes = [
   { path: 'category', component: CategoryListComponent, canActivate: [AuthGuard] },
   { path: 'category/new', component: CategoryMasterComponent, canActivate: [AuthGuard] },
   { path: 'category/edit/:id', component: CategoryMasterComponent, canActivate: [AuthGuard] },
+  { path: 'currency', component: CurrencyListComponent, canActivate: [AuthGuard] },
+  { path: 'currency/new', component: CurrencyMasterComponent, canActivate: [AuthGuard] },
+  { path: 'currency/edit/:id', component: CurrencyMasterComponent, canActivate: [AuthGuard] },
+  { path: 'tax', component: TaxListComponent, canActivate: [AuthGuard] },
+  { path: 'tax/new', component: TaxMasterComponent, canActivate: [AuthGuard] },
+  { path: 'tax/edit/:id', component: TaxMasterComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

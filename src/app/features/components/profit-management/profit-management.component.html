@@ -152,28 +152,28 @@
           <div class="summary-card">
             <div class="summary-icon expenses-icon"><i class="fas fa-arrow-down"></i></div>
             <div class="summary-content">
-              <div class="summary-value">{{ report.summary.totalExpenses | number:'1.2-2' }}</div>
+              <div class="summary-value">{{ report.summary.totalExpenses | currencyDisplay }}</div>
               <div class="summary-label">Total Expenses</div>
             </div>
           </div>
           <div class="summary-card">
             <div class="summary-icon income-icon"><i class="fas fa-arrow-up"></i></div>
             <div class="summary-content">
-              <div class="summary-value">{{ report.summary.totalIncome | number:'1.2-2' }}</div>
+              <div class="summary-value">{{ report.summary.totalIncome | currencyDisplay }}</div>
               <div class="summary-label">Total Income</div>
             </div>
           </div>
           <div class="summary-card" [class.profit-positive]="report.summary.netProfit >= 0" [class.profit-negative]="report.summary.netProfit < 0">
             <div class="summary-icon profit-icon"><i class="fas fa-chart-line"></i></div>
             <div class="summary-content">
-              <div class="summary-value">{{ report.summary.netProfit | number:'1.2-2' }}</div>
+              <div class="summary-value">{{ report.summary.netProfit | currencyDisplay }}</div>
               <div class="summary-label">Net Profit</div>
             </div>
           </div>
           <div class="summary-card">
             <div class="summary-icon avg-icon"><i class="fas fa-calculator"></i></div>
             <div class="summary-content">
-              <div class="summary-value">{{ report.summary.averageExpensePerCustomer | number:'1.2-2' }}</div>
+              <div class="summary-value">{{ report.summary.averageExpensePerCustomer | currencyDisplay }}</div>
               <div class="summary-label">Avg Expense / Customer</div>
             </div>
           </div>
@@ -201,10 +201,10 @@
                 <td>{{ cb.countryCode }}</td>
                 <td>{{ cb.region || '-' }}</td>
                 <td>{{ cb.customerCount }}</td>
-                <td>{{ cb.totalExpenses | number:'1.2-2' }}</td>
-                <td>{{ cb.totalIncome | number:'1.2-2' }}</td>
+                <td>{{ cb.totalExpenses | currencyDisplay }}</td>
+                <td>{{ cb.totalIncome | currencyDisplay }}</td>
                 <td [class.text-success]="cb.netProfit >= 0" [class.text-danger]="cb.netProfit < 0">
-                  {{ cb.netProfit | number:'1.2-2' }}
+                  {{ cb.netProfit | currencyDisplay }}
                 </td>
               </tr>
             </tbody>
@@ -241,10 +241,10 @@
                 <td><strong>{{ lb.locationName }}</strong></td>
                 <td>{{ lb.city || '-' }}</td>
                 <td>{{ lb.customerCount }}</td>
-                <td>{{ lb.totalExpenses | number:'1.2-2' }}</td>
-                <td>{{ lb.totalIncome | number:'1.2-2' }}</td>
+                <td>{{ lb.totalExpenses | currencyDisplay }}</td>
+                <td>{{ lb.totalIncome | currencyDisplay }}</td>
                 <td [class.text-success]="lb.netProfit >= 0" [class.text-danger]="lb.netProfit < 0">
-                  {{ lb.netProfit | number:'1.2-2' }}
+                  {{ lb.netProfit | currencyDisplay }}
                 </td>
               </tr>
             </tbody>
@@ -285,10 +285,10 @@
                 <td>{{ c.countryName || '-' }}</td>
                 <td>{{ c.locationName || '-' }}</td>
                 <td>{{ c.visitDate ? (c.visitDate | date:'mediumDate') : '-' }}</td>
-                <td>{{ c.totalExpenses | number:'1.2-2' }}</td>
-                <td>{{ c.totalIncome | number:'1.2-2' }}</td>
+                <td>{{ c.totalExpenses | currencyDisplay }}</td>
+                <td>{{ c.totalIncome | currencyDisplay }}</td>
                 <td [class.text-success]="c.netProfit >= 0" [class.text-danger]="c.netProfit < 0">
-                  {{ c.netProfit | number:'1.2-2' }}
+                  {{ c.netProfit | currencyDisplay }}
                 </td>
               </tr>
             </tbody>

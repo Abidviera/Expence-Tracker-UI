@@ -8,11 +8,8 @@
         <div class="dash-date">{{ getTodayDate() }}</div>
         <div class="dash-filter-bar">
           <div class="filter-pills">
-            <button
-              *ngFor="let opt of filterOptions"
-              class="filter-pill"
-              [class.active]="selectedFilter === opt.key"
-              (click)="onFilterChange(opt.key)">
+            <button *ngFor="let opt of filterOptions" class="filter-pill"
+              [class.active]="selectedFilter === opt.key" (click)="onFilterChange(opt.key)">
               {{ opt.label }}
             </button>
           </div>
@@ -49,7 +46,9 @@
 
     <div *ngIf="!loading && hasData()">
 
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
       <!-- ─── KPI Cards Row ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
       <div class="kpi-row">
 
         <!-- Income -->
@@ -140,7 +139,7 @@
           <div class="kpi-bar"><div class="kpi-bar-fill outstanding-fill"></div></div>
         </div>
 
-        <!-- Pending Approvals (conditional) -->
+        <!-- Pending Approvals -->
         <div class="kpi-card kpi-pending" *ngIf="hasPendingApprovals()">
           <div class="kpi-top">
             <div class="kpi-icon-wrap">
@@ -156,151 +155,1412 @@
           <div class="kpi-bar"><div class="kpi-bar-fill pending-fill"></div></div>
         </div>
 
-      </div>
-
-      <!-- ─── Main Charts Row ─── -->
-      <div class="charts-row">
-
-        <!-- Bar Chart -->
-        <div class="chart-card col-bar">
-          <div class="chart-card-head">
-            <div>
-              <h2 class="chart-card-title">Income vs Expenses</h2>
-              <p class="chart-card-sub">Monthly comparison over the last 12 months</p>
+        <!-- Analytics KPI: CLV Average -->
+        <div class="kpi-card kpi-clv" *ngIf="hasAnalyticsData() && getClvData()">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
             </div>
-            <div class="chart-meta-badge">12 Months</div>
           </div>
-          <div class="chart-wrap" style="height: 300px;">
-            <canvas baseChart [type]="barChartType" [data]="barChartData" [options]="barChartOptions"></canvas>
-          </div>
+          <div class="kpi-value">{{ formatCompact(getClvData()?.averageClv) }}</div>
+          <div class="kpi-label">Avg Customer Value</div>
+          <div class="kpi-sub">{{ getClvData()?.totalCustomers }} total customers</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill customer-fill"></div></div>
         </div>
 
-        <!-- Budget Overview Card -->
-        <div class="chart-card col-side">
-          <div class="chart-card-head">
-            <div>
-              <h2 class="chart-card-title">Budget Overview</h2>
-              <p class="chart-card-sub">Financial summary</p>
+        <!-- Analytics KPI: Growth -->
+        <div class="kpi-card kpi-growth" *ngIf="hasAnalyticsData() && getGrowthData()">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+              </svg>
+            </div>
+            <div class="kpi-change" [class.positive]="(getGrowthData()?.monthlyIncomeGrowth ?? 0) > 0" [class.negative]="(getGrowthData()?.monthlyIncomeGrowth ?? 0) < 0">
+              {{ formatPercent(getGrowthData()?.monthlyIncomeGrowth) }}
             </div>
           </div>
-          <div class="budget-content">
-            <div class="budget-figure">
-              <span class="budget-figure-label">Total Income</span>
-              <span class="budget-figure-value income-color">{{ formatAmount(getTotalIncome()) }}</span>
-            </div>
-            <div class="budget-divider"></div>
-            <div class="budget-figure">
-              <span class="budget-figure-label">Total Expenses</span>
-              <span class="budget-figure-value expense-color">-{{ formatAmount(getTotalExpenses()) }}</span>
-            </div>
-            <div class="budget-divider"></div>
-            <div class="budget-figure net-figure">
-              <span class="budget-figure-label">Net Profit</span>
-              <span class="budget-figure-value net-color" [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">
-                {{ getNetProfitDisplay() }}
-              </span>
+          <div class="kpi-value" [class.text-profit]="(getGrowthData()?.projectedYearlyIncome ?? 0) > 0" [class.text-loss]="(getGrowthData()?.projectedYearlyIncome ?? 0) <= 0">
+            {{ formatCompact(getGrowthData()?.projectedYearlyIncome) }}
+          </div>
+          <div class="kpi-label">Projected Yearly Income</div>
+          <div class="kpi-sub">Growth trend: {{ getGrowthData()?.growthTrend }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill customer-fill"></div></div>
+        </div>
+
+        <!-- Analytics KPI: Anomalies -->
+        <div class="kpi-card kpi-anomaly" *ngIf="hasAnalyticsData() && getAnomalyData()?.anomaliesDetected">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
             </div>
           </div>
-          <div class="budget-progress-section">
-            <div class="budget-progress-header">
-              <span>Budget Utilization</span>
-              <span class="budget-pct">{{ getBudgetUsedPercent() }}%</span>
+          <div class="kpi-value">{{ getAnomalyData()?.anomaliesDetected }}</div>
+          <div class="kpi-label">Anomalies Detected</div>
+          <div class="kpi-sub">{{ getAnomalyData()?.totalExpensesAnalyzed }} expenses analyzed</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill expense-fill"></div></div>
+        </div>
+
+        <!-- Analytics KPI: Collection Rate -->
+        <div class="kpi-card kpi-collection" *ngIf="hasAnalyticsData() && getPaymentData()">
+          <div class="kpi-top">
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
             </div>
-            <div class="budget-progress-track">
-              <div class="budget-progress-fill"
-                   [style.width.%]="getBudgetUsedPercent()"
-                   [class.bp-under]="getBudgetUsedPercent() < 70"
-                   [class.bp-warn]="getBudgetUsedPercent() >= 70 && getBudgetUsedPercent() < 90"
-                   [class.bp-over]="getBudgetUsedPercent() >= 90">
+          </div>
+          <div class="kpi-value">{{ formatPercent(getPaymentData()?.collectionRate) }}</div>
+          <div class="kpi-label">Collection Rate</div>
+          <div class="kpi-sub">{{ formatCompact(getPaymentData()?.totalOutstanding) }} outstanding</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill income-fill"></div></div>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── Analytics Navigation Tabs ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div class="analytics-nav" *ngIf="hasAnalyticsData()">
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'overview'" (click)="setAnalyticsTab('overview')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Overview
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'country'" (click)="setAnalyticsTab('country')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Country
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'location'" (click)="setAnalyticsTab('location')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Location
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'category'" (click)="setAnalyticsTab('category')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Categories
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'customers'" (click)="setAnalyticsTab('customers')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Customers & CLV
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'expenses'" (click)="setAnalyticsTab('expenses')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Top Expenses
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'recurring'" (click)="setAnalyticsTab('recurring')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Recurring
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'growth'" (click)="setAnalyticsTab('growth')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Growth
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'anomaly'" (click)="setAnalyticsTab('anomaly')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Anomalies
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'heatmap'" (click)="setAnalyticsTab('heatmap')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          Heatmap
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'budget'" (click)="setAnalyticsTab('budget')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Budget
+        </button>
+        <button class="analytics-nav-btn" [class.active]="activeAnalyticsTab === 'insights'" (click)="setAnalyticsTab('insights')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Insights
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Overview ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'overview'">
+
+        <!-- Main Charts Row -->
+        <div class="charts-row">
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Income vs Expenses</h2>
+                <p class="chart-card-sub">Monthly comparison over the last 12 months</p>
+              </div>
+              <div class="chart-meta-badge">12 Months</div>
+            </div>
+            <div class="chart-wrap" style="height: 300px;">
+              <canvas baseChart [type]="barChartType" [data]="barChartData" [options]="barChartOptions"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card col-side">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Budget Overview</h2>
+                <p class="chart-card-sub">Financial summary</p>
               </div>
             </div>
-            <div class="budget-remaining">
-              <span>Remaining</span>
-              <span [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">{{ getBudgetRemaining() }}</span>
+            <div class="budget-content">
+              <div class="budget-figure">
+                <span class="budget-figure-label">Total Income</span>
+                <span class="budget-figure-value income-color">{{ formatAmount(getTotalIncome()) }}</span>
+              </div>
+              <div class="budget-divider"></div>
+              <div class="budget-figure">
+                <span class="budget-figure-label">Total Expenses</span>
+                <span class="budget-figure-value expense-color">-{{ formatAmount(getTotalExpenses()) }}</span>
+              </div>
+              <div class="budget-divider"></div>
+              <div class="budget-figure net-figure">
+                <span class="budget-figure-label">Net Profit</span>
+                <span class="budget-figure-value net-color" [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">
+                  {{ getNetProfitDisplay() }}
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="budget-mini-stats">
-            <div class="mini-stat">
-              <div class="mini-stat-dot income-dot"></div>
-              <span>{{ getTotalCustomers() }} Customers</span>
+            <div class="budget-progress-section">
+              <div class="budget-progress-header">
+                <span>Budget Utilization</span>
+                <span class="budget-pct">{{ getBudgetUsedPercent() }}%</span>
+              </div>
+              <div class="budget-progress-track">
+                <div class="budget-progress-fill" [style.width.%]="getBudgetUsedPercent()"
+                  [class.bp-under]="getBudgetUsedPercent() < 70"
+                  [class.bp-warn]="getBudgetUsedPercent() >= 70 && getBudgetUsedPercent() < 90"
+                  [class.bp-over]="getBudgetUsedPercent() >= 90">
+                </div>
+              </div>
+              <div class="budget-remaining">
+                <span>Remaining</span>
+                <span [class.text-profit]="isProfitable()" [class.text-loss]="!isProfitable()">{{ getBudgetRemaining() }}</span>
+              </div>
             </div>
-            <div class="mini-stat" *ngIf="hasPendingApprovals()">
-              <div class="mini-stat-dot pending-dot"></div>
-              <span>{{ getPendingApprovals() }} Pending</span>
+            <div class="budget-mini-stats">
+              <div class="mini-stat">
+                <div class="mini-stat-dot income-dot"></div>
+                <span>{{ getTotalCustomers() }} Customers</span>
+              </div>
+              <div class="mini-stat" *ngIf="hasPendingApprovals()">
+                <div class="mini-stat-dot pending-dot"></div>
+                <span>{{ getPendingApprovals() }} Pending</span>
+              </div>
             </div>
           </div>
         </div>
 
-      </div>
-
-      <!-- ─── Line Chart + Category Row ─── -->
-      <div class="charts-row">
-
-        <!-- Net Profit Line Chart -->
-        <div class="chart-card col-profit">
-          <div class="chart-card-head">
-            <div>
-              <h2 class="chart-card-title">Net Profit Trend</h2>
-              <p class="chart-card-sub">Profitability over the last 12 months</p>
+        <!-- Line Chart + Category Row -->
+        <div class="charts-row">
+          <div class="chart-card col-profit">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Net Profit Trend</h2>
+                <p class="chart-card-sub">Profitability over the last 12 months</p>
+              </div>
+              <div class="profit-indicator" [class.pi-up]="isProfitable()" [class.pi-down]="!isProfitable()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path *ngIf="isProfitable()" d="M7 14l5-5 5 5H7z"/>
+                  <path *ngIf="!isProfitable()" d="M7 10l5 5 5-5H7z"/>
+                </svg>
+                {{ isProfitable() ? 'Profitable' : 'Loss' }}
+              </div>
             </div>
-            <div class="profit-indicator" [class.pi-up]="isProfitable()" [class.pi-down]="!isProfitable()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path *ngIf="isProfitable()" d="M7 14l5-5 5 5H7z"/>
-                <path *ngIf="!isProfitable()" d="M7 10l5 5 5-5H7z"/>
+            <div class="chart-wrap" style="height: 240px;">
+              <canvas baseChart [type]="lineChartType" [data]="lineChartData" [options]="lineChartOptions"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card col-donut">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Income Sources</h2>
+                <p class="chart-card-sub">Breakdown by category</p>
+              </div>
+            </div>
+            <div class="donut-wrap" *ngIf="hasIncomeCategories()">
+              <div class="donut-canvas">
+                <canvas baseChart [type]="incomeDonutType" [data]="incomeDonutData" [options]="donutOptions"></canvas>
+              </div>
+            </div>
+            <div class="donut-empty" *ngIf="!hasIncomeCategories()">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
               </svg>
-              {{ isProfitable() ? 'Profitable' : 'Loss' }}
+              <p>No income data</p>
             </div>
           </div>
-          <div class="chart-wrap" style="height: 240px;">
-            <canvas baseChart [type]="lineChartType" [data]="lineChartData" [options]="lineChartOptions"></canvas>
+
+          <div class="chart-card col-donut">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Expense Breakdown</h2>
+                <p class="chart-card-sub">Breakdown by category</p>
+              </div>
+            </div>
+            <div class="donut-wrap" *ngIf="hasExpenseCategories()">
+              <div class="donut-canvas">
+                <canvas baseChart [type]="expenseDonutType" [data]="expenseDonutData" [options]="donutOptions"></canvas>
+              </div>
+            </div>
+            <div class="donut-empty" *ngIf="!hasExpenseCategories()">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+              </svg>
+              <p>No expense data</p>
+            </div>
           </div>
         </div>
 
-        <!-- Income by Category -->
-        <div class="chart-card col-donut">
-          <div class="chart-card-head">
-            <div>
-              <h2 class="chart-card-title">Income Sources</h2>
-              <p class="chart-card-sub">Breakdown by category</p>
+        <!-- Payment Status + Quick Stats Row -->
+        <div class="charts-row" *ngIf="hasAnalyticsData()">
+          <div class="chart-card col-donut" *ngIf="hasPaymentData()">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Payment Status</h2>
+                <p class="chart-card-sub">Income collection overview</p>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut-canvas">
+                <canvas baseChart [type]="incomeDonutType" [data]="paymentPieData" [options]="donutOptions"></canvas>
+              </div>
+            </div>
+            <div class="payment-stats-grid">
+              <div class="payment-stat-item">
+                <span class="ps-dot" style="background:#10b981"></span>
+                <span class="ps-label">Paid</span>
+                <span class="ps-value text-profit">{{ formatPercent((getPaymentData()?.incomeStatus?.paidAmount ?? 0) / (getPaymentData()?.incomeStatus?.totalAmount ?? 1) * 100) }}</span>
+              </div>
+              <div class="payment-stat-item">
+                <span class="ps-dot" style="background:#f97316"></span>
+                <span class="ps-label">Partial</span>
+                <span class="ps-value" style="color:#f97316">{{ formatPercent((getPaymentData()?.incomeStatus?.partialAmount ?? 0) / (getPaymentData()?.incomeStatus?.totalAmount ?? 1) * 100) }}</span>
+              </div>
+              <div class="payment-stat-item">
+                <span class="ps-dot" style="background:#ef4444"></span>
+                <span class="ps-label">Unpaid</span>
+                <span class="ps-value text-loss">{{ formatPercent((getPaymentData()?.incomeStatus?.unpaidAmount ?? 0) / (getPaymentData()?.incomeStatus?.totalAmount ?? 1) * 100) }}</span>
+              </div>
             </div>
           </div>
-          <div class="donut-wrap" *ngIf="hasIncomeCategories()">
-            <div class="donut-canvas">
-              <canvas baseChart [type]="incomeDonutType" [data]="incomeDonutData" [options]="donutOptions"></canvas>
-            </div>
-          </div>
-          <div class="donut-empty" *ngIf="!hasIncomeCategories()">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
-            </svg>
-            <p>No income data</p>
-          </div>
-        </div>
 
-        <!-- Expenses by Category -->
-        <div class="chart-card col-donut">
-          <div class="chart-card-head">
-            <div>
-              <h2 class="chart-card-title">Expense Breakdown</h2>
-              <p class="chart-card-sub">Breakdown by category</p>
+          <div class="chart-card col-profit" *ngIf="hasGrowthData()">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Growth Metrics</h2>
+                <p class="chart-card-sub">Period performance</p>
+              </div>
+              <div class="chart-meta-badge">{{ getGrowthData()?.growthTrend }}</div>
+            </div>
+            <div class="growth-metrics-grid">
+              <div class="growth-metric">
+                <span class="gm-label">Monthly Income Growth</span>
+                <span class="gm-value" [class.text-profit]="(getGrowthData()?.monthlyIncomeGrowth ?? 0) > 0" [class.text-loss]="(getGrowthData()?.monthlyIncomeGrowth ?? 0) < 0">
+                  {{ formatPercent(getGrowthData()?.monthlyIncomeGrowth) }}
+                </span>
+              </div>
+              <div class="growth-metric">
+                <span class="gm-label">Monthly Expense Growth</span>
+                <span class="gm-value" [class.text-profit]="(getGrowthData()?.monthlyExpenseGrowth ?? 0) < 0" [class.text-loss]="(getGrowthData()?.monthlyExpenseGrowth ?? 0) > 0">
+                  {{ formatPercent(getGrowthData()?.monthlyExpenseGrowth) }}
+                </span>
+              </div>
+              <div class="growth-metric">
+                <span class="gm-label">Quarterly Income Growth</span>
+                <span class="gm-value" [class.text-profit]="(getGrowthData()?.quarterlyIncomeGrowth ?? 0) > 0" [class.text-loss]="(getGrowthData()?.quarterlyIncomeGrowth ?? 0) < 0">
+                  {{ formatPercent(getGrowthData()?.quarterlyIncomeGrowth) }}
+                </span>
+              </div>
+              <div class="growth-metric">
+                <span class="gm-label">Projected Yearly Income</span>
+                <span class="gm-value">{{ formatCurrency(getGrowthData()?.projectedYearlyIncome) }}</span>
+              </div>
             </div>
           </div>
-          <div class="donut-wrap" *ngIf="hasExpenseCategories()">
-            <div class="donut-canvas">
-              <canvas baseChart [type]="expenseDonutType" [data]="expenseDonutData" [options]="donutOptions"></canvas>
+
+          <div class="chart-card col-profit" *ngIf="hasRecurringData()">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Recurring vs One-time</h2>
+                <p class="chart-card-sub">Transaction type distribution</p>
+              </div>
             </div>
-          </div>
-          <div class="donut-empty" *ngIf="!hasExpenseCategories()">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
-            </svg>
-            <p>No expense data</p>
+            <div class="donut-wrap">
+              <div class="donut-canvas">
+                <canvas baseChart [type]="incomeDonutType" [data]="recurringPieData" [options]="donutOptions"></canvas>
+              </div>
+            </div>
+            <div class="recurring-stats">
+              <div class="rec-stat">
+                <span class="rec-stat-label">Recurring</span>
+                <span class="rec-stat-value text-profit">{{ getRecurringData()?.recurringPercentage }}%</span>
+              </div>
+              <div class="rec-stat">
+                <span class="rec-stat-label">One-time</span>
+                <span class="rec-stat-value" style="color:#6366f1">{{ getRecurringData()?.oneTimePercentage }}%</span>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
 
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Country ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'country' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Country Overview</h2>
+            <p class="section-sub">Income, expenses, and profitability by country</p>
+          </div>
+          <div class="chart-meta-badge">{{ getCountryData()?.totalCountries }} Countries</div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Countries</span>
+            <span class="ak-value">{{ getCountryData()?.totalCountries }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Income</span>
+            <span class="ak-value text-profit">{{ formatCurrency(getCountryData()?.totalIncome) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Expenses</span>
+            <span class="ak-value text-loss">{{ formatCurrency(getCountryData()?.totalExpenses) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Net Profit</span>
+            <span class="ak-value" [class.text-profit]="(getCountryData()?.netProfit ?? 0) > 0" [class.text-loss]="(getCountryData()?.netProfit ?? 0) < 0">
+              {{ formatCurrency(getCountryData()?.netProfit) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card col-bar" *ngIf="hasCountryData()">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Income & Expenses by Country</h2>
+                <p class="chart-card-sub">Top countries by financial performance</p>
+              </div>
+              <div class="tab-switcher">
+                <button class="tab-btn" [class.active]="activeCountryTab === 'chart'" (click)="setCountryTab('chart')">Chart</button>
+                <button class="tab-btn" [class.active]="activeCountryTab === 'table'" (click)="setCountryTab('table')">Table</button>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 350px;" *ngIf="activeCountryTab === 'chart'">
+              <canvas baseChart [type]="barChartType" [data]="countryBarData" [options]="barChartOptions"></canvas>
+            </div>
+            <div class="table-wrapper" *ngIf="activeCountryTab === 'table' && hasCountryData()">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Country</th>
+                    <th>Region</th>
+                    <th>Income</th>
+                    <th>Expenses</th>
+                    <th>Net Profit</th>
+                    <th>Margin</th>
+                    <th>Customers</th>
+                    <th>Transactions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let c of getCountryData()?.countries; trackBy: trackByIndex">
+                    <td><strong>{{ c.countryName }}</strong> <span class="country-code">{{ c.countryCode }}</span></td>
+                    <td>{{ c.region }}</td>
+                    <td class="text-profit">{{ formatCurrency(c.totalIncome) }}</td>
+                    <td class="text-loss">{{ formatCurrency(c.totalExpenses) }}</td>
+                    <td [class.text-profit]="c.netProfit > 0" [class.text-loss]="c.netProfit < 0">{{ formatCurrency(c.netProfit) }}</td>
+                    <td>
+                      <span class="margin-badge" [class.text-profit]="c.profitMargin > 0" [class.text-loss]="c.profitMargin < 0">
+                        {{ formatPercent(c.profitMargin) }}
+                      </span>
+                    </td>
+                    <td>{{ c.customerCount }}</td>
+                    <td>{{ c.transactionCount }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="chart-card col-side" *ngIf="hasCountryData()">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Profit by Country</h2>
+                <p class="chart-card-sub">Polar area visualization</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 300px;">
+              <canvas baseChart [type]="polarAreaType" [data]="countryPolarData" [options]="polarAreaOptions"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Location ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'location' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Location / Region Overview</h2>
+            <p class="section-sub">Financial breakdown by location and city</p>
+          </div>
+          <div class="chart-meta-badge">{{ getLocationData()?.totalLocations }} Locations</div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Locations</span>
+            <span class="ak-value">{{ getLocationData()?.totalLocations }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Income</span>
+            <span class="ak-value text-profit">{{ formatCurrency(getLocationData()?.totalIncome) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Net Profit</span>
+            <span class="ak-value" [class.text-profit]="(getLocationData()?.netProfit ?? 0) > 0" [class.text-loss]="(getLocationData()?.netProfit ?? 0) < 0">
+              {{ formatCurrency(getLocationData()?.netProfit) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card" style="grid-column: span 12;">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Income, Expenses & Profit by Location</h2>
+                <p class="chart-card-sub">All locations ranked by net profit</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 400px;">
+              <canvas baseChart [type]="barChartType" [data]="locationBarData" [options]="stackedBarOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Location Details</h2>
+              <p class="chart-card-sub">All locations with financial metrics</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Location</th>
+                  <th>Country</th>
+                  <th>City</th>
+                  <th>Income</th>
+                  <th>Expenses</th>
+                  <th>Net Profit</th>
+                  <th>Margin</th>
+                  <th>Customers</th>
+                  <th>Transactions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loc of getLocationData()?.locations; trackBy: trackByIndex">
+                  <td><strong>{{ loc.locationName }}</strong></td>
+                  <td>{{ loc.countryName }}</td>
+                  <td>{{ loc.city }}</td>
+                  <td class="text-profit">{{ formatCurrency(loc.totalIncome) }}</td>
+                  <td class="text-loss">{{ formatCurrency(loc.totalExpenses) }}</td>
+                  <td [class.text-profit]="loc.netProfit > 0" [class.text-loss]="loc.netProfit < 0">{{ formatCurrency(loc.netProfit) }}</td>
+                  <td>
+                    <span class="margin-badge" [class.text-profit]="loc.profitMargin > 0" [class.text-loss]="loc.profitMargin < 0">
+                      {{ formatPercent(loc.profitMargin) }}
+                    </span>
+                  </td>
+                  <td>{{ loc.customerCount }}</td>
+                  <td>{{ loc.transactionCount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Categories ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'category' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Category-wise Profitability</h2>
+            <p class="section-sub">Net profit analysis by expense and income category</p>
+          </div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Categories</span>
+            <span class="ak-value">{{ getCategoryProfitData()?.categories?.length }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Income</span>
+            <span class="ak-value text-profit">{{ formatCurrency(getCategoryProfitData()?.totalIncome) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Expenses</span>
+            <span class="ak-value text-loss">{{ formatCurrency(getCategoryProfitData()?.totalExpenses) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Net Profit</span>
+            <span class="ak-value" [class.text-profit]="(getCategoryProfitData()?.netProfit ?? 0) > 0" [class.text-loss]="(getCategoryProfitData()?.netProfit ?? 0) < 0">
+              {{ formatCurrency(getCategoryProfitData()?.netProfit) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Income vs Expenses by Category</h2>
+                <p class="chart-card-sub">Side-by-side comparison</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 400px;">
+              <canvas baseChart [type]="barChartType" [data]="categoryProfitBarData" [options]="barChartOptions"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card col-side">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Profit by Category</h2>
+                <p class="chart-card-sub">Polar area view</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 300px;">
+              <canvas baseChart [type]="polarAreaType" [data]="categoryPolarData" [options]="polarAreaOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Category Profitability Details</h2>
+              <p class="chart-card-sub">All categories ranked by net profit</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Income</th>
+                  <th>Expenses</th>
+                  <th>Net Profit</th>
+                  <th>Margin</th>
+                  <th>Inc. Count</th>
+                  <th>Exp. Count</th>
+                  <th>Performance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of getCategoryProfitData()?.categories; trackBy: trackByIndex">
+                  <td>
+                    <span class="cat-tag">
+                      <i class="fas" [ngClass]="getCategoryIcon(c.categoryName)"></i>
+                      {{ c.categoryName }}
+                    </span>
+                  </td>
+                  <td class="text-profit">{{ formatCurrency(c.incomeAmount) }}</td>
+                  <td class="text-loss">{{ formatCurrency(c.expenseAmount) }}</td>
+                  <td [class.text-profit]="c.netProfit > 0" [class.text-loss]="c.netProfit < 0">{{ formatCurrency(c.netProfit) }}</td>
+                  <td>
+                    <span class="margin-badge" [class.text-profit]="c.profitMargin > 0" [class.text-loss]="c.profitMargin < 0">
+                      {{ formatPercent(c.profitMargin) }}
+                    </span>
+                  </td>
+                  <td>{{ c.incomeCount }}</td>
+                  <td>{{ c.expenseCount }}</td>
+                  <td>
+                    <span class="status-pill" [ngClass]="getPerformanceClass(c.performanceLabel)">
+                      {{ c.performanceLabel }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Customers & CLV ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'customers' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Customer Lifetime Value (CLV)</h2>
+            <p class="section-sub">Customer contribution analysis and segmentation</p>
+          </div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Customers</span>
+            <span class="ak-value">{{ getClvData()?.totalCustomers }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Average CLV</span>
+            <span class="ak-value text-profit">{{ formatCurrency(getClvData()?.averageClv) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Highest CLV</span>
+            <span class="ak-value">{{ formatCurrency(getClvData()?.highestClv) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Median CLV</span>
+            <span class="ak-value">{{ formatCurrency(getClvData()?.medianClv) }}</span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Top Customers by Net Contribution</h2>
+                <p class="chart-card-sub">Horizontal bar chart</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 400px;">
+              <canvas baseChart [type]="horizontalBarType" [data]="clvBarData" [options]="horizontalBarOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">All Customers with CLV</h2>
+              <p class="chart-card-sub">Ranked by net contribution (income - expenses)</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Email</th>
+                  <th>Location</th>
+                  <th>Total Income</th>
+                  <th>Total Expenses</th>
+                  <th>Net Contribution</th>
+                  <th>Transactions</th>
+                  <th>Avg Value</th>
+                  <th>Tier</th>
+                  <th>Lifetime</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of getClvData()?.customers; trackBy: trackByIndex">
+                  <td><strong>{{ c.customerName }}</strong></td>
+                  <td>{{ c.email }}</td>
+                  <td>{{ c.locationName || c.countryName || '—' }}</td>
+                  <td class="text-profit">{{ formatCurrency(c.totalIncome) }}</td>
+                  <td class="text-loss">{{ formatCurrency(c.totalExpenses) }}</td>
+                  <td [class.text-profit]="c.netContribution > 0" [class.text-loss]="c.netContribution < 0">
+                    {{ formatCurrency(c.netContribution) }}
+                  </td>
+                  <td>{{ c.transactionCount }}</td>
+                  <td>{{ formatCurrency(c.averageTransactionValue) }}</td>
+                  <td>
+                    <span class="tier-badge" [ngClass]="getClvTierClass(c.clvTier)">{{ c.clvTier }}</span>
+                  </td>
+                  <td>{{ c.lifetimeDays }} days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Top Customers Sub-section -->
+        <div *ngIf="hasTopCustomersData()">
+          <div class="charts-row">
+            <div class="chart-card col-bar">
+              <div class="chart-card-head">
+                <div>
+                  <h2 class="chart-card-title">Top Customers by Revenue</h2>
+                  <p class="chart-card-sub">Ranked by total income generated</p>
+                </div>
+              </div>
+              <div class="chart-wrap" style="height: 350px;">
+                <canvas baseChart [type]="horizontalBarType" [data]="topCustomersData" [options]="horizontalBarOptions"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Top Expenses ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'expenses' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Top Expenses Analysis</h2>
+            <p class="section-sub">Highest value and most frequent expense entries</p>
+          </div>
+          <div class="chart-meta-badge">{{ formatCurrency(getTopExpensesData()?.totalExpenses) }} Total</div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card" style="grid-column: span 12;">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Top Expenses by Amount</h2>
+                <p class="chart-card-sub">Orange bars indicate anomalous expenses</p>
+              </div>
+              <div class="tab-switcher">
+                <button class="tab-btn" [class.active]="activeTopExpensesTab === 'amount'" (click)="setTopExpensesTab('amount')">By Amount</button>
+                <button class="tab-btn" [class.active]="activeTopExpensesTab === 'table'" (click)="setTopExpensesTab('table')">Table</button>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 400px;" *ngIf="activeTopExpensesTab === 'amount'">
+              <canvas baseChart [type]="horizontalBarType" [data]="topExpensesData" [options]="horizontalBarOptions"></canvas>
+            </div>
+            <div class="table-wrapper" *ngIf="activeTopExpensesTab === 'table'">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>% of Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let e of getTopExpensesData()?.byAmount; trackBy: trackById">
+                    <td><strong>{{ e.rank }}</strong></td>
+                    <td>
+                      <div class="tx-info">
+                        <span class="tx-title">{{ e.title }}</span>
+                        <span class="tx-type" *ngIf="e.isAnomaly">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="#f97316"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                          Anomaly
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="cat-tag">
+                        <i class="fas" [ngClass]="getCategoryIcon(e.categoryName)"></i>
+                        {{ e.categoryName }}
+                      </span>
+                    </td>
+                    <td class="text-loss">{{ formatCurrency(e.amount) }}</td>
+                    <td>{{ e.date | date:'MMM dd, yyyy' }}</td>
+                    <td>{{ e.customerName || '—' }}</td>
+                    <td><span class="status-pill" [ngClass]="getStatusClass(e.status)">{{ e.status }}</span></td>
+                    <td>{{ formatPercent(e.percentageOfTotal) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Recurring ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'recurring' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Recurring vs One-time Transactions</h2>
+            <p class="section-sub">Classification based on transaction frequency patterns</p>
+          </div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Transactions</span>
+            <span class="ak-value">{{ getRecurringData()?.totalTransactions }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Recurring</span>
+            <span class="ak-value text-profit">{{ getRecurringData()?.recurringCount }} ({{ formatPercent(getRecurringData()?.recurringPercentage) }})</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">One-time</span>
+            <span class="ak-value" style="color:#6366f1">{{ getRecurringData()?.oneTimeCount }} ({{ formatPercent(getRecurringData()?.oneTimePercentage) }})</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Recurring Income</span>
+            <span class="ak-value text-profit">{{ formatCurrency(getRecurringData()?.recurringIncome) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">One-time Income</span>
+            <span class="ak-value" style="color:#6366f1">{{ formatCurrency(getRecurringData()?.oneTimeIncome) }}</span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card col-donut">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Distribution</h2>
+                <p class="chart-card-sub">Recurring vs one-time count</p>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut-canvas">
+                <canvas baseChart [type]="incomeDonutType" [data]="recurringPieData" [options]="donutOptions"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Monthly Trend</h2>
+                <p class="chart-card-sub">Recurring vs one-time amounts over time</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 300px;">
+              <canvas baseChart [type]="lineChartType" [data]="recurringTrendData" [options]="lineChartOptions"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Growth ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'growth' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Growth Rate Analysis</h2>
+            <p class="section-sub">Period-over-period growth metrics and projections</p>
+          </div>
+          <div class="chart-meta-badge">{{ getGrowthData()?.growthTrend }}</div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Monthly Income Growth</span>
+            <span class="ak-value" [class.text-profit]="(getGrowthData()?.monthlyIncomeGrowth ?? 0) > 0" [class.text-loss]="(getGrowthData()?.monthlyIncomeGrowth ?? 0) < 0">
+              {{ formatPercent(getGrowthData()?.monthlyIncomeGrowth) }}
+            </span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Monthly Expense Growth</span>
+            <span class="ak-value" [class.text-profit]="(getGrowthData()?.monthlyExpenseGrowth ?? 0) < 0" [class.text-loss]="(getGrowthData()?.monthlyExpenseGrowth ?? 0) > 0">
+              {{ formatPercent(getGrowthData()?.monthlyExpenseGrowth) }}
+            </span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Quarterly Income Growth</span>
+            <span class="ak-value" [class.text-profit]="(getGrowthData()?.quarterlyIncomeGrowth ?? 0) > 0" [class.text-loss]="(getGrowthData()?.quarterlyIncomeGrowth ?? 0) < 0">
+              {{ formatPercent(getGrowthData()?.quarterlyIncomeGrowth) }}
+            </span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Projected Yearly Income</span>
+            <span class="ak-value">{{ formatCurrency(getGrowthData()?.projectedYearlyIncome) }}</span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card" style="grid-column: span 12;">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Monthly Growth Rates</h2>
+                <p class="chart-card-sub">Income, expense, and profit growth percentage month-over-month</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 350px;">
+              <canvas baseChart [type]="lineChartType" [data]="growthLineData" [options]="lineChartOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Monthly Growth Breakdown</h2>
+              <p class="chart-card-sub">Detailed period comparison</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Current Income</th>
+                  <th>Previous Income</th>
+                  <th>Income Growth</th>
+                  <th>Current Expenses</th>
+                  <th>Previous Expenses</th>
+                  <th>Expense Growth</th>
+                  <th>Current Profit</th>
+                  <th>Profit Growth</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let m of getGrowthData()?.monthlyGrowth; trackBy: trackByIndex">
+                  <td><strong>{{ m.month }} {{ m.year }}</strong></td>
+                  <td class="text-profit">{{ formatCurrency(m.currentIncome) }}</td>
+                  <td>{{ formatCurrency(m.previousIncome) }}</td>
+                  <td>
+                    <span class="growth-badge" [class.text-profit]="m.incomeGrowthPercent > 0" [class.text-loss]="m.incomeGrowthPercent < 0">
+                      {{ formatPercent(m.incomeGrowthPercent) }}
+                    </span>
+                  </td>
+                  <td class="text-loss">{{ formatCurrency(m.currentExpenses) }}</td>
+                  <td>{{ formatCurrency(m.previousExpenses) }}</td>
+                  <td>
+                    <span class="growth-badge" [class.text-profit]="m.expenseGrowthPercent < 0" [class.text-loss]="m.expenseGrowthPercent > 0">
+                      {{ formatPercent(m.expenseGrowthPercent) }}
+                    </span>
+                  </td>
+                  <td [class.text-profit]="m.currentProfit > 0" [class.text-loss]="m.currentProfit < 0">{{ formatCurrency(m.currentProfit) }}</td>
+                  <td>
+                    <span class="growth-badge" [class.text-profit]="m.profitGrowthPercent > 0" [class.text-loss]="m.profitGrowthPercent < 0">
+                      {{ formatPercent(m.profitGrowthPercent) }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Anomalies ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'anomaly' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Anomaly Detection</h2>
+            <p class="section-sub">Unusual expense patterns detected using statistical analysis (Z-score)</p>
+          </div>
+        </div>
+
+        <div class="analytics-kpi-row">
+          <div class="analytics-kpi">
+            <span class="ak-label">Expenses Analyzed</span>
+            <span class="ak-value">{{ getAnomalyData()?.totalExpensesAnalyzed }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Anomalies Found</span>
+            <span class="ak-value text-loss">{{ getAnomalyData()?.anomaliesDetected }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Mean Expense</span>
+            <span class="ak-value">{{ formatCurrency(getAnomalyData()?.meanExpense) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Std Deviation</span>
+            <span class="ak-value">{{ formatCurrency(getAnomalyData()?.standardDeviation) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Z-Score Threshold</span>
+            <span class="ak-value">{{ getAnomalyData()?.zScoreThreshold }}</span>
+          </div>
+        </div>
+
+        <div class="charts-row" *ngIf="getAnomalyData()?.hasData">
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Anomalous Expenses</h2>
+                <p class="chart-card-sub">Orange = anomalous, Red = high value</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 400px;">
+              <canvas baseChart [type]="horizontalBarType" [data]="topExpensesData" [options]="horizontalBarOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Anomaly Details</h2>
+              <p class="chart-card-sub">Expenses flagged as statistically unusual</p>
+            </div>
+          </div>
+          <div class="table-wrapper" *ngIf="getAnomalyData()?.anomalies?.length">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Z-Score</th>
+                  <th>Severity</th>
+                  <th>Category Avg</th>
+                  <th>% Above Avg</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let a of getAnomalyData()?.anomalies; trackBy: trackById">
+                  <td><strong>{{ a.title }}</strong></td>
+                  <td class="text-loss">{{ formatCurrency(a.amount) }}</td>
+                  <td>{{ a.date | date:'MMM dd, yyyy' }}</td>
+                  <td>{{ a.categoryName }}</td>
+                  <td>
+                    <span class="zscore-badge" [class.text-loss]="a.zScore > 0">{{ a.zScore > 0 ? '+' : '' }}{{ a.zScore }}</span>
+                  </td>
+                  <td>
+                    <span class="severity-badge" [ngClass]="getSeverityClass(a.severity)">{{ a.severity }}</span>
+                  </td>
+                  <td>{{ formatCurrency(a.categoryAverage) }}</td>
+                  <td [class.text-loss]="a.percentageAboveAverage > 0">{{ formatPercent(a.percentageAboveAverage) }}</td>
+                  <td class="reason-cell">{{ a.reason }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-empty" *ngIf="!getAnomalyData()?.anomalies?.length">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+              <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            <p>No anomalies detected in this period</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Heatmap ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'heatmap' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Expense Heatmap</h2>
+            <p class="section-sub">Spending patterns by day, hour, and day of month</p>
+          </div>
+        </div>
+
+        <div class="analytics-kpi-row" *ngIf="hasHeatmapData()">
+          <div class="analytics-kpi">
+            <span class="ak-label">Peak Expense Day</span>
+            <span class="ak-value">{{ getHeatmapData()?.peakExpenseDay }}</span>
+            <span class="ak-sub">{{ formatCurrency(getHeatmapData()?.peakExpenseDayAmount) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Peak Expense Hour</span>
+            <span class="ak-value">{{ getHeatmapData()?.peakExpenseHour }}</span>
+            <span class="ak-sub">{{ formatCurrency(getHeatmapData()?.peakExpenseHourAmount) }}</span>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Expenses by Day of Week</h2>
+                <p class="chart-card-sub">Color intensity shows relative spending volume</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 300px;">
+              <canvas baseChart [type]="barChartType" [data]="heatmapDayData" [options]="barChartOptions"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card col-bar">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Expenses by Hour</h2>
+                <p class="chart-card-sub">Spending distribution across hours</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 300px;">
+              <canvas baseChart [type]="barChartType" [data]="heatmapHourData" [options]="barChartOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Day of Week Breakdown</h2>
+              <p class="chart-card-sub">Detailed spending statistics per weekday</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Total Amount</th>
+                  <th>Transactions</th>
+                  <th>Average</th>
+                  <th>% of Total</th>
+                  <th>Intensity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of getHeatmapData()?.byDayOfWeek; trackBy: trackByIndex">
+                  <td><strong>{{ d.dayName }}</strong></td>
+                  <td class="text-loss">{{ formatCurrency(d.totalAmount) }}</td>
+                  <td>{{ d.transactionCount }}</td>
+                  <td>{{ formatCurrency(d.averageAmount) }}</td>
+                  <td>{{ formatPercent(d.percentageOfTotal) }}</td>
+                  <td>
+                    <div class="heatmap-bar-wrap">
+                      <div class="heatmap-bar" [style.width.%]="d.percentageOfTotal" [class.hot]="d.percentageOfTotal > 15"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Budget ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'budget' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Budget vs Actual</h2>
+            <p class="section-sub">Comparison of budgeted amounts vs actual expenses by category</p>
+          </div>
+        </div>
+
+        <div class="analytics-kpi-row" *ngIf="hasBudgetData()">
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Budgeted</span>
+            <span class="ak-value">{{ formatCurrency(getBudgetData()?.totalBudgeted) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Total Actual</span>
+            <span class="ak-value">{{ formatCurrency(getBudgetData()?.totalActual) }}</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Variance</span>
+            <span class="ak-value" [class.text-profit]="(getBudgetData()?.totalVariance ?? 0) > 0" [class.text-loss]="(getBudgetData()?.totalVariance ?? 0) < 0">
+              {{ formatCurrency(getBudgetData()?.totalVariance) }}
+            </span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="ak-label">Variance %</span>
+            <span class="ak-value" [class.text-profit]="(getBudgetData()?.variancePercent ?? 0) > 0" [class.text-loss]="(getBudgetData()?.variancePercent ?? 0) < 0">
+              {{ formatPercent(getBudgetData()?.variancePercent) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="charts-row" *ngIf="hasBudgetData()">
+          <div class="chart-card" style="grid-column: span 12;">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Budget vs Actual by Category</h2>
+                <p class="chart-card-sub">Blue = budgeted, Green = under budget, Red = over budget</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 400px;">
+              <canvas baseChart [type]="barChartType" [data]="budgetBarData" [options]="stackedBarOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Category Budget Details</h2>
+              <p class="chart-card-sub">Per-category budget performance</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Budgeted</th>
+                  <th>Actual</th>
+                  <th>Variance</th>
+                  <th>Variance %</th>
+                  <th>Status</th>
+                  <th>Transactions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of getBudgetData()?.categories; trackBy: trackByIndex">
+                  <td>
+                    <span class="cat-tag">
+                      <i class="fas" [ngClass]="getCategoryIcon(b.categoryName)"></i>
+                      {{ b.categoryName }}
+                    </span>
+                  </td>
+                  <td>{{ formatCurrency(b.budgetedAmount) }}</td>
+                  <td>{{ formatCurrency(b.actualAmount) }}</td>
+                  <td [class.text-profit]="b.variance > 0" [class.text-loss]="b.variance < 0">
+                    {{ formatCurrency(b.variance) }}
+                  </td>
+                  <td>
+                    <span class="growth-badge" [class.text-profit]="b.variancePercent > 0" [class.text-loss]="b.variancePercent < 0">
+                      {{ formatPercent(b.variancePercent) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="status-pill" [ngClass]="getBudgetStatusClass(b.status)">{{ b.status }}</span>
+                  </td>
+                  <td>{{ b.transactionCount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <!-- ─── TAB: Insights ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
+      <div *ngIf="activeAnalyticsTab === 'insights' && hasAnalyticsData()">
+        <div class="analytics-header">
+          <div>
+            <h2 class="section-title">Quick Insights</h2>
+            <p class="section-sub">AI-generated summary and recommendations for your financial data</p>
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="insight-summary-card" *ngIf="getInsightsData()">
+          <div class="insight-summary-text">{{ getInsightsData()?.summary }}</div>
+          <div class="insight-metrics-row">
+            <div class="insight-metric">
+              <span class="im-label">Expense/Income Ratio</span>
+              <span class="im-value" [class.text-profit]="(getInsightsData()?.expenseToIncomeRatio ?? 0) < 60" [class.text-loss]="(getInsightsData()?.expenseToIncomeRatio ?? 0) > 80">
+                {{ formatPercent(getInsightsData()?.expenseToIncomeRatio) }}
+              </span>
+            </div>
+            <div class="insight-metric">
+              <span class="im-label">Active Customers</span>
+              <span class="im-value">{{ getInsightsData()?.activeCustomersThisPeriod }}</span>
+            </div>
+            <div class="insight-metric">
+              <span class="im-label">Avg Transaction</span>
+              <span class="im-value">{{ formatCurrency(getInsightsData()?.averageTransactionSize) }}</span>
+            </div>
+            <div class="insight-metric">
+              <span class="im-label">Best Country</span>
+              <span class="im-value">{{ getInsightsData()?.bestPerformingCountry?.name || '—' }}</span>
+            </div>
+            <div class="insight-metric">
+              <span class="im-label">Best Category</span>
+              <span class="im-value">{{ getInsightsData()?.bestPerformingCategory?.name || '—' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Findings -->
+        <div class="insights-grid" *ngIf="getInsightsData()">
+          <div class="insight-section" *ngIf="getInsightsData()?.keyFindings?.length">
+            <div class="insight-section-head">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Key Findings
+            </div>
+            <ul class="insight-list">
+              <li *ngFor="let f of getInsightsData()?.keyFindings">{{ f }}</li>
+            </ul>
+          </div>
+
+          <div class="insight-section" *ngIf="getInsightsData()?.recommendations?.length">
+            <div class="insight-section-head">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Recommendations
+            </div>
+            <ul class="insight-list">
+              <li *ngFor="let r of getInsightsData()?.recommendations">{{ r }}</li>
+            </ul>
+          </div>
+
+          <div class="insight-section" *ngIf="getInsightsData()?.warnings?.length">
+            <div class="insight-section-head warning">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Warnings
+            </div>
+            <ul class="insight-list warning-list">
+              <li *ngFor="let w of getInsightsData()?.warnings">{{ w }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Top Income Sources -->
+        <div class="charts-row" *ngIf="hasTopIncomeData()">
+          <div class="chart-card" style="grid-column: span 12;">
+            <div class="chart-card-head">
+              <div>
+                <h2 class="chart-card-title">Top Income Sources</h2>
+                <p class="chart-card-sub">Highest value income entries</p>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height: 350px;">
+              <canvas baseChart [type]="horizontalBarType" [data]="topIncomeData" [options]="horizontalBarOptions"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card" *ngIf="hasTopIncomeData()">
+          <div class="table-card-head">
+            <div>
+              <h2 class="chart-card-title">Top Income Sources — Detail</h2>
+              <p class="chart-card-sub">All top income entries ranked by amount</p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Source</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>% of Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let s of getTopIncomeData()?.sources; trackBy: trackById">
+                  <td><strong>{{ s.rank }}</strong></td>
+                  <td><strong>{{ s.source }}</strong></td>
+                  <td>
+                    <span class="cat-tag">
+                      <i class="fas" [ngClass]="getCategoryIcon(s.categoryName)"></i>
+                      {{ s.categoryName }}
+                    </span>
+                  </td>
+                  <td class="text-profit">{{ formatCurrency(s.amount) }}</td>
+                  <td>{{ s.date | date:'MMM dd, yyyy' }}</td>
+                  <td>{{ s.customerName || '—' }}</td>
+                  <td><span class="status-pill" [ngClass]="getStatusClass(s.status)">{{ s.status }}</span></td>
+                  <td>{{ formatPercent(s.percentageOfTotal) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
       <!-- ─── Recent Transactions Table ─── -->
+      <!-- ═══════════════════════════════════════════════════════════════════════ -->
       <div class="table-card">
         <div class="table-card-head">
           <div>

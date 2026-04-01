@@ -1,0 +1,138 @@
+<div class="ExpenceList">
+  <div class="container-fluid">
+    <div class="header">
+      <h1>Currency Master</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="navigateToCreate()">
+          <i class="fas fa-plus"></i> New Currency
+        </button>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          [(ngModel)]="filters.searchTerm"
+          (ngModelChange)="onSearchChange(filters.searchTerm || '')"
+          placeholder="Search by name, code or description..."
+        />
+      </div>
+
+      <div class="actions-section">
+        <button *ngIf="hasActiveFilters()" class="btn btn-secondary" (click)="resetFilters()">
+          <i class="fas fa-undo"></i> Reset Filters
+        </button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th
+              (click)="onSortChange('name', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
+            >
+              Name
+              <i class="fas fa-sort sort-icon"></i>
+            </th>
+            <th
+              (click)="onSortChange('code', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
+            >
+              Code
+              <i class="fas fa-sort sort-icon"></i>
+            </th>
+            <th>Symbol</th>
+            <th>Image</th>
+            <th>Status</th>
+            <th
+              (click)="onSortChange('createdAt', filters.sortDirection === 'asc' ? 'desc' : 'asc')"
+            >
+              Created At
+              <i class="fas fa-sort sort-icon"></i>
+            </th>
+            <th style="text-align: center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-row-highlight" *ngFor="let currency of currencies">
+            <td>
+              <div class="expense-title">{{ currency.name }}</div>
+            </td>
+            <td><strong>{{ currency.code }}</strong></td>
+            <td>{{ currency.symbol }}</td>
+            <td>
+              <img *ngIf="currency.imageUrl" [src]="currency.imageUrl" [alt]="currency.code" class="currency-img" />
+              <span *ngIf="!currency.imageUrl" class="text-muted">-</span>
+            </td>
+            <td>
+              <span [class]="'badge badge-' + (currency.isActive ? 'success' : 'secondary')">
+                {{ currency.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>{{ currency.createdAt | date:'mediumDate' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  class="action-btn action-update"
+                  (click)="editCurrency(currency.currencyId)"
+                  title="Edit"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  class="action-btn action-delete"
+                  (click)="deleteCurrency(currency.currencyId)"
+                  title="Delete"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="currencies.length === 0 && !isLoading">
+            <td colspan="7" class="empty-state">
+              <div class="empty-state-content">
+                <i class="fas fa-coins"></i>
+                <p>No currencies found</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="totalRecords > 0">
+      <div class="pagination-info">
+        Showing {{ getStartItem() }}-{{ getEndItem() }} of {{ totalRecords }} currencies
+      </div>
+      <div class="pagination-controls">
+        <button
+          class="pagination-btn"
+          (click)="previousPage()"
+          [disabled]="!filters.pageNumber || filters.pageNumber === 1"
+        >
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <div class="pagination-pages">
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="page-btn"
+            [class.active]="page === filters.pageNumber"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+        <button
+          class="pagination-btn"
+          (click)="nextPage()"
+          [disabled]="filters.pageNumber >= getTotalPages()"
+        >
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

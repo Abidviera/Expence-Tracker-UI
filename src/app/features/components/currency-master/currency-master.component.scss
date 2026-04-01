@@ -1,0 +1,16 @@
+@import '../category-master/category-master.component';
+
+.image-preview {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.currency-preview-img {
+  width: 48px;
+  height: 32px;
+  object-fit: contain;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}

@@ -22,6 +22,10 @@ import { LocationListComponent } from './components/location-list/location-list.
 import { LocationMasterComponent } from './components/location-master/location-master.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { CategoryMasterComponent } from './components/category-master/category-master.component';
+import { CurrencyListComponent } from './components/currency-list/currency-list.component';
+import { CurrencyMasterComponent } from './components/currency-master/currency-master.component';
+import { TaxListComponent } from './components/tax-list/tax-list.component';
+import { TaxMasterComponent } from './components/tax-master/tax-master.component';
 import { BaseChartDirective, ThemeService, withDefaultRegisterables, NG_CHARTS_CONFIGURATION } from 'ng2-charts';
 import { NgChartsConfiguration } from 'ng2-charts';
 import { ReportManagementComponent } from './components/report-management/report-management.component';
@@ -47,6 +51,10 @@ import { ReportManagementComponent } from './components/report-management/report
     LocationMasterComponent,
     CategoryListComponent,
     CategoryMasterComponent,
+    CurrencyListComponent,
+    CurrencyMasterComponent,
+    TaxListComponent,
+    TaxMasterComponent,
   ],
   imports: [
     CommonModule,

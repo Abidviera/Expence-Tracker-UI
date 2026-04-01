@@ -40,6 +40,8 @@ export class SidebarMenuService {
     { path: 'features/country', title: 'Country', icon: 'fas fa-globe', roles: [UserRole.Admin] },
     { path: 'features/location', title: 'Location', icon: 'fas fa-map-marker-alt', roles: [UserRole.Admin] },
     { path: 'features/category', title: 'Category', icon: 'fas fa-tags', roles: [UserRole.Admin] },
+    { path: 'features/currency', title: 'Currency', icon: 'fas fa-coins', roles: [UserRole.Admin] },
+    { path: 'features/tax', title: 'Tax', icon: 'fas fa-percentage', roles: [UserRole.Admin] },
 
     { heading: 'Management', roles: [UserRole.Admin, UserRole.Accountant] },
     { path: 'features/Approvals', title: 'Approvals', icon: 'fas fa-check-circle', roles: [UserRole.Admin] },

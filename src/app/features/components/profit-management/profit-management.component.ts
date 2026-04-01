@@ -10,6 +10,8 @@ import {
 import { ToasterService } from '../../../services/toaster.service';
 import { ExportService } from '../../../services/export.service';
 import { DateFilterService, FilterKey } from '../../../services/date-filter.service';
+import { CurrencyService } from '../../../services/currency.service';
+import { CurrencyFormatService } from '../../../services/currency-format.service';
 
 @Component({
   selector: 'app-profit-management',
@@ -64,6 +66,8 @@ export class ProfitManagementComponent implements OnInit {
     private toasterService: ToasterService,
     private exportService: ExportService,
     private dateFilterService: DateFilterService,
+    private currencyService: CurrencyService,
+    private currencyFormatService: CurrencyFormatService,
   ) {
     const currentYear = new Date().getFullYear();
     for (let y = currentYear; y >= currentYear - 5; y--) {
@@ -74,6 +78,18 @@ export class ProfitManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCountries();
+    this.loadActiveCurrency();
+  }
+
+  private loadActiveCurrency(): void {
+    this.currencyService.getActiveCurrencies().subscribe({
+      next: (currencies) => {
+        if (currencies && currencies.length > 0) {
+          this.currencyFormatService.setActiveCurrency(currencies[0]);
+        }
+      },
+      error: () => {},
+    });
   }
 
   private loadCountries(): void {

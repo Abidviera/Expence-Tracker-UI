@@ -16,11 +16,12 @@ import { InvoiceTemplate4Component } from './Templates/invoice-template4/invoice
 import { InvoiceTemplate5Component } from './Templates/invoice-template5/invoice-template5.component';
 import { InvoiceTemplate6Component } from './Templates/invoice-template6/invoice-template6.component';
 import { InvoiceTemplate7Component } from './Templates/invoice-template7/invoice-template7.component';
+import { CurrencyDisplayPipe } from '../pipes/currency-display.pipe';
 
 
 @NgModule({
-  declarations: [SidebarComponent,  SearchableDropdownComponent,  ToastComponent, ConfirmationModalComponent, ExportModalComponent, IncomeDetailsPopupComponent, InvoiceTemplate1Component, InvoiceTemplate2Component, InvoiceTemplate3Component, InvoiceTemplate4Component, InvoiceTemplate5Component, InvoiceTemplate6Component, InvoiceTemplate7Component],
+  declarations: [SidebarComponent,  SearchableDropdownComponent,  ToastComponent, ConfirmationModalComponent, ExportModalComponent, IncomeDetailsPopupComponent, InvoiceTemplate1Component, InvoiceTemplate2Component, InvoiceTemplate3Component, InvoiceTemplate4Component, InvoiceTemplate5Component, InvoiceTemplate6Component, InvoiceTemplate7Component, CurrencyDisplayPipe],
   imports: [CommonModule, FormsModule,  MatIconModule, NgbModule],
-  exports: [SidebarComponent,  SearchableDropdownComponent , ToastComponent, ConfirmationModalComponent, NgbModule, ExportModalComponent, IncomeDetailsPopupComponent, InvoiceTemplate1Component, InvoiceTemplate2Component, InvoiceTemplate3Component, InvoiceTemplate4Component, InvoiceTemplate5Component, InvoiceTemplate6Component, InvoiceTemplate7Component],
+  exports: [SidebarComponent,  SearchableDropdownComponent , ToastComponent, ConfirmationModalComponent, NgbModule, ExportModalComponent, IncomeDetailsPopupComponent, InvoiceTemplate1Component, InvoiceTemplate2Component, InvoiceTemplate3Component, InvoiceTemplate4Component, InvoiceTemplate5Component, InvoiceTemplate6Component, InvoiceTemplate7Component, CurrencyDisplayPipe],
 })
 export class SharedModule {}

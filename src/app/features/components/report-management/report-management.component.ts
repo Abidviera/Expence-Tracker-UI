@@ -11,6 +11,8 @@ import {
 } from '../../../models/Country.model';
 import { Country, Location } from '../../../models/Country.model';
 import { ChartConfiguration, ChartData } from 'chart.js';
+import { CurrencyService } from '../../../services/currency.service';
+import { CurrencyFormatService } from '../../../services/currency-format.service';
 
 @Component({
   selector: 'app-report-management',
@@ -185,12 +187,26 @@ export class ReportManagementComponent implements OnInit {
     private countryService: CountryService,
     private dateFilterService: DateFilterService,
     private exportService: ExportService,
+    private currencyService: CurrencyService,
+    private currencyFormatService: CurrencyFormatService,
   ) {}
 
   ngOnInit(): void {
     this.filterOptions = this.dateFilterService.options;
     this.loadCountries();
     this.loadLocations();
+    this.loadActiveCurrency();
+  }
+
+  private loadActiveCurrency(): void {
+    this.currencyService.getActiveCurrencies().subscribe({
+      next: (currencies) => {
+        if (currencies && currencies.length > 0) {
+          this.currencyFormatService.setActiveCurrency(currencies[0]);
+        }
+      },
+      error: () => {},
+    });
   }
 
   loadCountries(): void {
@@ -483,11 +499,11 @@ export class ReportManagementComponent implements OnInit {
   // ─── Accessors ───
 
   formatCurrency(amount: number): string {
-    return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return this.currencyFormatService.format(amount);
   }
 
   formatAmount(amount: number): string {
-    return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return this.currencyFormatService.formatWhole(amount);
   }
 
   getReportMeta(): { title: string; period: string; by: string; date: string } | null {
