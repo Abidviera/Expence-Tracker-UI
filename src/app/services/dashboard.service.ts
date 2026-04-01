@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { FilterKey, DateFilterParams } from './date-filter.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,20 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  getDashboardData(): Observable<DashboardData> {
-    return this.http.get<DashboardData>(this.apiUrl);
+  /**
+   * Fetch dashboard data with optional date filter.
+   * If no filter is provided, defaults to 'thisMonth'.
+   */
+  getDashboardData(filter?: DateFilterParams): Observable<DashboardData> {
+    let params = new HttpParams();
+
+    if (filter) {
+      params = params.set('filterKey', filter.filterKey);
+      params = params.set('fromDate', filter.fromDate);
+      params = params.set('toDate', filter.toDate);
+    }
+
+    return this.http.get<DashboardData>(this.apiUrl, { params });
   }
 }
 

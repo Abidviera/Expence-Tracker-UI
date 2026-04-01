@@ -19,6 +19,33 @@
         <h3><i class="fas fa-filter"></i> Report Filters</h3>
       </div>
       <div class="filter-card-body">
+        <!-- Date Filter Buttons -->
+        <div class="filter-row filter-row-dates">
+          <div class="filter-group filter-group-full">
+            <label>Date Range</label>
+            <div class="filter-buttons">
+              <button
+                *ngFor="let opt of filterOptions"
+                class="filter-btn"
+                [class.active]="selectedFilter === opt.key"
+                (click)="onFilterChange(opt.key)">
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Custom Date Range -->
+        <div class="filter-row" *ngIf="showCustomDates">
+          <div class="filter-group">
+            <label>From Date</label>
+            <input type="date" class="form-control" [(ngModel)]="customFromDate" (change)="onCustomDateChange()" />
+          </div>
+          <div class="filter-group">
+            <label>To Date</label>
+            <input type="date" class="form-control" [(ngModel)]="customToDate" (change)="onCustomDateChange()" />
+          </div>
+        </div>
+        <!-- Legacy Month/Year (for backward compat when FilterKey is empty) -->
         <div class="filter-row">
           <div class="filter-group">
             <label>Month</label>

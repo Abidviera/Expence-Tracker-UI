@@ -69,12 +69,16 @@ export interface LocationPaginationRequest {
 }
 
 export interface ReportRequest {
+  // Legacy: single month (deprecated — use FilterKey instead)
   month: number;
   year: number;
+  // Universal date filter (use FilterKey instead of Month/Year for flexible ranges)
+  filterKey?: string;
+  fromDate?: string;
+  toDate?: string;
+  // Transaction filters (FK-based)
   countryId?: string;
   locationId?: string;
-  countryName?: string;
-  locationName?: string;
 }
 
 export interface ReportResponse {

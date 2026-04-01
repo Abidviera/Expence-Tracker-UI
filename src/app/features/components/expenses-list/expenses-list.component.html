@@ -21,7 +21,35 @@
       </div>
 
       <div class="filter-grid">
-        <div class="date-range">
+        <!-- Universal Date Filter Buttons -->
+        <div class="filter-row" style="grid-column: 1 / -1; margin-bottom: 0.5rem;">
+          <div class="filter-buttons">
+            <button
+              *ngFor="let opt of filterOptions"
+              class="filter-btn"
+              [class.active]="selectedFilter === opt.key"
+              (click)="onFilterChange(opt.key)">
+              {{ opt.label }}
+            </button>
+          </div>
+        </div>
+        <!-- Custom Date Range Inputs (shown when 'custom' is selected) -->
+        <div class="filter-row" *ngIf="showCustomDates">
+          <div class="filter-group">
+            <label class="filter-label">From Date</label>
+            <div class="filter-control">
+              <input type="date" [(ngModel)]="customFromDate" (change)="onCustomDateChange()" />
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">To Date</label>
+            <div class="filter-control">
+              <input type="date" [(ngModel)]="customToDate" (change)="onCustomDateChange()" />
+            </div>
+          </div>
+        </div>
+        <!-- Standard Date Inputs (shown for non-custom filters) -->
+        <div class="date-range" *ngIf="!showCustomDates">
           <div class="filter-group">
             <label class="filter-label">Date Range</label>
             <div class="filter-control">
@@ -52,7 +80,6 @@
             </div>
           </div>
         </div>
-
         <app-searchable-dropdown
           [options]="Categories"
           optionLabel="name"
@@ -271,8 +298,8 @@
       <i class="fas fa-times-circle"></i>
     </span>
   </div>
-      </div>
     </div>
+  </div>
 
     <div class="search-section">
       <div class="search-box">

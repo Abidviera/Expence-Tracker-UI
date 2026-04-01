@@ -844,3 +844,43 @@
       flex-wrap: wrap;
     }
   }
+
+/* --- Universal Date Filter Bar --- */
+.filter-buttons {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #8c0b4e;
+    color: #8c0b4e;
+    background: rgba(140, 11, 78, 0.05);
+  }
+
+  &.active {
+    background: linear-gradient(135deg, #5c0733, #8c0b4e);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(92, 7, 51, 0.25);
+  }
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}

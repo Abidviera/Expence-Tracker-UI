@@ -1,7 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 import { UserResponseDto } from '../../../auth/components/login/Interfaces/LoginResponse';
-import { DashboardService, DashboardData, ProfitTrend, CategoryBreakdown, RecentTransaction } from '../../../services/dashboard.service';
+import {
+  DashboardService,
+  DashboardData,
+  ProfitTrend,
+  CategoryBreakdown,
+  RecentTransaction,
+} from '../../../services/dashboard.service';
+import { DateFilterService, FilterKey } from '../../../services/date-filter.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
@@ -9,7 +16,7 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
   selector: 'app-dashboard',
   standalone: false,
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
@@ -17,6 +24,13 @@ export class DashboardComponent implements OnInit {
   user: UserResponseDto | null = null;
   dashboardData: DashboardData | null = null;
   loading = true;
+
+  // Date filter state
+  selectedFilter: FilterKey = 'thisMonth';
+  customFromDate: string = '';
+  customToDate: string = '';
+  showCustomDates = false;
+  filterOptions: { key: FilterKey; label: string }[] = [];
 
   public profitChartType: ChartType = 'bar';
   public profitChartData: ChartData<'bar'> = { labels: [], datasets: [] };
@@ -27,19 +41,13 @@ export class DashboardComponent implements OnInit {
       legend: {
         display: true,
         position: 'top',
-        labels: { color: '#64748b', font: { size: 12 }, padding: 15 }
-      }
+        labels: { color: '#64748b', font: { size: 12 }, padding: 15 },
+      },
     },
     scales: {
-      x: {
-        grid: { display: false },
-        ticks: { color: '#64748b', font: { size: 11 } }
-      },
-      y: {
-        grid: { color: 'rgba(0,0,0,0.05)' },
-        ticks: { color: '#64748b' }
-      }
-    }
+      x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 11 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748b' } },
+    },
   };
 
   public lineChartType: ChartType = 'line';
@@ -51,19 +59,13 @@ export class DashboardComponent implements OnInit {
       legend: {
         display: true,
         position: 'top',
-        labels: { color: '#64748b', font: { size: 12 }, padding: 15 }
-      }
+        labels: { color: '#64748b', font: { size: 12 }, padding: 15 },
+      },
     },
     scales: {
-      x: {
-        grid: { display: false },
-        ticks: { color: '#64748b', font: { size: 11 } }
-      },
-      y: {
-        grid: { color: 'rgba(0,0,0,0.05)' },
-        ticks: { color: '#64748b' }
-      }
-    }
+      x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 11 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748b' } },
+    },
   };
 
   public incomeDonutType: ChartType = 'doughnut';
@@ -76,9 +78,9 @@ export class DashboardComponent implements OnInit {
       legend: {
         display: true,
         position: 'right',
-        labels: { color: '#64748b', font: { size: 11 }, padding: 10, boxWidth: 12 }
-      }
-    }
+        labels: { color: '#64748b', font: { size: 11 }, padding: 10, boxWidth: 12 },
+      },
+    },
   };
 
   public expenseDonutType: ChartType = 'doughnut';
@@ -91,9 +93,9 @@ export class DashboardComponent implements OnInit {
       legend: {
         display: true,
         position: 'right',
-        labels: { color: '#64748b', font: { size: 11 }, padding: 10, boxWidth: 12 }
-      }
-    }
+        labels: { color: '#64748b', font: { size: 11 }, padding: 10, boxWidth: 12 },
+      },
+    },
   };
 
   private categoryTotals: CategoryBreakdown[] = [];
@@ -101,17 +103,34 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private commonUtil: CommonUtil,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private dateFilterService: DateFilterService,
   ) {}
 
   ngOnInit(): void {
     this.user = this.commonUtil.getCurrentUser();
+    this.filterOptions = this.dateFilterService.options;
     this.loadDashboardData();
   }
 
   loadDashboardData(): void {
     this.loading = true;
-    this.dashboardService.getDashboardData().subscribe({
+
+    // Build filter params
+    const customFrom = this.selectedFilter === 'custom' && this.customFromDate
+      ? new Date(this.customFromDate)
+      : undefined;
+    const customTo = this.selectedFilter === 'custom' && this.customToDate
+      ? new Date(this.customToDate)
+      : undefined;
+
+    const filterParams = this.dateFilterService.buildParams(
+      this.selectedFilter,
+      customFrom,
+      customTo
+    );
+
+    this.dashboardService.getDashboardData(filterParams).subscribe({
       next: (data) => {
         this.dashboardData = data;
         this.categoryTotals = data.incomeByCategory;
@@ -125,43 +144,63 @@ export class DashboardComponent implements OnInit {
       error: (err) => {
         console.error('Dashboard load error:', err);
         this.loading = false;
-      }
+      },
     });
+  }
+
+  onFilterChange(key: FilterKey): void {
+    this.selectedFilter = key;
+    this.showCustomDates = key === 'custom';
+    if (key !== 'custom') {
+      this.customFromDate = '';
+      this.customToDate = '';
+    }
+    this.loadDashboardData();
+  }
+
+  onCustomDateChange(): void {
+    if (this.customFromDate && this.customToDate) {
+      this.loadDashboardData();
+    }
+  }
+
+  refreshData(): void {
+    this.loadDashboardData();
   }
 
   private buildBarChart(trend: ProfitTrend[]): void {
     this.profitChartData = {
-      labels: trend.map(t => t.month),
+      labels: trend.map((t) => t.month),
       datasets: [
         {
           label: 'Income',
-          data: trend.map(t => t.income),
+          data: trend.map((t) => t.income),
           backgroundColor: 'rgba(16, 185, 129, 0.7)',
           borderColor: '#10b981',
           borderWidth: 1,
           borderRadius: 4,
-          barThickness: 18
+          barThickness: 18,
         },
         {
           label: 'Expenses',
-          data: trend.map(t => t.expense),
+          data: trend.map((t) => t.expense),
           backgroundColor: 'rgba(239, 68, 68, 0.7)',
           borderColor: '#ef4444',
           borderWidth: 1,
           borderRadius: 4,
-          barThickness: 18
-        }
-      ]
+          barThickness: 18,
+        },
+      ],
     };
   }
 
   private buildLineChart(trend: ProfitTrend[]): void {
     this.lineChartData = {
-      labels: trend.map(t => t.month),
+      labels: trend.map((t) => t.month),
       datasets: [
         {
           label: 'Net Profit',
-          data: trend.map(t => t.profit),
+          data: trend.map((t) => t.profit),
           borderColor: '#8c0b4e',
           backgroundColor: 'rgba(140, 11, 78, 0.1)',
           fill: true,
@@ -170,35 +209,37 @@ export class DashboardComponent implements OnInit {
           pointBorderColor: '#fff',
           pointBorderWidth: 2,
           pointRadius: 4,
-          pointHoverRadius: 6
-        }
-      ]
+          pointHoverRadius: 6,
+        },
+      ],
     };
   }
 
   private buildIncomeDonutChart(categories: CategoryBreakdown[]): void {
-    const colors = this.generateColors(categories.length);
     this.incomeDonutData = {
-      labels: categories.map(c => c.categoryName),
-      datasets: [{
-        data: categories.map(c => c.totalAmount),
-        backgroundColor: colors,
-        borderWidth: 2,
-        borderColor: '#fff'
-      }]
+      labels: categories.map((c) => c.categoryName),
+      datasets: [
+        {
+          data: categories.map((c) => c.totalAmount),
+          backgroundColor: this.generateColors(categories.length),
+          borderWidth: 2,
+          borderColor: '#fff',
+        },
+      ],
     };
   }
 
   private buildExpenseDonutChart(categories: CategoryBreakdown[]): void {
-    const colors = this.generateColors(categories.length);
     this.expenseDonutData = {
-      labels: categories.map(c => c.categoryName),
-      datasets: [{
-        data: categories.map(c => c.totalAmount),
-        backgroundColor: colors,
-        borderWidth: 2,
-        borderColor: '#fff'
-      }]
+      labels: categories.map((c) => c.categoryName),
+      datasets: [
+        {
+          data: categories.map((c) => c.totalAmount),
+          backgroundColor: this.generateColors(categories.length),
+          borderWidth: 2,
+          borderColor: '#fff',
+        },
+      ],
     };
   }
 
@@ -206,21 +247,21 @@ export class DashboardComponent implements OnInit {
     const palette = [
       '#8c0b4e', '#10b981', '#3b82f6', '#f59e0b',
       '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899',
-      '#84cc16', '#f97316', '#6366f1', '#14b8a6'
+      '#84cc16', '#f97316', '#6366f1', '#14b8a6',
     ];
     return Array.from({ length: count }, (_, i) => palette[i % palette.length]);
   }
 
+  // --- Accessors ---
+
   getPercentage(index: number): string {
     const cat = this.categoryTotals[index];
-    if (!cat) return '0';
-    return String(cat.percentage ?? 0);
+    return cat ? String(cat.percentage ?? 0) : '0';
   }
 
   getExpensePercentage(index: number): string {
     const cat = this.expenseTotals[index];
-    if (!cat) return '0';
-    return String(cat.percentage ?? 0);
+    return cat ? String(cat.percentage ?? 0) : '0';
   }
 
   formatCurrency(amount: number | undefined): string {
@@ -246,18 +287,15 @@ export class DashboardComponent implements OnInit {
   }
 
   getNetProfitDisplay(): string {
-    if (!this.dashboardData) return '$0.00';
-    return this.formatCurrency(this.dashboardData.netProfit);
+    return this.dashboardData ? this.formatCurrency(this.dashboardData.netProfit) : '$0.00';
   }
 
   getNetProfitIcon(): string {
-    if (!this.dashboardData) return 'fa-minus';
-    return this.dashboardData.netProfit >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+    return this.dashboardData && this.dashboardData.netProfit >= 0 ? 'fa-arrow-up' : 'fa-minus';
   }
 
   getNetProfitClass(): string {
-    if (!this.dashboardData) return '';
-    return this.dashboardData.netProfit >= 0 ? 'trend-up' : 'trend-down';
+    return this.dashboardData && this.dashboardData.netProfit >= 0 ? 'trend-up' : 'trend-down';
   }
 
   getStatusClass(status: string): string {
@@ -378,13 +416,11 @@ export class DashboardComponent implements OnInit {
   }
 
   hasIncomeCategories(): boolean {
-    const cats = this.dashboardData?.incomeByCategory ?? [];
-    return cats.length > 0;
+    return (this.dashboardData?.incomeByCategory ?? []).length > 0;
   }
 
   hasExpenseCategories(): boolean {
-    const cats = this.dashboardData?.expensesByCategory ?? [];
-    return cats.length > 0;
+    return (this.dashboardData?.expensesByCategory ?? []).length > 0;
   }
 
   getIncomeCategorySlice(): CategoryBreakdown[] {
@@ -393,9 +429,5 @@ export class DashboardComponent implements OnInit {
 
   getExpenseCategorySlice(): CategoryBreakdown[] {
     return this.getExpenseCategories().slice(0, 4);
-  }
-
-  refreshData(): void {
-    this.loadDashboardData();
   }
 }

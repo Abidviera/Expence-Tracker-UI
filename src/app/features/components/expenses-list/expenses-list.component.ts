@@ -7,16 +7,15 @@ import { CustomerService } from '../../../services/customer.service';
 import { CountryService } from '../../../services/country.service';
 import { CategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
-import { Expense } from '../../../models/Expense.model';
 import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-details-popup/income-details-popup.component';
 import { ModalService } from '../../../services/modal.service';
 import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
 import { ToasterService } from '../../../services/toaster.service';
-import { PrintService } from '../../../services/print.service';
 import { InvoiceTemplate3Component } from '../../../shared/Templates/invoice-template3/invoice-template3.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
 import { UserRole } from '../../../enums/UserRole.enum';
+import { DateFilterService, FilterKey } from '../../../services/date-filter.service';
 
 @Component({
   selector: 'app-expenses-list',
@@ -37,6 +36,13 @@ export class ExpensesListComponent {
   selectedLocation: any = null;
   expenses: any[] = [];
   totalRecords = 0;
+
+  // Date filter state
+  selectedFilter: FilterKey = 'thisMonth';
+  showCustomDates = false;
+  customFromDate: string = '';
+  customToDate: string = '';
+  filterOptions: { key: FilterKey; label: string }[] = [];
 
   filters: ExpensePaginationRequest = {
     pageNumber: 1,
@@ -62,12 +68,13 @@ export class ExpensesListComponent {
     private router: Router,
     private modalService: ModalService,
     private toastService: ToasterService,
-    private printService: PrintService,
     private modalPrintService: NgbModal,
-    private commonUtil: CommonUtil
+    private commonUtil: CommonUtil,
+    private dateFilterService: DateFilterService,
   ) {}
 
   ngOnInit(): void {
+    this.filterOptions = this.dateFilterService.options;
     const currentUser = this.commonUtil.getCurrentUser();
     if (currentUser && currentUser.role !== UserRole.Admin) {
       this.filters.userId = currentUser.userId ?? undefined;
@@ -75,6 +82,32 @@ export class ExpensesListComponent {
       this.filters.userId = undefined;
     }
     this.loadInitialData();
+  }
+
+  onFilterChange(key: FilterKey): void {
+    this.selectedFilter = key;
+    this.showCustomDates = key === 'custom';
+    if (key !== 'custom') {
+      const params = this.dateFilterService.buildParams(key);
+      this.filters.fromDate = params.fromDate;
+      this.filters.toDate = params.toDate;
+    }
+    this.filters.pageNumber = 1;
+    this.loadExpenses();
+  }
+
+  onCustomDateChange(): void {
+    if (this.selectedFilter === 'custom' && this.customFromDate && this.customToDate) {
+      const params = this.dateFilterService.buildParams(
+        'custom',
+        new Date(this.customFromDate),
+        new Date(this.customToDate)
+      );
+      this.filters.fromDate = params.fromDate;
+      this.filters.toDate = params.toDate;
+      this.filters.pageNumber = 1;
+      this.loadExpenses();
+    }
   }
 
   private loadInitialData(): void {
@@ -255,14 +288,19 @@ export class ExpensesListComponent {
   resetFilters() {
     const currentUser = this.commonUtil.getCurrentUser();
     const isAdmin = currentUser && currentUser.role === UserRole.Admin;
+    this.selectedFilter = 'thisMonth';
+    this.showCustomDates = false;
+    this.customFromDate = '';
+    this.customToDate = '';
+    const params = this.dateFilterService.buildParams('thisMonth');
     this.filters = {
       pageNumber: 1,
       pageSize: 10,
       searchTerm: '',
       sortColumn: '',
       sortDirection: 'asc',
-      fromDate: '',
-      toDate: '',
+      fromDate: params.fromDate,
+      toDate: params.toDate,
       minAmount: undefined,
       maxAmount: undefined,
       minPaid: undefined,
@@ -329,8 +367,13 @@ export class ExpensesListComponent {
   }
 
   clearDate(): void {
-    this.filters.fromDate = '';
-    this.filters.toDate = '';
+    this.selectedFilter = 'thisMonth';
+    this.showCustomDates = false;
+    this.customFromDate = '';
+    this.customToDate = '';
+    const params = this.dateFilterService.buildParams('thisMonth');
+    this.filters.fromDate = params.fromDate;
+    this.filters.toDate = params.toDate;
     this.loadExpenses();
   }
 

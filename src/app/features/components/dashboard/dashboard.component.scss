@@ -23,8 +23,9 @@
   
     .dashboard-left {
       display: flex;
-      align-items: center;
-      gap: 1.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
     }
   
     .welcome-message {
@@ -1020,5 +1021,83 @@
 
     .icon-button:hover svg {
       transform: rotate(45deg);
+    }
+
+    /* --- Universal Date Filter Bar --- */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      background: #f8fafc;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #8c0b4e;
+        color: #8c0b4e;
+        background: rgba(140, 11, 78, 0.05);
+      }
+
+      &.active {
+        background: linear-gradient(135deg, #5c0733, #8c0b4e);
+        color: #ffffff;
+        border-color: transparent;
+        box-shadow: 0 2px 8px rgba(92, 7, 51, 0.25);
+      }
+    }
+
+    .custom-date-range {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .date-input {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #1e293b;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #8c0b4e;
+        box-shadow: 0 0 0 2px rgba(140, 11, 78, 0.1);
+      }
+    }
+
+    .date-separator {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .dashboard-left {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .filter-bar {
+        width: 100%;
+      }
     }
   }

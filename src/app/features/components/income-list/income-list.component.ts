@@ -13,9 +13,9 @@ import { CategoryService } from '../../../services/category.service';
 import { ModalService } from '../../../services/modal.service';
 import { ExportService } from '../../../services/export.service';
 import { ExportModalComponent } from '../../../shared/modals/export-modal/export-modal.component';
-import { animation } from '@angular/animations';
 import { IncomeDetailsPopupComponent } from '../../../shared/modals/income-details-popup/income-details-popup.component';
 import { CommonUtil } from '../../../shared/utilities/CommonUtil';
+import { DateFilterService, FilterKey } from '../../../services/date-filter.service';
 
 @Component({
   selector: 'app-income-list',
@@ -40,6 +40,14 @@ export class IncomeListComponent {
   incomes: any[] = [];
   totalRecords = 0;
   selectedUser: User | null = null;
+
+  // Date filter state
+  selectedFilter: FilterKey = 'thisMonth';
+  showCustomDates = false;
+  customFromDate: string = '';
+  customToDate: string = '';
+  filterOptions: { key: FilterKey; label: string }[] = [];
+
   filters: IncomePaginationRequest = {
     pageNumber: 1,
     pageSize: 7,
@@ -66,10 +74,12 @@ export class IncomeListComponent {
     private countryService: CountryService,
     private modalService: ModalService,
     private exportService: ExportService,
-    private commonUtil: CommonUtil
+    private commonUtil: CommonUtil,
+    private dateFilterService: DateFilterService,
   ) {}
 
   ngOnInit(): void {
+    this.filterOptions = this.dateFilterService.options;
     const currentUser = this.commonUtil.getCurrentUser();
     if (currentUser && currentUser.role !== UserRole.Admin) {
       this.filters.userId = currentUser.userId ?? undefined;
@@ -77,6 +87,32 @@ export class IncomeListComponent {
       this.filters.userId = undefined;
     }
     this.loadInitialData();
+  }
+
+  onFilterChange(key: FilterKey): void {
+    this.selectedFilter = key;
+    this.showCustomDates = key === 'custom';
+    if (key !== 'custom') {
+      const params = this.dateFilterService.buildParams(key);
+      this.filters.fromDate = params.fromDate;
+      this.filters.toDate = params.toDate;
+    }
+    this.resetPagination();
+    this.loadIncomes();
+  }
+
+  onCustomDateChange(): void {
+    if (this.selectedFilter === 'custom' && this.customFromDate && this.customToDate) {
+      const params = this.dateFilterService.buildParams(
+        'custom',
+        new Date(this.customFromDate),
+        new Date(this.customToDate)
+      );
+      this.filters.fromDate = params.fromDate;
+      this.filters.toDate = params.toDate;
+      this.resetPagination();
+      this.loadIncomes();
+    }
   }
 
   private loadInitialData(): void {
@@ -226,14 +262,19 @@ export class IncomeListComponent {
   resetFilters() {
     const currentUser = this.commonUtil.getCurrentUser();
     const isAdmin = currentUser && currentUser.role === UserRole.Admin;
+    this.selectedFilter = 'thisMonth';
+    this.showCustomDates = false;
+    this.customFromDate = '';
+    this.customToDate = '';
+    const params = this.dateFilterService.buildParams('thisMonth');
     this.filters = {
       pageNumber: 1,
       pageSize: 10,
       searchTerm: '',
       sortColumn: '',
       sortDirection: 'asc',
-      fromDate: '',
-      toDate: '',
+      fromDate: params.fromDate,
+      toDate: params.toDate,
       minAmount: undefined,
       maxAmount: undefined,
       minPaid: undefined,
@@ -357,8 +398,13 @@ export class IncomeListComponent {
   }
 
   clearDate(): void {
-    this.filters.fromDate = '';
-    this.filters.toDate = '';
+    this.selectedFilter = 'thisMonth';
+    this.showCustomDates = false;
+    this.customFromDate = '';
+    this.customToDate = '';
+    const params = this.dateFilterService.buildParams('thisMonth');
+    this.filters.fromDate = params.fromDate;
+    this.filters.toDate = params.toDate;
     this.loadIncomes();
   }
 

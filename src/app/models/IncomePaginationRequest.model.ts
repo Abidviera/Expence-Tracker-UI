@@ -17,7 +17,7 @@ export interface IncomePaginationRequest {
     countryId?: string;
     locationId?: string;
     customerId?: string;
-    paymentStatus?: 'Paid' | 'Partial' | 'Unpaid';
+    paymentStatus?: 'paid' | 'partial' | 'unpaid';
 }
 
 export interface PaginationResponse<T> {

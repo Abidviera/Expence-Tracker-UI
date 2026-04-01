@@ -7,6 +7,33 @@
         <h1 class="welcome-message">
           Welcome back, {{ user?.firstName }} {{ user?.lastName }}!
         </h1>
+        <!-- Universal Date Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-buttons">
+            <button
+              *ngFor="let opt of filterOptions"
+              class="filter-btn"
+              [class.active]="selectedFilter === opt.key"
+              (click)="onFilterChange(opt.key)">
+              {{ opt.label }}
+            </button>
+          </div>
+          <div class="custom-date-range" *ngIf="showCustomDates">
+            <input
+              type="date"
+              class="form-control date-input"
+              [(ngModel)]="customFromDate"
+              (change)="onCustomDateChange()"
+              placeholder="From Date" />
+            <span class="date-separator">to</span>
+            <input
+              type="date"
+              class="form-control date-input"
+              [(ngModel)]="customToDate"
+              (change)="onCustomDateChange()"
+              placeholder="To Date" />
+          </div>
+        </div>
       </div>
 
       <div class="dashboard-right">
